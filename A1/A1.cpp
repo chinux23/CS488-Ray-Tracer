@@ -63,10 +63,6 @@ void A1::init()
 		glm::radians( 45.0f ),
 		float( m_framebufferWidth ) / float( m_framebufferHeight ),
 		1.0f, 1000.0f );
-	
-	// Create first cube
-	firstCube = make_shared<Cube::Cube>(glm::vec3(0.0f, 0.0f, 0.0f), 0.5f);
-	firstCube->uploadData(m_shader);
 }
 
 void A1::initGrid()
@@ -118,6 +114,25 @@ void A1::initGrid()
 	delete [] verts;
 
 	CHECK_GL_ERRORS;
+}
+
+void A1::extendStack(){
+	size_t num_of_cubes = cubes.size();
+	glm::vec3 new_position(0.5f, 0.5f + num_of_cubes, 0.5f);
+	
+	std::shared_ptr<Cube::Cube> new_cube = make_shared<Cube::Cube>(new_position, 1.0f);
+	new_cube->uploadData(m_shader);
+	
+	// Add new cube to current stack of cubes
+	cubes.push_back(new_cube);
+}
+
+void A1::shrinkStack(){
+	
+	if (cubes.size() > 0) {
+		cubes.pop_back();
+	}
+
 }
 
 //----------------------------------------------------------------------------------------
@@ -210,7 +225,9 @@ void A1::draw()
 		glDrawArrays( GL_LINES, 0, (3+DIM)*4 );
 
 		// Draw the cubes
-		firstCube->draw();
+		for (auto cube : cubes) {
+			cube->draw();
+		}
 	
 		// Highlight the active square.
 	
@@ -312,6 +329,16 @@ bool A1::keyInputEvent(int key, int action, int mods) {
 	// Fill in with event handling code...
 	if( action == GLFW_PRESS ) {
 		// Respond to some key events.
+		switch (key) {
+			case GLFW_KEY_SPACE:
+				extendStack();
+				break;
+			case GLFW_KEY_BACKSPACE:
+				shrinkStack();
+				break;
+			default:
+				break;
+		}
 	}
 
 	return eventHandled;

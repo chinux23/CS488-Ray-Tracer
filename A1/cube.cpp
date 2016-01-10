@@ -9,6 +9,7 @@
 #include "cube.hpp"
 #include <glm/gtx/transform.hpp>
 #include <iostream>
+#include <iomanip>
 
 
 // Constructor
@@ -60,7 +61,7 @@ void Cube::debugPrint()
 {
 	std::cout << "Cube vertices: " << std::endl;
 	for (auto vertex : vertices) {
-		std::cout << " " << vertex.x << " " << vertex.y << " " << vertex.z << " " << std::endl;
+		std::cout << std::showpos << " " << vertex.x << " " << vertex.y << " " << vertex.z << " " << std::endl;
 	}
 }
 

@@ -51,6 +51,14 @@ private:
 	float colour[3];
 	int current_col;
 	
+
+	/* ------------- Mod ----------------- */
+	
 	std::shared_ptr<Cube::Cube> firstCube;
+	std::vector<std::shared_ptr<Cube::Cube>> cubes;
+	
+public:
+	void shrinkStack();
+	void extendStack();
 
 };
