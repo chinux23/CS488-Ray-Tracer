@@ -9,10 +9,24 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/io.hpp>
 
+#include <vector>
+
 using namespace glm;
 using namespace std;
 
 const float PI = 3.14159265f;
+
+std::vector<glm::vec3> vertices = {
+	vec3( -0.5f,  0.5f,  0.0f ),
+	vec3(  0.5f,  0.5f,  0.0f ),
+	vec3(  0.5f, -0.5f,  0.0f ),
+	vec3( -0.5f, -0.5f,  0.0f ),
+	
+	vec3( -0.5f,  0.5f,  1.0f ),
+	vec3(  0.5f,  0.5f,  1.0f ),
+	vec3(  0.5f, -0.5f,  1.0f ),
+	vec3( -0.5f, -0.5f,  1.0f ),
+};
 
 GLuint elements[] = {
 	0, 1, 2,	// bottom triangle 1
@@ -109,19 +123,19 @@ void A0::uploadTriangleDataToVbo()
 	// Vertex positions for triangle vertices.
 	// Default OpenGL coordinates range from -1 to 1 in all directions (x,y,z).
 //	float half_sqrt3 = float(std::sqrt(3.0)) * 0.5f;
-	vec3 triangleVertices[] = {
-		// cube vertices
-		vec3( -0.5f,  0.5f,  0.0f ),
-		vec3(  0.5f,  0.5f,  0.0f ),
-		vec3(  0.5f, -0.5f,  0.0f ),
-		vec3( -0.5f, -0.5f,  0.0f ),
-		
-		vec3( -0.5f,  0.5f,  1.0f ),
-		vec3(  0.5f,  0.5f,  1.0f ),
-		vec3(  0.5f, -0.5f,  1.0f ),
-		vec3( -0.5f, -0.5f,  1.0f ),
-		
-	};
+//	vec3 triangleVertices[] = {
+//		// cube vertices
+//		vec3( -0.5f,  0.5f,  0.0f ),
+//		vec3(  0.5f,  0.5f,  0.0f ),
+//		vec3(  0.5f, -0.5f,  0.0f ),
+//		vec3( -0.5f, -0.5f,  0.0f ),
+//		
+//		vec3( -0.5f,  0.5f,  1.0f ),
+//		vec3(  0.5f,  0.5f,  1.0f ),
+//		vec3(  0.5f, -0.5f,  1.0f ),
+//		vec3( -0.5f, -0.5f,  1.0f ),
+//		
+//	};
 
 	// Construct triangle centroid and move vertices so triangle is centered at origin
 //	vec3 centroid(0.0f);
@@ -139,7 +153,7 @@ void A0::uploadTriangleDataToVbo()
 
 	//-- Upload triangle vertex data to the vertex buffer:
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo_triangle);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVertices), triangleVertices,
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertices.size(), vertices.data(),
 			GL_STATIC_DRAW);
 
 
