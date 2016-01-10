@@ -15,8 +15,24 @@ using namespace std;
 const float PI = 3.14159265f;
 
 GLuint elements[] = {
-	0, 1, 2,
-	0, 2, 3
+	0, 1, 2,	// bottom triangle 1
+	0, 2, 3,	// bottom triangle 2
+	
+	4, 5, 6,	// top triangle 1
+	4, 6, 7,	// top triangle 2
+	
+	0, 1, 4,
+	1, 4, 5,
+	
+	2, 3, 6,
+	3, 6, 7,
+	
+	0, 3, 4,
+	3, 4, 7,
+	
+	1, 2, 5,
+	2, 5, 6,
+	
 };
 
 //----------------------------------------------------------------------------------------
@@ -94,15 +110,16 @@ void A0::uploadTriangleDataToVbo()
 	// Default OpenGL coordinates range from -1 to 1 in all directions (x,y,z).
 //	float half_sqrt3 = float(std::sqrt(3.0)) * 0.5f;
 	vec3 triangleVertices[] = {
-		// Construct equalaterial triangle
-		vec3(-0.5f, 0.5f, 0.0f),
-		vec3(0.5f, 0.5f, 0.0f),
-		vec3(0.5f, -0.5f, 0.0f),
+		// cube vertices
+		vec3( -0.5f,  0.5f,  0.0f ),
+		vec3(  0.5f,  0.5f,  0.0f ),
+		vec3(  0.5f, -0.5f,  0.0f ),
+		vec3( -0.5f, -0.5f,  0.0f ),
 		
-		// another one
-//		vec3(0.5f, -0.5f, 0.0f),
-//		vec3(-0.5f, 0.5f, 0.0f),
-		vec3(-0.5f, -0.5f, 0.0f)
+		vec3( -0.5f,  0.5f,  1.0f ),
+		vec3(  0.5f,  0.5f,  1.0f ),
+		vec3(  0.5f, -0.5f,  1.0f ),
+		vec3( -0.5f, -0.5f,  1.0f ),
 		
 	};
 
@@ -164,9 +181,19 @@ void A0::uploadUniformsToShader()
 		// Set the uniform's value.
 		glUniform3f(uniformLocation_colour, m_shape_color.r, m_shape_color.g,
 				m_shape_color.b);
-
+	
+	
+		glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float) 1024 / (float)768, 0.1f, 100.0f);
+		glm::mat4 View = glm::lookAt(
+			glm::vec3(4,3,3), // Camera is at (4,3,3), in World Space
+			glm::vec3(0,0,0), // and looks at the origin
+			glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+			);
+		glm::mat4 Model = glm::mat4(1.0f);
+	
+		mat4 transform = Projection * View * Model;
 		vec3 z_axis(0.0f,0.0f,1.0f);
-		mat4 transform = glm::translate(mat4(), vec3(m_shape_translation, 0.0f));
+		transform *= glm::translate(mat4(), vec3(m_shape_translation, 0.0f));
 		transform *= glm::scale(mat4(), vec3(m_shape_size));
 		transform *= glm::rotate(mat4(), m_shape_rotation, z_axis);
 
@@ -270,8 +297,8 @@ void A0::draw()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	
 	m_shader.enable();
-	
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+//		glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, (void*)(12 * sizeof(GLuint)));
 //		glDrawArrays(GL_TRIANGLES, 0, 6);
 	m_shader.disable();
 
