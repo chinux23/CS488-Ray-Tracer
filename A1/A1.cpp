@@ -63,6 +63,10 @@ void A1::init()
 		glm::radians( 45.0f ),
 		float( m_framebufferWidth ) / float( m_framebufferHeight ),
 		1.0f, 1000.0f );
+	
+	// Create first cube
+	firstCube = make_shared<Cube::Cube>(glm::vec3(0.0f, 0.0f, 0.0f), 0.5f);
+	firstCube->uploadData(m_shader);
 }
 
 void A1::initGrid()
@@ -206,7 +210,11 @@ void A1::draw()
 		glDrawArrays( GL_LINES, 0, (3+DIM)*4 );
 
 		// Draw the cubes
+		firstCube->draw();
+	
 		// Highlight the active square.
+	
+	
 	m_shader.disable();
 
 	// Restore defaults

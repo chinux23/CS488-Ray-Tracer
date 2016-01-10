@@ -35,6 +35,10 @@ public:
 	// Upload EbO data
 	void uploadEboData();
 	
+	void debugPrint();
+	
+	void uploadData(const ShaderProgram &shader);
+	
 };
 
 #endif /* cube_hpp */

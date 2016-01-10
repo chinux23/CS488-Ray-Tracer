@@ -8,7 +8,7 @@
 
 #include "cube.hpp"
 #include <glm/gtx/transform.hpp>
-
+#include <iostream>
 
 
 // Constructor
@@ -28,6 +28,7 @@ Cube::Cube(glm::vec3 position, GLfloat size) : Shape(position), side_size(size)
 		centroid + glm::vec3(  half_side,  half_side, -half_side ),			// vertex # 6
 		centroid + glm::vec3( -half_side,  half_side, -half_side ),			// vertex # 7
 	};
+	debugPrint();
 	
 	layout = {
 		0, 1, 2,	// front face (bottom right)
@@ -55,6 +56,14 @@ Cube::~Cube()
 	
 }
 
+void Cube::debugPrint()
+{
+	std::cout << "Cube vertices: " << std::endl;
+	for (auto vertex : vertices) {
+		std::cout << " " << vertex.x << " " << vertex.y << " " << vertex.z << " " << std::endl;
+	}
+}
+
 void Cube::uploadVboData()
 {
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -75,7 +84,9 @@ void Cube::uploadVaoData(const ShaderProgram &shader)
 {
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	
 	GLint positionAttribLocation = shader.getAttribLocation( "position" );
+	glEnableVertexAttribArray(positionAttribLocation);
 	glVertexAttribPointer(positionAttribLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 	
 	//-- Unbind target, and restore default values:
@@ -83,4 +94,11 @@ void Cube::uploadVaoData(const ShaderProgram &shader)
 	glBindVertexArray(0);
 	
 	CHECK_GL_ERRORS;
+}
+
+void Cube::uploadData(const ShaderProgram &shader)
+{
+	uploadVboData();
+	uploadEboData();
+	uploadVaoData(shader);
 }

@@ -8,6 +8,9 @@
 
 #include "grid.hpp"
 
+#include "cube.hpp"
+#include <memory>
+
 class A1 : public CS488Window {
 public:
 	A1();
@@ -47,4 +50,7 @@ private:
 
 	float colour[3];
 	int current_col;
+	
+	std::shared_ptr<Cube::Cube> firstCube;
+
 };

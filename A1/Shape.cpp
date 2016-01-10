@@ -32,7 +32,7 @@ void Shape::draw()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	
-	glDrawElements(GL_TRIANGLES, (GLsizei)vertices.size() * 3, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, (GLsizei)layout.size() * 3, GL_UNSIGNED_INT, 0);
 	
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
