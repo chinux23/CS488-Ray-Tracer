@@ -1,0 +1,12 @@
+-------- Compilation ------------
+1. Same compilation command as in the assignment instruction. No changes involved in terms of compilation.
+
+$ cd "Directory of Assignment Code"
+$ premake4 gmake
+$ make
+
+2. Code is compiled and tested using personal Mac laptop, running MacOS 10.11.2. Tested running with both Xcode and standalone.
+
+-------- Manual -----------------
+All specified tasks are completed. No additional features are added.
+
