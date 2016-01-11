@@ -11,6 +11,8 @@
 #include "cube.hpp"
 #include <memory>
 
+typedef std::vector<std::shared_ptr<Cube::Cube>> CubeStack;
+
 class A1 : public CS488Window {
 public:
 	A1();
@@ -54,11 +56,29 @@ private:
 
 	/* ------------- Mod ----------------- */
 	
-	std::shared_ptr<Cube::Cube> firstCube;
-	std::vector<std::shared_ptr<Cube::Cube>> cubes;
+	CubeStack cubes;
+	
+	// grid_of_cubes[x][z] will points to a specific square.
+	// first index [x] represents the X-axis. Second index [z] represents the Z-axis.
+	std::vector<std::vector<CubeStack>> grid_of_cubes;
+	
+	// position of active cell. (in XZ plan)
+	std::pair<GLint, GLint> active_cell_position;
 	
 public:
 	void shrinkStack();
 	void extendStack();
+	
+	void moveActiveCellUp();
+	void moveActiveCellDown();
+	void moveActiveCellLeft();
+	void moveActiveCellRight();
+	
+	CubeStack& activeStack();
+	
+private:
+	void debugPrintActiveCell();
+	
+	
 
 };

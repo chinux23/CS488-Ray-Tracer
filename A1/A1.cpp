@@ -63,6 +63,15 @@ void A1::init()
 		glm::radians( 45.0f ),
 		float( m_framebufferWidth ) / float( m_framebufferHeight ),
 		1.0f, 1000.0f );
+	
+	// init stacks
+	for (int i = 0; i < DIM; i++) {
+		vector<CubeStack> col_of_cubes;
+		for (int j = 0; j < DIM; j++) {
+			col_of_cubes.push_back(CubeStack());
+		}
+		grid_of_cubes.push_back(col_of_cubes);
+	}
 }
 
 void A1::initGrid()
@@ -117,22 +126,69 @@ void A1::initGrid()
 }
 
 void A1::extendStack(){
-	size_t num_of_cubes = cubes.size();
-	glm::vec3 new_position(0.5f, 0.5f + num_of_cubes, 0.5f);
+	// Get current active cell
+	GLint x = active_cell_position.first;
+	GLint z = active_cell_position.second;
+	CubeStack&  active_stack = activeStack();
+	
+	size_t num_of_cubes = active_stack.size();
+	glm::vec3 new_position(0.5f + x, 0.5f + num_of_cubes, 0.5f + z);
 	
 	std::shared_ptr<Cube::Cube> new_cube = make_shared<Cube::Cube>(new_position, 1.0f);
 	new_cube->uploadData(m_shader);
 	
 	// Add new cube to current stack of cubes
-	cubes.push_back(new_cube);
+	active_stack.push_back(new_cube);
 }
 
 void A1::shrinkStack(){
-	
-	if (cubes.size() > 0) {
-		cubes.pop_back();
+	if (activeStack().size() > 0) {
+		activeStack().pop_back();
 	}
+}
 
+CubeStack& A1::activeStack()
+{
+	GLint x = active_cell_position.first;
+	GLint z = active_cell_position.second;
+	return grid_of_cubes[x][z];
+}
+
+void A1::moveActiveCellUp()
+{
+	if (active_cell_position.second > 0) {
+		active_cell_position.second--;
+	}
+	debugPrintActiveCell();
+}
+
+void A1::moveActiveCellDown()
+{
+	if (active_cell_position.second < DIM) {
+		active_cell_position.second++;
+	}
+	debugPrintActiveCell();
+}
+
+void A1::moveActiveCellLeft()
+{
+	if (active_cell_position.first > 0) {
+		active_cell_position.first--;
+	}
+	debugPrintActiveCell();
+}
+
+void A1::moveActiveCellRight()
+{
+	if (active_cell_position.first < DIM) {
+		active_cell_position.first++;
+	}
+	debugPrintActiveCell();
+}
+
+void A1::debugPrintActiveCell()
+{
+	std::cout << "ActiveCell: [" << active_cell_position.first << ", " << active_cell_position.second << "]" << std::endl;
 }
 
 //----------------------------------------------------------------------------------------
@@ -225,8 +281,12 @@ void A1::draw()
 		glDrawArrays( GL_LINES, 0, (3+DIM)*4 );
 
 		// Draw the cubes
-		for (auto cube : cubes) {
-			cube->draw();
+		for (auto col_of_stack : grid_of_cubes) {
+			for (auto stack : col_of_stack) {
+				for (auto cube : stack) {
+					cube->draw();
+				}
+			}
 		}
 	
 		// Highlight the active square.
@@ -245,7 +305,9 @@ void A1::draw()
  * Called once, after program is signaled to terminate.
  */
 void A1::cleanup()
-{}
+{
+
+}
 
 //----------------------------------------------------------------------------------------
 /*
@@ -335,6 +397,18 @@ bool A1::keyInputEvent(int key, int action, int mods) {
 				break;
 			case GLFW_KEY_BACKSPACE:
 				shrinkStack();
+				break;
+			case GLFW_KEY_UP:
+				moveActiveCellUp();
+				break;
+			case GLFW_KEY_DOWN:
+				moveActiveCellDown();
+				break;
+			case GLFW_KEY_LEFT:
+				moveActiveCellLeft();
+				break;
+			case GLFW_KEY_RIGHT:
+				moveActiveCellRight();
 				break;
 			default:
 				break;
