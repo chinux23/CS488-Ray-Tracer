@@ -10,8 +10,13 @@
 
 #include "cube.hpp"
 #include <memory>
+#include <chrono>
 
-typedef std::vector<std::shared_ptr<Cube::Cube>> CubeStack;
+
+using CubeStack = std::vector<std::shared_ptr<Cube::Cube>>;
+using Clock		= std::chrono::high_resolution_clock;
+using TimePoint = std::chrono::time_point<Clock>;
+
 
 class A1 : public CS488Window {
 public:
@@ -78,7 +83,7 @@ public:
 	
 private:
 	void debugPrintActiveCell();
-	
-	
+	bool isCubeStackActive(const CubeStack& cube);
+	TimePoint t_start;
 
 };

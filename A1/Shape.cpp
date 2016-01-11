@@ -7,6 +7,7 @@
 //
 
 #include "Shape.hpp"
+#include <exception>
 
 Shape::Shape(glm::vec3 position) : world_position(position)
 {
@@ -41,5 +42,10 @@ void Shape::draw()
 void Shape::translate(glm::vec3 movement)
 {
 	
+}
+
+bool Shape::operator==(const Shape& other)
+{
+	throw "Not Implemented";
 }
 

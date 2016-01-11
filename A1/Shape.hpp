@@ -60,6 +60,8 @@ public:
 	// Move the shape in the world.
 	virtual void translate(glm::vec3 movement);
 	
+	virtual bool operator==(const Shape& other);
+	
 };
 
 #endif /* Shape_hpp */

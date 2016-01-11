@@ -72,6 +72,8 @@ void A1::init()
 		}
 		grid_of_cubes.push_back(col_of_cubes);
 	}
+	
+	t_start = std::chrono::high_resolution_clock::now();
 }
 
 void A1::initGrid()
@@ -164,7 +166,7 @@ void A1::moveActiveCellUp()
 
 void A1::moveActiveCellDown()
 {
-	if (active_cell_position.second < DIM) {
+	if (active_cell_position.second < DIM-1) {
 		active_cell_position.second++;
 	}
 	debugPrintActiveCell();
@@ -180,7 +182,7 @@ void A1::moveActiveCellLeft()
 
 void A1::moveActiveCellRight()
 {
-	if (active_cell_position.first < DIM) {
+	if (active_cell_position.first < DIM-1) {
 		active_cell_position.first++;
 	}
 	debugPrintActiveCell();
@@ -277,9 +279,9 @@ void A1::draw()
 
 		// Just draw the grid for now.
 		glBindVertexArray( m_grid_vao );
-		glUniform3f( col_uni, 1, 1, 1 );
+		glUniform4f( col_uni, 1, 1, 1, 1);
 		glDrawArrays( GL_LINES, 0, (3+DIM)*4 );
-
+	
 		// Draw the cubes
 		for (auto col_of_stack : grid_of_cubes) {
 			for (auto stack : col_of_stack) {
@@ -290,7 +292,19 @@ void A1::draw()
 		}
 	
 		// Highlight the active square.
+		TimePoint t_now = std::chrono::high_resolution_clock::now();
+		float time = std::chrono::duration_cast<std::chrono::duration<float>>(t_now - t_start).count();
+		glUniform4f(col_uni, 0.1f, 0.1f, 0.6f, (sin(time * 8.0f) + 1.0f) / 4.0f + 0.5f);
 	
+		CubeStack& active_stack = activeStack();
+		GLint x = active_cell_position.first;
+		GLint z = active_cell_position.second;
+		size_t num_of_cubes = active_stack.size();
+		glm::vec3 new_position(0.5f + x, 0.5f + num_of_cubes, 0.5f + z);
+		std::shared_ptr<Cube::Cube> highlighting_cube = make_shared<Cube::Cube>(new_position, 1.0f);
+		highlighting_cube->uploadData(m_shader);
+		highlighting_cube->draw();
+
 	
 	m_shader.disable();
 

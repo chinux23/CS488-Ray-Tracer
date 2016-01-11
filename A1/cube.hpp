@@ -39,6 +39,8 @@ public:
 	
 	void uploadData(const ShaderProgram &shader);
 	
+	virtual bool operator==(const Cube::Cube& other);
+	
 };
 
 #endif /* cube_hpp */

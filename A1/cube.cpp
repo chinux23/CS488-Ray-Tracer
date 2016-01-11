@@ -103,3 +103,7 @@ void Cube::uploadData(const ShaderProgram &shader)
 	uploadEboData();
 	uploadVaoData(shader);
 }
+
+bool Cube::operator==(const Cube& other) {
+	return world_position == other.world_position;
+}
