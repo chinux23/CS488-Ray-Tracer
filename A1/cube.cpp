@@ -29,7 +29,7 @@ Cube::Cube(glm::vec3 position, GLfloat size) : Shape(position), side_size(size)
 		centroid + glm::vec3(  half_side,  half_side, -half_side ),			// vertex # 6
 		centroid + glm::vec3( -half_side,  half_side, -half_side ),			// vertex # 7
 	};
-	debugPrint();
+//	debugPrint();
 	
 	layout = {
 		0, 1, 2,	// front face (bottom right)

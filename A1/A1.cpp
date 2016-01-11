@@ -74,6 +74,7 @@ void A1::init()
 	}
 	
 	t_start = std::chrono::high_resolution_clock::now();
+	isCopyEnabled = 0;
 }
 
 void A1::initGrid()
@@ -156,41 +157,96 @@ CubeStack& A1::activeStack()
 	return grid_of_cubes[x][z];
 }
 
+void A1::adjustCurrentStackSize(long size)
+{
+	if (size == 0) {
+		return;
+	}
+	
+	if (size > 0) {
+		for (long i = 0; i < size; i++) {
+			extendStack();
+		}
+	}
+	
+	if (size < 0) {
+		for (long i = 0; i > size; i--) {
+			shrinkStack();
+		}
+	}
+}
+
 void A1::moveActiveCellUp()
 {
+	long last_active_stack_size = activeStack().size();
 	if (active_cell_position.second > 0) {
 		active_cell_position.second--;
 	}
-	debugPrintActiveCell();
+	long current_stack_size = activeStack().size();
+	long difference = last_active_stack_size - current_stack_size;
+	if (isCopyEnabled) {
+		adjustCurrentStackSize(difference);
+	}
+//	debugPrintActiveCell();
 }
 
 void A1::moveActiveCellDown()
 {
+	long last_active_stack_size = activeStack().size();
 	if (active_cell_position.second < DIM-1) {
 		active_cell_position.second++;
 	}
-	debugPrintActiveCell();
+//	debugPrintActiveCell();
+	long current_stack_size = activeStack().size();
+	long difference = last_active_stack_size - current_stack_size;
+	if (isCopyEnabled) {
+		adjustCurrentStackSize(difference);
+	}
 }
 
 void A1::moveActiveCellLeft()
 {
+	long last_active_stack_size = activeStack().size();
 	if (active_cell_position.first > 0) {
 		active_cell_position.first--;
 	}
-	debugPrintActiveCell();
+//	debugPrintActiveCell();
+	
+	long current_stack_size = activeStack().size();
+	long difference = last_active_stack_size - current_stack_size;
+	if (isCopyEnabled) {
+		adjustCurrentStackSize(difference);
+	}
 }
 
 void A1::moveActiveCellRight()
 {
+	long last_active_stack_size = activeStack().size();
 	if (active_cell_position.first < DIM-1) {
 		active_cell_position.first++;
 	}
-	debugPrintActiveCell();
+//	debugPrintActiveCell();
+	
+	long current_stack_size = activeStack().size();
+	long difference = last_active_stack_size - current_stack_size;
+	if (isCopyEnabled) {
+		adjustCurrentStackSize(difference);
+	}
 }
 
 void A1::debugPrintActiveCell()
 {
 	std::cout << "ActiveCell: [" << active_cell_position.first << ", " << active_cell_position.second << "]" << std::endl;
+}
+
+void A1::enableShiftCopy()
+{
+	isCopyEnabled++;
+}
+
+void A1::disableShiftCopy()
+{
+	isCopyEnabled--;
 }
 
 //----------------------------------------------------------------------------------------
@@ -293,6 +349,7 @@ void A1::draw()
 	
 		// Highlight the active square.
 		TimePoint t_now = std::chrono::high_resolution_clock::now();
+		// The following line of code is referenced from: https://open.gl/drawing
 		float time = std::chrono::duration_cast<std::chrono::duration<float>>(t_now - t_start).count();
 		glUniform4f(col_uni, 0.1f, 0.1f, 0.6f, (sin(time * 8.0f) + 1.0f) / 4.0f + 0.5f);
 	
@@ -424,8 +481,25 @@ bool A1::keyInputEvent(int key, int action, int mods) {
 			case GLFW_KEY_RIGHT:
 				moveActiveCellRight();
 				break;
+			case GLFW_KEY_RIGHT_SHIFT:
+			case GLFW_KEY_LEFT_SHIFT:
+				enableShiftCopy();
+				break;
+			case GLFW_KEY_Q:
+				glfwSetWindowShouldClose(m_window, GL_TRUE);
+				break;
 			default:
 				break;
+		}
+	} else if (action == GLFW_RELEASE) {
+		switch (key) {
+			case GLFW_KEY_LEFT_SHIFT:
+			case GLFW_KEY_RIGHT_SHIFT:
+				disableShiftCopy();
+				break;
+				
+			default:
+    break;
 		}
 	}
 

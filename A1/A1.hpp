@@ -74,6 +74,9 @@ public:
 	void shrinkStack();
 	void extendStack();
 	
+	// Adjust current stack either by expanding if size is positive or shrinking if size is negative.
+	void adjustCurrentStackSize(long size);
+	
 	void moveActiveCellUp();
 	void moveActiveCellDown();
 	void moveActiveCellLeft();
@@ -86,4 +89,7 @@ private:
 	bool isCubeStackActive(const CubeStack& cube);
 	TimePoint t_start;
 
+	void enableShiftCopy();
+	void disableShiftCopy();
+	int isCopyEnabled;
 };
