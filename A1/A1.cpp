@@ -14,6 +14,7 @@ using namespace glm;
 using namespace std;
 
 static const size_t DIM = 16;
+
 // Default colors
 static float default_colors[8][3] = {
 	1.0f, 1.0f, 1.0f,
@@ -25,6 +26,7 @@ static float default_colors[8][3] = {
 	0.0f, 1.0f, 1.0f,
 	1.0f, 0.0f, 1.0f
 };
+
 //----------------------------------------------------------------------------------------
 // Constructor
 A1::A1()
@@ -76,7 +78,7 @@ void A1::init()
 		float( m_framebufferWidth ) / float( m_framebufferHeight ),
 		1.0f, 1000.0f );
 	
-	// init stacks
+	// Initialize each grid with an empty Cube stack.
 	for (int i = 0; i < DIM; i++) {
 		vector<CubeStack> col_of_cubes;
 		for (int j = 0; j < DIM; j++) {

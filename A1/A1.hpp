@@ -56,12 +56,12 @@ private:
 	glm::mat4 view;
 
 	float colour[3];
-	float colors[8][3];
-	int current_col;
+	float colors[8][3];		// Used to store all 8 colors.
+	int current_col;		// Indicate current color selected.
 	
 
 	/* ------------- Mod ----------------- */
-	
+	// Create a single stack of cubes.
 	CubeStack cubes;
 	
 	// grid_of_cubes[x][z] will points to a specific square.
@@ -72,33 +72,64 @@ private:
 	std::pair<GLint, GLint> active_cell_position;
 	
 public:
+
+	// Remove 1 cube from active cell if there are cubes there. Otherwise no op.
 	void shrinkStack();
+
+	// Add 1 cube to active cell.
 	void extendStack();
 	
 	// Adjust current stack either by expanding if size is positive or shrinking if size is negative.
 	void adjustCurrentStackSize(long size);
 	
+	// Move active cell up. Direction: negative z axis.
 	void moveActiveCellUp();
+
+	// Move active cell down. Direction: postive Z axis
 	void moveActiveCellDown();
+
+	// Move active cell to the left by 1. Direction: negative X axis.
 	void moveActiveCellLeft();
+
+	// Move active cell to the right by 1. DirectioN: positive X axis.
 	void moveActiveCellRight();
 	
+	// Change all cubes in active cell to the color specified by current_col.
 	void updateActiveCellColor();
 	
+	// Reference the cube stack in the active cell.
 	CubeStack& activeStack();
 	
+	// Reset grid.
 	void reset();
-	
-private:
-	void debugPrintActiveCell();
-	bool isCubeStackActive(const CubeStack& cube);
-	TimePoint t_start;
 
-	void enableShiftCopy();
-	void disableShiftCopy();
+	// When active cell moves, whether it should copy from current active cell.
 	int isCopyEnabled;
 	
+private:
+
+	// print active cell position
+	void debugPrintActiveCell();
+
+	// Test whether the cube stack is in the active cell.
+	bool isCubeStackActive(const CubeStack& cube);
+
+	// TimePoint to indicate the start of the program.
+	TimePoint t_start;
+
+	// Since there are two Shift keys. Either one of them is pressed, Shift-Copy is enabled.
+	// Enable shift copy. Intenrally it just increment isCopyEnabled by 1.
+	void enableShiftCopy();
+
+	// Disable shift copy. Internally it just decrement isCopyEnabled by 1.
+	void disableShiftCopy();
+
+	// Stores current X position of the mouse.
 	double mouse_x_pos;
+
+	// Stores current rotation speed.
 	float rotation_degree;
+
+	// Stores current scaling factor.
 	float scale_factor;
 };
