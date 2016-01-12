@@ -14,7 +14,17 @@ using namespace glm;
 using namespace std;
 
 static const size_t DIM = 16;
-
+// Default colors
+static float default_colors[8][3] = {
+	1.0f, 1.0f, 1.0f,
+	0.0f, 0.0f, 0.0f,
+	1.0f, 0.0f, 0.0f,
+	0.0f, 1.0f, 0.0f,
+	0.0f, 0.0f, 1.0f,
+	1.0f, 1.0f, 0.0f,
+	0.0f, 1.0f, 1.0f,
+	1.0f, 0.0f, 1.0f
+};
 //----------------------------------------------------------------------------------------
 // Constructor
 A1::A1()
@@ -78,18 +88,6 @@ void A1::init()
 	t_start = std::chrono::high_resolution_clock::now();
 	isCopyEnabled = 0;
 	
-	// Default colors
-	float default_colors[8][3] = {
-		1.0f, 1.0f, 1.0f,
-		0.0f, 0.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
-		0.0f, 0.0f, 1.0f,
-		1.0f, 1.0f, 0.0f,
-		0.0f, 1.0f, 1.0f,
-		1.0f, 0.0f, 1.0f
-	};
-	
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 3; j++) {
 			colors[i][j] = default_colors[i][j];
@@ -97,6 +95,27 @@ void A1::init()
 	}
 	
 	scale_factor = 1.0f;
+}
+
+void A1::reset()
+{
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 3; j++) {
+			colors[i][j] = default_colors[i][j];
+		}
+	}
+	
+	rotation_degree = 0.0f;
+	scale_factor = 1.0f;
+	
+	for (auto & col_of_stack : grid_of_cubes) {
+		for (auto & stack : col_of_stack) {
+			stack.clear();
+		}
+	}
+	
+	active_cell_position.first = 0;
+	active_cell_position.second = 0;
 }
 
 void A1::initGrid()
@@ -557,6 +576,9 @@ bool A1::keyInputEvent(int key, int action, int mods) {
 				break;
 			case GLFW_KEY_Q:
 				glfwSetWindowShouldClose(m_window, GL_TRUE);
+				break;
+			case GLFW_KEY_R:
+				reset();
 				break;
 			default:
 				break;

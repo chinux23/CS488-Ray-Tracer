@@ -87,6 +87,8 @@ public:
 	
 	CubeStack& activeStack();
 	
+	void reset();
+	
 private:
 	void debugPrintActiveCell();
 	bool isCubeStackActive(const CubeStack& cube);
