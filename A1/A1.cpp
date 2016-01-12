@@ -178,7 +178,7 @@ void A1::extendStack(){
 	size_t num_of_cubes = active_stack.size();
 	glm::vec3 new_position(0.5f + x, 0.5f + num_of_cubes, 0.5f + z);
 	
-	std::shared_ptr<Cube::Cube> new_cube = make_shared<Cube::Cube>(new_position, 1.0f);
+	std::shared_ptr<Cube> new_cube = make_shared<Cube>(new_position, 1.0f);
 	new_cube->colorIndex = current_col;
 	new_cube->uploadData(m_shader);
 	
@@ -427,7 +427,7 @@ void A1::draw()
 		GLint z = active_cell_position.second;
 		size_t num_of_cubes = active_stack.size();
 		glm::vec3 new_position(0.5f + x, 0.5f + num_of_cubes, 0.5f + z);
-		std::shared_ptr<Cube::Cube> highlighting_cube = make_shared<Cube::Cube>(new_position, 1.0f);
+		std::shared_ptr<Cube> highlighting_cube = make_shared<Cube>(new_position, 1.0f);
 		highlighting_cube->uploadData(m_shader);
 		highlighting_cube->draw();
 
