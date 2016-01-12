@@ -39,7 +39,7 @@ public:
 	
 	void uploadData(const ShaderProgram &shader);
 	
-	virtual bool operator==(const Cube::Cube& other);
+	virtual bool operator==(const Cube& other);
 	
 	int colorIndex;
 	
