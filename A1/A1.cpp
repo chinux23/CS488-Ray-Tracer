@@ -95,6 +95,8 @@ void A1::init()
 			colors[i][j] = default_colors[i][j];
 		}
 	}
+	
+	scale_factor = 1.0f;
 }
 
 void A1::initGrid()
@@ -367,8 +369,8 @@ void A1::draw()
 	// Create a global transformation for the model (centre it).
 	mat4 W;
 	W = glm::rotate(W, rotation_degree, glm::vec3(0, 1, 0));
+	W = glm::scale(W, glm::vec3(scale_factor, scale_factor, scale_factor));
 	W = glm::translate( W, vec3( -float(DIM)/2.0f, 0, -float(DIM)/2.0f ) );
-	
 
 	m_shader.enable();
 		glEnable( GL_DEPTH_TEST );
@@ -458,7 +460,7 @@ bool A1::mouseMoveEvent(double xPos, double yPos)
 		// that you can rotate relative to the *change* in X.
 		if (ImGui::IsMouseDown(0)) {
 			double difference = xPos - mouse_x_pos;
-			std::cout << "Mouse move in x axis with: " << difference << std::endl;
+//			std::cout << "Mouse move in x axis with: " << difference << std::endl;
 			rotation_degree += difference * 0.01;
 		}
 		mouse_x_pos = xPos;
@@ -490,7 +492,21 @@ bool A1::mouseScrollEvent(double xOffSet, double yOffSet) {
 	bool eventHandled(false);
 
 	// Zoom in or out.
-
+//	std::cout << "Scroll: " << xOffSet << " " << yOffSet << std::endl;
+	if (yOffSet > 0) {
+		scale_factor = scale_factor * (0.001 * yOffSet + 1);
+	} else {
+		scale_factor = scale_factor / (0.001 * (-yOffSet) + 1);
+	}
+	
+	if (scale_factor < 0.01) {
+		scale_factor = 0.01;
+	}
+	
+	if (scale_factor > 10) {
+		scale_factor = 10;
+	}
+	
 	return eventHandled;
 }
 

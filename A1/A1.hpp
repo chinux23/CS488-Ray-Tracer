@@ -98,4 +98,5 @@ private:
 	
 	double mouse_x_pos;
 	float rotation_degree;
+	float scale_factor;
 };
