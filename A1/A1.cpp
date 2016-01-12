@@ -87,35 +87,46 @@ void A1::init()
 		grid_of_cubes.push_back(col_of_cubes);
 	}
 	
+	// Initialize t_start
 	t_start = std::chrono::high_resolution_clock::now();
+
+	// Initialize shift-copy to false.
 	isCopyEnabled = 0;
 	
+	// Initialize colors for all 8 color pickers.
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 3; j++) {
 			colors[i][j] = default_colors[i][j];
 		}
 	}
 	
+	// Initialize scaling factor.
 	scale_factor = 1.0f;
 }
 
 void A1::reset()
 {
+	// Reset color pickers.
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 3; j++) {
 			colors[i][j] = default_colors[i][j];
 		}
 	}
 	
+	// Reset rotation degree.
 	rotation_degree = 0.0f;
+
+	// Reset scaling factor.
 	scale_factor = 1.0f;
 	
+	// Remove all cubes.
 	for (auto & col_of_stack : grid_of_cubes) {
 		for (auto & stack : col_of_stack) {
 			stack.clear();
 		}
 	}
 	
+	// Reset active cell to 0, 0.
 	active_cell_position.first = 0;
 	active_cell_position.second = 0;
 }
