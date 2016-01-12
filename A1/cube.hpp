@@ -11,7 +11,7 @@
 
 #include "Shape.hpp"
 #include <vector>
-#include "ShaderProgram.hpp"
+#include "cs488-framework/ShaderProgram.hpp"
 
 
 class Cube : public Shape {
