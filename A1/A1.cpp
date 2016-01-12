@@ -2,17 +2,29 @@
 #include "cs488-framework/GlErrorCheck.hpp"
 
 #include <iostream>
+#include <sstream>
 
 #include <imgui/imgui.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+
 using namespace glm;
 using namespace std;
 
 static const size_t DIM = 16;
-
+// Default colors
+static float default_colors[8][3] = {
+	1.0f, 1.0f, 1.0f,
+	0.0f, 0.0f, 0.0f,
+	1.0f, 0.0f, 0.0f,
+	0.0f, 1.0f, 0.0f,
+	0.0f, 0.0f, 1.0f,
+	1.0f, 1.0f, 0.0f,
+	0.0f, 1.0f, 1.0f,
+	1.0f, 0.0f, 1.0f
+};
 //----------------------------------------------------------------------------------------
 // Constructor
 A1::A1()
@@ -63,6 +75,47 @@ void A1::init()
 		glm::radians( 45.0f ),
 		float( m_framebufferWidth ) / float( m_framebufferHeight ),
 		1.0f, 1000.0f );
+	
+	// init stacks
+	for (int i = 0; i < DIM; i++) {
+		vector<CubeStack> col_of_cubes;
+		for (int j = 0; j < DIM; j++) {
+			col_of_cubes.push_back(CubeStack());
+		}
+		grid_of_cubes.push_back(col_of_cubes);
+	}
+	
+	t_start = std::chrono::high_resolution_clock::now();
+	isCopyEnabled = 0;
+	
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 3; j++) {
+			colors[i][j] = default_colors[i][j];
+		}
+	}
+	
+	scale_factor = 1.0f;
+}
+
+void A1::reset()
+{
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 3; j++) {
+			colors[i][j] = default_colors[i][j];
+		}
+	}
+	
+	rotation_degree = 0.0f;
+	scale_factor = 1.0f;
+	
+	for (auto & col_of_stack : grid_of_cubes) {
+		for (auto & stack : col_of_stack) {
+			stack.clear();
+		}
+	}
+	
+	active_cell_position.first = 0;
+	active_cell_position.second = 0;
 }
 
 void A1::initGrid()
@@ -116,6 +169,140 @@ void A1::initGrid()
 	CHECK_GL_ERRORS;
 }
 
+void A1::extendStack(){
+	// Get current active cell
+	GLint x = active_cell_position.first;
+	GLint z = active_cell_position.second;
+	CubeStack&  active_stack = activeStack();
+	
+	size_t num_of_cubes = active_stack.size();
+	glm::vec3 new_position(0.5f + x, 0.5f + num_of_cubes, 0.5f + z);
+	
+	std::shared_ptr<Cube::Cube> new_cube = make_shared<Cube::Cube>(new_position, 1.0f);
+	new_cube->colorIndex = current_col;
+	new_cube->uploadData(m_shader);
+	
+	// Add new cube to current stack of cubes
+	active_stack.push_back(new_cube);
+}
+
+void A1::shrinkStack(){
+	if (activeStack().size() > 0) {
+		activeStack().pop_back();
+	}
+}
+
+CubeStack& A1::activeStack()
+{
+	GLint x = active_cell_position.first;
+	GLint z = active_cell_position.second;
+	return grid_of_cubes[x][z];
+}
+
+void A1::adjustCurrentStackSize(long size)
+{
+	if (size == 0) {
+		return;
+	}
+	
+	if (size > 0) {
+		for (long i = 0; i < size; i++) {
+			extendStack();
+		}
+	}
+	
+	if (size < 0) {
+		for (long i = 0; i > size; i--) {
+			shrinkStack();
+		}
+	}
+}
+
+void A1::moveActiveCellUp()
+{
+	long last_active_stack_size = activeStack().size();
+	if (active_cell_position.second > 0) {
+		active_cell_position.second--;
+		updateActiveCellColor();
+	}
+	long current_stack_size = activeStack().size();
+	long difference = last_active_stack_size - current_stack_size;
+	if (isCopyEnabled) {
+		adjustCurrentStackSize(difference);
+	}
+//	debugPrintActiveCell();
+}
+
+void A1::moveActiveCellDown()
+{
+	long last_active_stack_size = activeStack().size();
+	if (active_cell_position.second < DIM-1) {
+		active_cell_position.second++;
+		updateActiveCellColor();
+	}
+//	debugPrintActiveCell();
+	long current_stack_size = activeStack().size();
+	long difference = last_active_stack_size - current_stack_size;
+	if (isCopyEnabled) {
+		adjustCurrentStackSize(difference);
+	}
+}
+
+void A1::moveActiveCellLeft()
+{
+	long last_active_stack_size = activeStack().size();
+	if (active_cell_position.first > 0) {
+		active_cell_position.first--;
+		updateActiveCellColor();
+	}
+//	debugPrintActiveCell();
+	
+	long current_stack_size = activeStack().size();
+	long difference = last_active_stack_size - current_stack_size;
+	if (isCopyEnabled) {
+		adjustCurrentStackSize(difference);
+	}
+}
+
+void A1::moveActiveCellRight()
+{
+	long last_active_stack_size = activeStack().size();
+	if (active_cell_position.first < DIM-1) {
+		active_cell_position.first++;
+		updateActiveCellColor();
+	}
+//	debugPrintActiveCell();
+	
+	long current_stack_size = activeStack().size();
+	long difference = last_active_stack_size - current_stack_size;
+	if (isCopyEnabled) {
+		adjustCurrentStackSize(difference);
+	}
+}
+
+void A1::updateActiveCellColor()
+{
+	CubeStack &stack = activeStack();
+	for (auto cube : stack) {
+		cube->colorIndex = current_col;
+	}
+}
+
+void A1::debugPrintActiveCell()
+{
+	std::cout << "ActiveCell: [" << active_cell_position.first << ", " << active_cell_position.second << "]" << std::endl;
+}
+
+void A1::enableShiftCopy()
+{
+	isCopyEnabled++;
+}
+
+void A1::disableShiftCopy()
+{
+	isCopyEnabled--;
+}
+
 //----------------------------------------------------------------------------------------
 /*
  * Called once per frame, before guiLogic().
@@ -155,24 +342,33 @@ void A1::guiLogic()
 
 		// Prefixing a widget name with "##" keeps it from being
 		// displayed.
-
-		ImGui::PushID( 0 );
-		ImGui::ColorEdit3( "##Colour", colour );
-		ImGui::SameLine();
-		if( ImGui::RadioButton( "##Col", &current_col, 0 ) ) {
-			// Select this colour.
+	
+		for (int i = 0; i < 8; i++) {
+			std::stringstream ss;
+			ss << "##Colour" << i;
+			ImGui::PushID( i );
+			ImGui::ColorEdit3( ss.str().c_str() , colors[i] );
+			ImGui::SameLine();
+			if( ImGui::RadioButton( "##Col", &current_col, i ) ) {
+				// Select this colour.
+				std::cout << "RadioButton activate: " << i << std::endl;
+				std::cout << "Current colour " << current_col << std::endl;
+				
+				CubeStack &stack = activeStack();
+				for (auto cube : stack) {
+					cube->colorIndex = current_col;
+				}
+			}
+			ImGui::PopID();
 		}
-		ImGui::PopID();
 
-/*
 		// For convenience, you can uncomment this to show ImGui's massive
 		// demonstration window right in your application.  Very handy for
 		// browsing around to get the widget you want.  Then look in 
 		// shared/imgui/imgui_demo.cpp to see how it's done.
-		if( ImGui::Button( "Test Window" ) ) {
-			showTestWindow = !showTestWindow;
-		}
-*/
+//		if( ImGui::Button( "Test Window" ) ) {
+//			showTestWindow = !showTestWindow;
+//		}
 
 		ImGui::Text( "Framerate: %.1f FPS", ImGui::GetIO().Framerate );
 
@@ -191,6 +387,8 @@ void A1::draw()
 {
 	// Create a global transformation for the model (centre it).
 	mat4 W;
+	W = glm::rotate(W, rotation_degree, glm::vec3(0, 1, 0));
+	W = glm::scale(W, glm::vec3(scale_factor, scale_factor, scale_factor));
 	W = glm::translate( W, vec3( -float(DIM)/2.0f, 0, -float(DIM)/2.0f ) );
 
 	m_shader.enable();
@@ -202,11 +400,38 @@ void A1::draw()
 
 		// Just draw the grid for now.
 		glBindVertexArray( m_grid_vao );
-		glUniform3f( col_uni, 1, 1, 1 );
+		glUniform4f( col_uni, 1, 1, 1, 1);
 		glDrawArrays( GL_LINES, 0, (3+DIM)*4 );
-
+	
 		// Draw the cubes
+		for (auto col_of_stack : grid_of_cubes) {
+			for (auto stack : col_of_stack) {
+				for (auto cube : stack) {
+					// Get cube color
+					int color_index = cube->colorIndex;
+					glUniform4f( col_uni, colors[color_index][0], colors[color_index][1], colors[color_index][2], 1);
+					cube->draw();
+					glUniform4f( col_uni, 1, 1, 1, 1);
+				}
+			}
+		}
+	
 		// Highlight the active square.
+		TimePoint t_now = std::chrono::high_resolution_clock::now();
+		// The following line of code is referenced from: https://open.gl/drawing
+		float time = std::chrono::duration_cast<std::chrono::duration<float>>(t_now - t_start).count();
+		glUniform4f(col_uni, 0.1f, 0.1f, 0.6f, (sin(time * 8.0f) + 1.0f) / 4.0f + 0.5f);
+	
+		CubeStack& active_stack = activeStack();
+		GLint x = active_cell_position.first;
+		GLint z = active_cell_position.second;
+		size_t num_of_cubes = active_stack.size();
+		glm::vec3 new_position(0.5f + x, 0.5f + num_of_cubes, 0.5f + z);
+		std::shared_ptr<Cube::Cube> highlighting_cube = make_shared<Cube::Cube>(new_position, 1.0f);
+		highlighting_cube->uploadData(m_shader);
+		highlighting_cube->draw();
+
+	
 	m_shader.disable();
 
 	// Restore defaults
@@ -220,7 +445,9 @@ void A1::draw()
  * Called once, after program is signaled to terminate.
  */
 void A1::cleanup()
-{}
+{
+
+}
 
 //----------------------------------------------------------------------------------------
 /*
@@ -250,6 +477,12 @@ bool A1::mouseMoveEvent(double xPos, double yPos)
 		// Probably need some instance variables to track the current
 		// rotation amount, and maybe the previous X position (so 
 		// that you can rotate relative to the *change* in X.
+		if (ImGui::IsMouseDown(0)) {
+			double difference = xPos - mouse_x_pos;
+//			std::cout << "Mouse move in x axis with: " << difference << std::endl;
+			rotation_degree += difference * 0.01;
+		}
+		mouse_x_pos = xPos;
 	}
 
 	return eventHandled;
@@ -278,7 +511,21 @@ bool A1::mouseScrollEvent(double xOffSet, double yOffSet) {
 	bool eventHandled(false);
 
 	// Zoom in or out.
-
+//	std::cout << "Scroll: " << xOffSet << " " << yOffSet << std::endl;
+	if (yOffSet > 0) {
+		scale_factor = scale_factor * (0.001 * yOffSet + 1);
+	} else {
+		scale_factor = scale_factor / (0.001 * (-yOffSet) + 1);
+	}
+	
+	if (scale_factor < 0.01) {
+		scale_factor = 0.01;
+	}
+	
+	if (scale_factor > 10) {
+		scale_factor = 10;
+	}
+	
 	return eventHandled;
 }
 
@@ -304,6 +551,48 @@ bool A1::keyInputEvent(int key, int action, int mods) {
 	// Fill in with event handling code...
 	if( action == GLFW_PRESS ) {
 		// Respond to some key events.
+		switch (key) {
+			case GLFW_KEY_SPACE:
+				extendStack();
+				break;
+			case GLFW_KEY_BACKSPACE:
+				shrinkStack();
+				break;
+			case GLFW_KEY_UP:
+				moveActiveCellUp();
+				break;
+			case GLFW_KEY_DOWN:
+				moveActiveCellDown();
+				break;
+			case GLFW_KEY_LEFT:
+				moveActiveCellLeft();
+				break;
+			case GLFW_KEY_RIGHT:
+				moveActiveCellRight();
+				break;
+			case GLFW_KEY_RIGHT_SHIFT:
+			case GLFW_KEY_LEFT_SHIFT:
+				enableShiftCopy();
+				break;
+			case GLFW_KEY_Q:
+				glfwSetWindowShouldClose(m_window, GL_TRUE);
+				break;
+			case GLFW_KEY_R:
+				reset();
+				break;
+			default:
+				break;
+		}
+	} else if (action == GLFW_RELEASE) {
+		switch (key) {
+			case GLFW_KEY_LEFT_SHIFT:
+			case GLFW_KEY_RIGHT_SHIFT:
+				disableShiftCopy();
+				break;
+				
+			default:
+    break;
+		}
 	}
 
 	return eventHandled;

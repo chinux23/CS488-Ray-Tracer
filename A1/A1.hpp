@@ -8,6 +8,16 @@
 
 #include "grid.hpp"
 
+#include "cube.hpp"
+#include <memory>
+#include <chrono>
+
+
+using CubeStack = std::vector<std::shared_ptr<Cube::Cube>>;
+using Clock		= std::chrono::high_resolution_clock;
+using TimePoint = std::chrono::time_point<Clock>;
+
+
 class A1 : public CS488Window {
 public:
 	A1();
@@ -46,5 +56,49 @@ private:
 	glm::mat4 view;
 
 	float colour[3];
+	float colors[8][3];
 	int current_col;
+	
+
+	/* ------------- Mod ----------------- */
+	
+	CubeStack cubes;
+	
+	// grid_of_cubes[x][z] will points to a specific square.
+	// first index [x] represents the X-axis. Second index [z] represents the Z-axis.
+	std::vector<std::vector<CubeStack>> grid_of_cubes;
+	
+	// position of active cell. (in XZ plan)
+	std::pair<GLint, GLint> active_cell_position;
+	
+public:
+	void shrinkStack();
+	void extendStack();
+	
+	// Adjust current stack either by expanding if size is positive or shrinking if size is negative.
+	void adjustCurrentStackSize(long size);
+	
+	void moveActiveCellUp();
+	void moveActiveCellDown();
+	void moveActiveCellLeft();
+	void moveActiveCellRight();
+	
+	void updateActiveCellColor();
+	
+	CubeStack& activeStack();
+	
+	void reset();
+	
+private:
+	void debugPrintActiveCell();
+	bool isCubeStackActive(const CubeStack& cube);
+	TimePoint t_start;
+
+	void enableShiftCopy();
+	void disableShiftCopy();
+	int isCopyEnabled;
+	
+	double mouse_x_pos;
+	float rotation_degree;
+	float scale_factor;
 };
