@@ -95,4 +95,7 @@ private:
 	void enableShiftCopy();
 	void disableShiftCopy();
 	int isCopyEnabled;
+	
+	double mouse_x_pos;
+	float rotation_degree;
 };

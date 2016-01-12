@@ -366,7 +366,9 @@ void A1::draw()
 {
 	// Create a global transformation for the model (centre it).
 	mat4 W;
+	W = glm::rotate(W, rotation_degree, glm::vec3(0, 1, 0));
 	W = glm::translate( W, vec3( -float(DIM)/2.0f, 0, -float(DIM)/2.0f ) );
+	
 
 	m_shader.enable();
 		glEnable( GL_DEPTH_TEST );
@@ -454,6 +456,12 @@ bool A1::mouseMoveEvent(double xPos, double yPos)
 		// Probably need some instance variables to track the current
 		// rotation amount, and maybe the previous X position (so 
 		// that you can rotate relative to the *change* in X.
+		if (ImGui::IsMouseDown(0)) {
+			double difference = xPos - mouse_x_pos;
+			std::cout << "Mouse move in x axis with: " << difference << std::endl;
+			rotation_degree += difference * 0.01;
+		}
+		mouse_x_pos = xPos;
 	}
 
 	return eventHandled;
