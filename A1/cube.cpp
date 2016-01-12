@@ -50,6 +50,8 @@ Cube::Cube(glm::vec3 position, GLfloat size) : Shape(position), side_size(size)
 		1, 2, 5,	// right face (bottom)
 		2, 5, 6,	// right face (top)
 	};
+	
+	colorIndex = 0;
 }
 
 Cube::~Cube()

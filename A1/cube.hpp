@@ -41,6 +41,8 @@ public:
 	
 	virtual bool operator==(const Cube::Cube& other);
 	
+	int colorIndex;
+	
 };
 
 #endif /* cube_hpp */

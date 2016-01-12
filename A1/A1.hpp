@@ -56,6 +56,7 @@ private:
 	glm::mat4 view;
 
 	float colour[3];
+	float colors[8][3];
 	int current_col;
 	
 
@@ -81,6 +82,8 @@ public:
 	void moveActiveCellDown();
 	void moveActiveCellLeft();
 	void moveActiveCellRight();
+	
+	void updateActiveCellColor();
 	
 	CubeStack& activeStack();
 	

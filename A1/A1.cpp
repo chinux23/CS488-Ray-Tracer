@@ -2,11 +2,13 @@
 #include "cs488-framework/GlErrorCheck.hpp"
 
 #include <iostream>
+#include <sstream>
 
 #include <imgui/imgui.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
 
 using namespace glm;
 using namespace std;
@@ -75,6 +77,24 @@ void A1::init()
 	
 	t_start = std::chrono::high_resolution_clock::now();
 	isCopyEnabled = 0;
+	
+	// Default colors
+	float default_colors[8][3] = {
+		1.0f, 1.0f, 1.0f,
+		0.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 0.0f,
+		0.0f, 1.0f, 1.0f,
+		1.0f, 0.0f, 1.0f
+	};
+	
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 3; j++) {
+			colors[i][j] = default_colors[i][j];
+		}
+	}
 }
 
 void A1::initGrid()
@@ -138,6 +158,7 @@ void A1::extendStack(){
 	glm::vec3 new_position(0.5f + x, 0.5f + num_of_cubes, 0.5f + z);
 	
 	std::shared_ptr<Cube::Cube> new_cube = make_shared<Cube::Cube>(new_position, 1.0f);
+	new_cube->colorIndex = current_col;
 	new_cube->uploadData(m_shader);
 	
 	// Add new cube to current stack of cubes
@@ -181,6 +202,7 @@ void A1::moveActiveCellUp()
 	long last_active_stack_size = activeStack().size();
 	if (active_cell_position.second > 0) {
 		active_cell_position.second--;
+		updateActiveCellColor();
 	}
 	long current_stack_size = activeStack().size();
 	long difference = last_active_stack_size - current_stack_size;
@@ -195,6 +217,7 @@ void A1::moveActiveCellDown()
 	long last_active_stack_size = activeStack().size();
 	if (active_cell_position.second < DIM-1) {
 		active_cell_position.second++;
+		updateActiveCellColor();
 	}
 //	debugPrintActiveCell();
 	long current_stack_size = activeStack().size();
@@ -209,6 +232,7 @@ void A1::moveActiveCellLeft()
 	long last_active_stack_size = activeStack().size();
 	if (active_cell_position.first > 0) {
 		active_cell_position.first--;
+		updateActiveCellColor();
 	}
 //	debugPrintActiveCell();
 	
@@ -224,6 +248,7 @@ void A1::moveActiveCellRight()
 	long last_active_stack_size = activeStack().size();
 	if (active_cell_position.first < DIM-1) {
 		active_cell_position.first++;
+		updateActiveCellColor();
 	}
 //	debugPrintActiveCell();
 	
@@ -231,6 +256,14 @@ void A1::moveActiveCellRight()
 	long difference = last_active_stack_size - current_stack_size;
 	if (isCopyEnabled) {
 		adjustCurrentStackSize(difference);
+	}
+}
+
+void A1::updateActiveCellColor()
+{
+	CubeStack &stack = activeStack();
+	for (auto cube : stack) {
+		cube->colorIndex = current_col;
 	}
 }
 
@@ -288,24 +321,33 @@ void A1::guiLogic()
 
 		// Prefixing a widget name with "##" keeps it from being
 		// displayed.
-
-		ImGui::PushID( 0 );
-		ImGui::ColorEdit3( "##Colour", colour );
-		ImGui::SameLine();
-		if( ImGui::RadioButton( "##Col", &current_col, 0 ) ) {
-			// Select this colour.
+	
+		for (int i = 0; i < 8; i++) {
+			std::stringstream ss;
+			ss << "##Colour" << i;
+			ImGui::PushID( i );
+			ImGui::ColorEdit3( ss.str().c_str() , colors[i] );
+			ImGui::SameLine();
+			if( ImGui::RadioButton( "##Col", &current_col, i ) ) {
+				// Select this colour.
+				std::cout << "RadioButton activate: " << i << std::endl;
+				std::cout << "Current colour " << current_col << std::endl;
+				
+				CubeStack &stack = activeStack();
+				for (auto cube : stack) {
+					cube->colorIndex = current_col;
+				}
+			}
+			ImGui::PopID();
 		}
-		ImGui::PopID();
 
-/*
 		// For convenience, you can uncomment this to show ImGui's massive
 		// demonstration window right in your application.  Very handy for
 		// browsing around to get the widget you want.  Then look in 
 		// shared/imgui/imgui_demo.cpp to see how it's done.
-		if( ImGui::Button( "Test Window" ) ) {
-			showTestWindow = !showTestWindow;
-		}
-*/
+//		if( ImGui::Button( "Test Window" ) ) {
+//			showTestWindow = !showTestWindow;
+//		}
 
 		ImGui::Text( "Framerate: %.1f FPS", ImGui::GetIO().Framerate );
 
@@ -342,7 +384,11 @@ void A1::draw()
 		for (auto col_of_stack : grid_of_cubes) {
 			for (auto stack : col_of_stack) {
 				for (auto cube : stack) {
+					// Get cube color
+					int color_index = cube->colorIndex;
+					glUniform4f( col_uni, colors[color_index][0], colors[color_index][1], colors[color_index][2], 1);
 					cube->draw();
+					glUniform4f( col_uni, 1, 1, 1, 1);
 				}
 			}
 		}
