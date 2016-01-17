@@ -188,11 +188,15 @@ void A1::extendStack(){
 	GLint z = active_cell_position.second;
 	CubeStack&  active_stack = activeStack();
 	
+	// Make a new cube based on current number of cubes in the active cell.
 	size_t num_of_cubes = active_stack.size();
 	glm::vec3 new_position(0.5f + x, 0.5f + num_of_cubes, 0.5f + z);
 	
+	// Add the cube to the stack and set the color.
 	std::shared_ptr<Cube> new_cube = make_shared<Cube>(new_position, 1.0f);
 	new_cube->colorIndex = current_col;
+
+	// Upload the data to GPU.
 	new_cube->uploadData(m_shader);
 	
 	// Add new cube to current stack of cubes
@@ -200,6 +204,7 @@ void A1::extendStack(){
 }
 
 void A1::shrinkStack(){
+	// Remove one cube.
 	if (activeStack().size() > 0) {
 		activeStack().pop_back();
 	}
@@ -214,16 +219,19 @@ CubeStack& A1::activeStack()
 
 void A1::adjustCurrentStackSize(long size)
 {
+	// No need to adjust if nothing to be adjusted.
 	if (size == 0) {
 		return;
 	}
-	
+
+	// Add cubes.
 	if (size > 0) {
 		for (long i = 0; i < size; i++) {
 			extendStack();
 		}
 	}
 	
+	// Removing cubes.
 	if (size < 0) {
 		for (long i = 0; i > size; i--) {
 			shrinkStack();
