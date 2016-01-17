@@ -1,0 +1,8 @@
+Compilation:
+	1. Compilation is the same as default. Program should be run from the directory of the source code.
+	2. Lab machine used to test the code is: gl23
+	3. Code is locally tested on Mac machine with OS X El Capitan 10.11.2.
+
+Manual:
+	1. Due to difference in mouse sensitivity, when running the program on Linux machine, the sensitivity is relative small compared to Mac machine.
+	2. To highlight current active cell, a blinking cube with current selected color will be draw on the current active cell to indicate color and active cell location.
