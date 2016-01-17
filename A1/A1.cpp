@@ -441,7 +441,13 @@ void A1::draw()
 		TimePoint t_now = std::chrono::high_resolution_clock::now();
 		// The following line of code is referenced from: https://open.gl/drawing
 		float time = std::chrono::duration_cast<std::chrono::duration<float>>(t_now - t_start).count();
-		glUniform4f(col_uni, 0.1f, 0.1f, 0.6f, (sin(time * 8.0f) + 1.0f) / 4.0f + 0.5f);
+
+		glUniform4f(
+			col_uni, 
+			colors[current_col][0], 
+			colors[current_col][1], 
+			colors[current_col][2],
+			(sin(time * 6.0f) + 1.0f) / 4.0f + 0.2f);
 	
 		CubeStack& active_stack = activeStack();
 		GLint x = active_cell_position.first;
