@@ -8,6 +8,9 @@
 
 #include <vector>
 
+using namespace std;
+using namespace glm;
+
 // Set a global maximum number of vertices in order to pre-allocate VBO data
 // in one shot, rather than reallocating each frame.
 const GLsizei kMaxVertices = 1000;
@@ -69,5 +72,49 @@ protected:
 	VertexData m_vertexData;
 
 	glm::vec3 m_currentLineColour;
+
+private:
+	// Stores lines for the cube in model coordinates.
+	std::vector<pair<glm::vec4, glm::vec4>> cube_vertices;
+
+	// Cube location in the world coordinates
+	glm::vec4 cube_location;
+
+	// View Reference Point
+	glm::vec4 vrp;
+
+	// View Plane Normal
+	glm::vec4 vpn;
+
+	// View Up Vector
+	glm::vec4 vup;
+
+public:
+	// Initialize cube vertices
+	void initCube();
+
+	// Initialize view
+	void initView();
+
+private:
+	// Calculate a new translated matrix for m.
+	glm::mat4 translate(glm::mat4 const & m, const glm::vec3 & v);
+
+	// Calculate a new roated matrix for m.
+	glm::mat4 rotate(glm::mat4 const & m, const glm::vec3 & v);
+
+	// Calculate a new scaled matrix for m.
+	glm::mat4 scale(glm::mat4 const & m, const glm::vec3 & v);
+
+
+public:
+	// Translate cube in model coordinates
+	void translate_cube();
+
+	// Rotate cube in model coordinates.
+	void rotate_cube();
+
+	// Scale cube in model coordinates.
+	void scale_cube();
 
 };

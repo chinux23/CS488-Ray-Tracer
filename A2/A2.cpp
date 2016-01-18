@@ -9,6 +9,11 @@ using namespace std;
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/io.hpp>
+
+// For Debugging
+#include <glm/gtx/string_cast.hpp>
+
+
 using namespace glm;
 
 //----------------------------------------------------------------------------------------
@@ -59,6 +64,31 @@ void A2::init()
 	generateVertexBuffers();
 
 	mapVboDataToVertexAttributeLocation();
+
+	// Modification
+	initCube();
+}
+
+void A2::initCube()
+{
+	cube_vertices.push_back({glm::vec4(-1.0f, -1.0f,  1.0f, 1), glm::vec4( 1.0f, -1.0f,  1.0f, 1)});
+	cube_vertices.push_back({glm::vec4( 1.0f, -1.0f,  1.0f, 1), glm::vec4( 1.0f, -1.0f, -1.0f, 1)});
+	cube_vertices.push_back({glm::vec4(-1.0f, -1.0f, -1.0f, 1), glm::vec4( 1.0f, -1.0f, -1.0f, 1)});
+	cube_vertices.push_back({glm::vec4(-1.0f, -1.0f, -1.0f, 1), glm::vec4(-1.0f, -1.0f,  1.0f, 1)});
+
+	cube_vertices.push_back({glm::vec4(-1.0f,  1.0f,  1.0f, 1), glm::vec4( 1.0f,  1.0f,  1.0f, 1)});
+	cube_vertices.push_back({glm::vec4( 1.0f,  1.0f,  1.0f, 1), glm::vec4( 1.0f,  1.0f, -1.0f, 1)});
+	cube_vertices.push_back({glm::vec4( 1.0f,  1.0f, -1.0f, 1), glm::vec4(-1.0f,  1.0f, -1.0f, 1)});
+	cube_vertices.push_back({glm::vec4(-1.0f,  1.0f,  1.0f, 1), glm::vec4(-1.0f,  1.0f, -1.0f, 1)});
+
+	cube_vertices.push_back({glm::vec4(-1.0f, -1.0f,  1.0f, 1), glm::vec4(-1.0f,  1.0f,  1.0f, 1)});
+	cube_vertices.push_back({glm::vec4(-1.0f, -1.0f, -1.0f, 1), glm::vec4(-1.0f,  1.0f, -1.0f, 1)});
+	cube_vertices.push_back({glm::vec4( 1.0f, -1.0f,  1.0f, 1), glm::vec4( 1.0f,  1.0f,  1.0f, 1)});
+	cube_vertices.push_back({glm::vec4( 1.0f, -1.0f, -1.0f, 1), glm::vec4( 1.0f,  1.0f, -1.0f, 1)});
+
+	cube_location = glm::vec4(2.0f, 2.0f, 2.0f, 1);
+
+	std::cout << "Cube location: " << glm::to_string(cube_location) << std::endl;
 }
 
 //----------------------------------------------------------------------------------------
