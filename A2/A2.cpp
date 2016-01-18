@@ -12,7 +12,7 @@ using namespace std;
 
 // For Debugging
 #include <glm/gtx/string_cast.hpp>
-
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace glm;
 
@@ -67,6 +67,9 @@ void A2::init()
 
 	// Modification
 	initCube();
+
+	// Test & debug
+	test_debug();
 }
 
 void A2::initCube()
@@ -270,6 +273,32 @@ void A2::guiLogic()
 		ImGui::Text( "Framerate: %.1f FPS", ImGui::GetIO().Framerate );
 
 	ImGui::End();
+}
+
+void A2::test_debug()
+{
+	float theta = glm::radians(90.0f);
+	float rot_z[] = {
+		 glm::cos(theta),  glm::sin(theta), 0, 0,
+		-glm::sin(theta),  glm::cos(theta), 0, 0,
+		 0,                0,               1, 0,
+		 0,                0,               0, 1};
+
+	glm::mat4 rotate_z = glm::make_mat4(rot_z);
+
+	// float rot_x[] = {
+	// 	 1,  0,               0,               0,
+	// 	 0,  glm::cos(theta), glm::sin(theta), 0,
+	// 	 0, -glm::sin(theta), glm::cos(theta), 0,
+	// 	 0,  0,               0,               1};
+
+	// glm::mat4 rotate_x = glm::make_mat4(rot_x);
+
+	glm::vec4 point = glm::vec4({1.0f, 0.0f, 0.0f, 1});		// A point on X
+
+	glm::vec4 rotated_p = rotate_z * point;
+
+	cout << "Rotating " << glm::to_string(point) << " against Z for 90 degree: " << glm::to_string(rotated_p) << endl;
 }
 
 //----------------------------------------------------------------------------------------

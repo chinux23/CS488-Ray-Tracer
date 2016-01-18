@@ -106,6 +106,9 @@ private:
 	// Calculate a new scaled matrix for m.
 	glm::mat4 scale(glm::mat4 const & m, const glm::vec3 & v);
 
+	// test & debug
+	void test_debug();
+
 
 public:
 	// Translate cube in model coordinates
