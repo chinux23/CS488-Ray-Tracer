@@ -112,12 +112,20 @@ private:
 
 public:
 	// Translate cube in model coordinates
-	void translate_cube();
+	void translate_cube(const glm::vec3 &movement);
 
 	// Rotate cube in model coordinates.
 	void rotate_cube();
 
 	// Scale cube in model coordinates.
 	void scale_cube();
+
+public:
+	// The following functions are for unit tests.
+	void test_translate_model();
+	void test_rotate_model();
+	void test_scale_model();
+
+	void print_line_vertices();
 
 };

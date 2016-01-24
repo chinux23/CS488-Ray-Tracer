@@ -441,6 +441,53 @@ bool A2::keyInputEvent (
 	bool eventHandled(false);
 
 	// Fill in with event handling code...
+	if (action == GLFW_PRESS) {
+		switch(key){
+			case GLFW_KEY_T:
+				cout << "Model Translation Mode." << endl;
+				break;
+			case GLFW_KEY_R:
+				cout << "Model Rotation Mode" << endl;
+				break;
+			case GLFW_KEY_S:
+				cout << "Model Scale Mode" << endl;
+				break;
+			case GLFW_KEY_U:
+				cout << "Enter Unit Test Mode" << endl;
+				break;
+			default:
+				break;
+		}
+	}
 
 	return eventHandled;
+}
+
+void A2::translate_cube(const glm::vec3& movement)
+{
+	glm::vec4 movement_vector(movement.x, movement.y, movement.z, 0);
+
+	for (auto & line : cube_vertices) {
+		line.first = line.first + movement_vector;
+		line.second = line.second + movement_vector;
+	}
+}
+
+
+#pragma mark - Unit Test
+
+void A2::test_translate_model()
+{
+	// Test translate model about X
+
+
+}
+
+void A2::print_line_vertices()
+{
+	cout << "----------------------" << endl;
+	for (const auto &line : cube_vertices) {
+		cout << glm::to_string(line.first) << " " << glm::to_string(line.second) << endl;
+	}
+	cout << "----------------------" << endl;
 }
