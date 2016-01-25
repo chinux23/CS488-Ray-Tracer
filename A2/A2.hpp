@@ -88,6 +88,12 @@ private:
 
 	// View Up Vector
 	glm::vec4 vup;
+	
+	// View transformations.
+	glm::mat4 V;
+	
+	// Model transformations.
+	glm::mat4 M;
 
 public:
 	// Initialize cube vertices
@@ -108,6 +114,10 @@ private:
 
 	// test & debug
 	void test_debug();
+	
+	// As user interact with the environment, we need to update our transformation matrix V and M.
+	void update_model_transformation(const glm::mat4 & T);
+	void update_view_transoformation(const glm::mat4 & T);
 
 
 public:
@@ -115,7 +125,7 @@ public:
 	void translate_cube(const glm::vec3 &movement);
 
 	// Rotate cube in model coordinates.
-	void rotate_cube();
+	void rotate_cube(glm::vec3 rotation_radian);
 
 	// Scale cube in model coordinates.
 	void scale_cube();

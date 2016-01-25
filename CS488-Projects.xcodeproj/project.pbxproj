@@ -20,6 +20,14 @@
 		0C80C9401BA38CC5004E48C5 /* A0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0C602D9D1BA23C4A00CD438A /* A0.cpp */; };
 		749836971C42B6350042DD2D /* cube.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 749836951C42B6350042DD2D /* cube.cpp */; };
 		7498369A1C42B70A0042DD2D /* Shape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 749836981C42B70A0042DD2D /* Shape.cpp */; };
+		74D3C2361C547724009B4EB7 /* A2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 74D3C2331C547724009B4EB7 /* A2.cpp */; };
+		74D3C2381C54772B009B4EB7 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 74D3C2371C54772B009B4EB7 /* main.cpp */; };
+		74D3C2391C5477C3009B4EB7 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CDFBEDE1BA1E8A500325567 /* Cocoa.framework */; };
+		74D3C23A1C5477CA009B4EB7 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C602DA31BA23E5700CD438A /* CoreVideo.framework */; };
+		74D3C23B1C5477D0009B4EB7 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CDFBEDC1BA1E8A000325567 /* OpenGL.framework */; };
+		74D3C23C1C5477D5009B4EB7 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CDFBEDA1BA1E89B00325567 /* IOKit.framework */; };
+		74D3C2411C5479D2009B4EB7 /* FragmentShader.fs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 74D3C23F1C5479A0009B4EB7 /* FragmentShader.fs */; };
+		74D3C2421C5479D4009B4EB7 /* VertexShader.vs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 74D3C2401C5479A0009B4EB7 /* VertexShader.vs */; };
 		74E95EA21C3DF2720057973E /* A1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 74E95EA11C3DF2720057973E /* A1.cpp */; };
 		74E95EA51C3DF2810057973E /* grid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 74E95EA41C3DF2810057973E /* grid.cpp */; };
 		74E95EA91C3DF2A80057973E /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 74E95EA81C3DF2A80057973E /* main.cpp */; };
@@ -40,6 +48,17 @@
 			files = (
 				0C6927721BA5E37E0033976C /* FragmentShader.fs in CopyFiles */,
 				0C6927731BA5E37E0033976C /* VertexShader.vs in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74D3C22A1C5476E4009B4EB7 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = Assets;
+			dstSubfolderSpec = 16;
+			files = (
+				74D3C2411C5479D2009B4EB7 /* FragmentShader.fs in CopyFiles */,
+				74D3C2421C5479D4009B4EB7 /* VertexShader.vs in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,6 +123,12 @@
 		749836961C42B6350042DD2D /* cube.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cube.hpp; sourceTree = "<group>"; };
 		749836981C42B70A0042DD2D /* Shape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shape.cpp; sourceTree = "<group>"; };
 		749836991C42B70A0042DD2D /* Shape.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Shape.hpp; sourceTree = "<group>"; };
+		74D3C22C1C5476E4009B4EB7 /* A2 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = A2; sourceTree = BUILT_PRODUCTS_DIR; };
+		74D3C2331C547724009B4EB7 /* A2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = A2.cpp; sourceTree = "<group>"; };
+		74D3C2341C547724009B4EB7 /* A2.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = A2.hpp; sourceTree = "<group>"; };
+		74D3C2371C54772B009B4EB7 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		74D3C23F1C5479A0009B4EB7 /* FragmentShader.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = FragmentShader.fs; path = Assets/FragmentShader.fs; sourceTree = "<group>"; };
+		74D3C2401C5479A0009B4EB7 /* VertexShader.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = VertexShader.vs; path = Assets/VertexShader.vs; sourceTree = "<group>"; };
 		74E95E9A1C3DF2040057973E /* A1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = A1; sourceTree = BUILT_PRODUCTS_DIR; };
 		74E95EA11C3DF2720057973E /* A1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = A1.cpp; sourceTree = "<group>"; };
 		74E95EA31C3DF2770057973E /* A1.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = A1.hpp; sourceTree = "<group>"; };
@@ -125,6 +150,17 @@
 				0C80C93E1BA3366B004E48C5 /* Cocoa.framework in Frameworks */,
 				0C80C93D1BA33665004E48C5 /* IOKit.framework in Frameworks */,
 				0C602DB11BA3364400CD438A /* OpenGL.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74D3C2291C5476E4009B4EB7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				74D3C23C1C5477D5009B4EB7 /* IOKit.framework in Frameworks */,
+				74D3C23B1C5477D0009B4EB7 /* OpenGL.framework in Frameworks */,
+				74D3C23A1C5477CA009B4EB7 /* CoreVideo.framework in Frameworks */,
+				74D3C2391C5477C3009B4EB7 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -152,6 +188,7 @@
 				0C6926FA1BA523A10033976C /* shared */,
 				0CFB967E1BA10CE3009EA4B5 /* A0 */,
 				74E95E9B1C3DF2040057973E /* A1 */,
+				74D3C22D1C5476E4009B4EB7 /* A2 */,
 				0C260AB41BA10BC2009DAF93 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -161,6 +198,7 @@
 			children = (
 				0C260AB31BA10BC2009DAF93 /* A0 */,
 				74E95E9A1C3DF2040057973E /* A1 */,
+				74D3C22C1C5476E4009B4EB7 /* A2 */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -260,6 +298,26 @@
 			name = A0;
 			sourceTree = "<group>";
 		};
+		74D3C22D1C5476E4009B4EB7 /* A2 */ = {
+			isa = PBXGroup;
+			children = (
+				74D3C23E1C547995009B4EB7 /* Assets */,
+				74D3C2331C547724009B4EB7 /* A2.cpp */,
+				74D3C2371C54772B009B4EB7 /* main.cpp */,
+				74D3C2341C547724009B4EB7 /* A2.hpp */,
+			);
+			path = A2;
+			sourceTree = "<group>";
+		};
+		74D3C23E1C547995009B4EB7 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				74D3C23F1C5479A0009B4EB7 /* FragmentShader.fs */,
+				74D3C2401C5479A0009B4EB7 /* VertexShader.vs */,
+			);
+			name = Assets;
+			sourceTree = "<group>";
+		};
 		74E95E9B1C3DF2040057973E /* A1 */ = {
 			isa = PBXGroup;
 			children = (
@@ -315,6 +373,23 @@
 			productReference = 0C260AB31BA10BC2009DAF93 /* A0 */;
 			productType = "com.apple.product-type.tool";
 		};
+		74D3C22B1C5476E4009B4EB7 /* A2 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 74D3C2321C5476E4009B4EB7 /* Build configuration list for PBXNativeTarget "A2" */;
+			buildPhases = (
+				74D3C2281C5476E4009B4EB7 /* Sources */,
+				74D3C2291C5476E4009B4EB7 /* Frameworks */,
+				74D3C22A1C5476E4009B4EB7 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = A2;
+			productName = A2;
+			productReference = 74D3C22C1C5476E4009B4EB7 /* A2 */;
+			productType = "com.apple.product-type.tool";
+		};
 		74E95E991C3DF2040057973E /* A1 */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 74E95E9E1C3DF2040057973E /* Build configuration list for PBXNativeTarget "A1" */;
@@ -344,6 +419,9 @@
 					0C260AB21BA10BC2009DAF93 = {
 						CreatedOnToolsVersion = 6.1.1;
 					};
+					74D3C22B1C5476E4009B4EB7 = {
+						CreatedOnToolsVersion = 7.3;
+					};
 					74E95E991C3DF2040057973E = {
 						CreatedOnToolsVersion = 7.3;
 					};
@@ -364,6 +442,7 @@
 			targets = (
 				0C260AB21BA10BC2009DAF93 /* A0 */,
 				74E95E991C3DF2040057973E /* A1 */,
+				74D3C22B1C5476E4009B4EB7 /* A2 */,
 			);
 		};
 /* End PBXProject section */
@@ -378,6 +457,15 @@
 				0C6926F91BA51BFA0033976C /* ShaderProgram.cpp in Sources */,
 				0C6926F61BA51BFA0033976C /* CS488Window.cpp in Sources */,
 				0C80C9401BA38CC5004E48C5 /* A0.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74D3C2281C5476E4009B4EB7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				74D3C2381C54772B009B4EB7 /* main.cpp in Sources */,
+				74D3C2361C547724009B4EB7 /* A2.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -546,6 +634,43 @@
 			};
 			name = Release;
 		};
+		74D3C2301C5476E4009B4EB7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CODE_SIGN_IDENTITY = "-";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				LD_RUNPATH_SEARCH_PATHS = /System/Library/Frameworks/OpenGL.framework/Versions/Current;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				OTHER_LDFLAGS = (
+					"-lcs488-framework",
+					"-limgui",
+					"-lglfw3",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		74D3C2311C5476E4009B4EB7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				LD_RUNPATH_SEARCH_PATHS = /System/Library/Frameworks/OpenGL.framework/Versions/Current;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				OTHER_LDFLAGS = (
+					"-lcs488-framework",
+					"-limgui",
+					"-lglfw3",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		74E95E9F1C3DF2040057973E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -603,6 +728,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		74D3C2321C5476E4009B4EB7 /* Build configuration list for PBXNativeTarget "A2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				74D3C2301C5476E4009B4EB7 /* Debug */,
+				74D3C2311C5476E4009B4EB7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		74E95E9E1C3DF2040057973E /* Build configuration list for PBXNativeTarget "A1" */ = {
 			isa = XCConfigurationList;
