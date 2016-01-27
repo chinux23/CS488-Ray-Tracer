@@ -13,6 +13,8 @@ using namespace std;
 // For Debugging
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/reciprocal.hpp>
+
 
 using namespace glm;
 
@@ -72,6 +74,20 @@ void A2::init()
 	// V is the inverse of View coordinate frame, assuming standard world frame (identity matrix).
 	V = inverse(glm::mat4(vec4(1, 0, 0, 0), vec4(0, 1, 0, 0), vec4(0, 0, -1, 0), vec4(0, 0, 8, 1)));
 	cout << "initial view frame:" << V << endl;
+	
+	fov = 30.0;
+	cout << "initial Fov is " << fov << endl;
+	
+	float near = 2;
+	float far = 20;
+	cout << "near plane is " << near << " distance away" << endl;
+	cout << "far  plane is " << far  << " distance away" << endl;
+	
+	P = mat4(vec4(1/tan(glm::radians(fov/2)), 0, 0, 0),
+			 vec4(0, 1/tan(radians(fov/2)), 0, 0),
+			 vec4(0, 0, (far + near)/(far - near), 1),
+			 vec4(0, 0, -2 * far * near / (far - near), 0));
+	
 
 	// Init the cube in the standard world frame.
 	initCube();
@@ -234,20 +250,30 @@ void A2::appLogic()
 	// Call at the beginning of frame, before drawing lines:
 	initLineData();
 
-	// Draw outer square:
+//	// Draw outer square:
+//	setLineColour(vec3(1.0f, 0.7f, 0.8f));
+//	drawLine(vec2(-0.5f, -0.5f), vec2(0.5f, -0.5f));
+//	drawLine(vec2(0.5f, -0.5f), vec2(0.5f, 0.5f));
+//	drawLine(vec2(0.5f, 0.5f), vec2(-0.5f, 0.5f));
+//	drawLine(vec2(-0.5f, 0.5f), vec2(-0.5f, -0.5f));
+//
+//
+//	// Draw inner square:
+//	setLineColour(vec3(0.2f, 1.0f, 1.0f));
+//	drawLine(vec2(-0.25f, -0.25f), vec2(0.25f, -0.25f));
+//	drawLine(vec2(0.25f, -0.25f), vec2(0.25f, 0.25f));
+//	drawLine(vec2(0.25f, 0.25f), vec2(-0.25f, 0.25f));
+//	drawLine(vec2(-0.25f, 0.25f), vec2(-0.25f, -0.25f));
+	
 	setLineColour(vec3(1.0f, 0.7f, 0.8f));
-	drawLine(vec2(-0.5f, -0.5f), vec2(0.5f, -0.5f));
-	drawLine(vec2(0.5f, -0.5f), vec2(0.5f, 0.5f));
-	drawLine(vec2(0.5f, 0.5f), vec2(-0.5f, 0.5f));
-	drawLine(vec2(-0.5f, 0.5f), vec2(-0.5f, -0.5f));
+	
+	for (const auto & line: cube_vertices) {
+		const vec4 &v1 = P * V * M * line.first;
+		const vec4 &v2 = P * V * M * line.second;
+		cout << "v1: " << v1 << endl << "v2: " << v2 << endl;
+		drawLine({v1.x/v1.w, v1.y/v1.w}, {v2.x/v2.w, v2.y/v2.w});
+	}
 
-
-	// Draw inner square:
-	setLineColour(vec3(0.2f, 1.0f, 1.0f));
-	drawLine(vec2(-0.25f, -0.25f), vec2(0.25f, -0.25f));
-	drawLine(vec2(0.25f, -0.25f), vec2(0.25f, 0.25f));
-	drawLine(vec2(0.25f, 0.25f), vec2(-0.25f, 0.25f));
-	drawLine(vec2(-0.25f, 0.25f), vec2(-0.25f, -0.25f));
 }
 
 //----------------------------------------------------------------------------------------
@@ -645,5 +671,6 @@ void A2::test_debug()
 	p = V_prime * W_frame * p;
 	cout << "\tComputed p	  : " << p << endl;
 	cout << "\tCorrect Results: " << vec4(-2, 2, 7, 1) << endl;
+	
 	
 }

@@ -94,6 +94,12 @@ private:
 	
 	// Model transformations.
 	glm::mat4 M;
+	
+	// Projection transformations
+	glm::mat4 P;
+
+	// Field of View in degree
+	float fov;
 
 public:
 	// Initialize cube vertices
