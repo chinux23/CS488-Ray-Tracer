@@ -270,7 +270,7 @@ void A2::appLogic()
 	for (const auto & line: cube_vertices) {
 		const vec4 &v1 = P * V * M * line.first;
 		const vec4 &v2 = P * V * M * line.second;
-		cout << "v1: " << v1 << endl << "v2: " << v2 << endl;
+//		cout << "v1: " << v1 << endl << "v2: " << v2 << endl;
 		drawLine({v1.x/v1.w, v1.y/v1.w}, {v2.x/v2.w, v2.y/v2.w});
 	}
 
