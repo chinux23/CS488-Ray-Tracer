@@ -69,17 +69,20 @@ void A2::init()
 
 	// Modification
 	M = glm::mat4();
+    M = M * rotate(mat4(), vec3(0, 1, 0));
 	cout << "Initial Model Transformation: " << M << endl;
 	
 	// V is the inverse of View coordinate frame, assuming standard world frame (identity matrix).
-	V = inverse(glm::mat4(vec4(1, 0, 0, 0), vec4(0, 1, 0, 0), vec4(0, 0, -1, 0), vec4(0, 0, 8, 1)));
+	V = inverse(glm::mat4(vec4(1, 0, 0, 0), vec4(0, 1, 0, 0), vec4(0, 0, -1, 0), vec4(0, 8, 30, 1)));
+    V = inverse(rotate(mat4(), vec3(0.2, 0, 0))) * V;
 	cout << "initial view frame:" << V << endl;
 	
 	fov = 30.0;
 	cout << "initial Fov is " << fov << endl;
 	
-	float near = 2;
-	float far = 20;
+	near = 2;
+	far = 20;
+    
 	cout << "near plane is " << near << " distance away" << endl;
 	cout << "far  plane is " << far  << " distance away" << endl;
 	
@@ -93,6 +96,9 @@ void A2::init()
 	initCube();
 	
 	// Test & debug
+    curr_mode = 'R';    // default mode is rotate model.
+    mouse_x_pos = 0;
+    mouse_y_pos = 0;
 
 }
 
@@ -265,6 +271,11 @@ void A2::appLogic()
 //	drawLine(vec2(0.25f, 0.25f), vec2(-0.25f, 0.25f));
 //	drawLine(vec2(-0.25f, 0.25f), vec2(-0.25f, -0.25f));
 	
+    P = mat4(vec4(1/tan(glm::radians(fov/2)), 0, 0, 0),
+             vec4(0, 1/tan(radians(fov/2)), 0, 0),
+             vec4(0, 0, (far + near)/(far - near), 1),
+             vec4(0, 0, -2 * far * near / (far - near), 0));
+    
 	setLineColour(vec3(1.0f, 0.7f, 0.8f));
 	
 	for (const auto & line: cube_vertices) {
@@ -398,7 +409,107 @@ bool A2::mouseMoveEvent (
 	bool eventHandled(false);
 
 	// Fill in with event handling code...
+    if (!ImGui::IsMouseHoveringAnyWindow()) {
+        // Put some code here to handle rotations.  Probably need to
+        // check whether we're *dragging*, not just moving the mouse.
+        // Probably need some instance variables to track the current
+        // rotation amount, and maybe the previous X position (so
+        // that you can rotate relative to the *change* in X.
+        double difference = xPos - mouse_x_pos;
+        if (curr_mode == 'R'){
+            
+            if (ImGui::IsMouseDown(0)) {
+                M = M * rotate(mat4(), vec3(difference * 0.01, 0, 0));
+            }
+            
+            if (ImGui::IsMouseDown(1)) {
+                M = M * rotate(mat4(), vec3(0, difference * 0.01, 0));
+            }
+            
+            if (ImGui::IsMouseDown(2)) {
+                M = M * rotate(mat4(), vec3(0, 0, difference * 0.01));
+            }
+        } else if (curr_mode == 'T') {
+            if (ImGui::IsMouseDown(0)) {
+                M = M * translate(mat4(), vec3(difference * 0.01, 0, 0));
+            }
+            
+            if (ImGui::IsMouseDown(1)) {
+                M = M * translate(mat4(), vec3(0, difference * 0.01, 0));
+            }
+            
+            if (ImGui::IsMouseDown(2)) {
+                M = M * translate(mat4(), vec3(0, 0, difference * 0.01));
+            }
+        } else if (curr_mode == 'S') {
+            if (ImGui::IsMouseDown(0)) {
+                M = M * scale(mat4(), vec3(1 + difference * 0.01, 1, 1));
+            }
+            
+            if (ImGui::IsMouseDown(1)) {
+                M = M * scale(mat4(), vec3(1, 1 + difference * 0.01, 1));
+            }
+            
+            if (ImGui::IsMouseDown(2)) {
+                M = M * scale(mat4(), vec3(1, 1, 1 + difference * 0.01));
+            }
+        } else if (curr_mode == 'O') {
+            if (ImGui::IsMouseDown(0)) {
+                V = inverse(rotate(mat4(), vec3(difference * 0.01, 0, 0))) * V;
+            }
+            
+            if (ImGui::IsMouseDown(1)) {
+                V = inverse(rotate(mat4(), vec3(0, difference * 0.01, 0))) * V;
+            }
+            
+            if (ImGui::IsMouseDown(2)) {
+                V = inverse(rotate(mat4(), vec3(0, 0, difference * 0.01))) * V;
+            }
+        } else if (curr_mode == 'N') {
+            if (ImGui::IsMouseDown(0)) {
+                V = inverse(translate(mat4(), vec3(difference * 0.01, 0, 0))) * V;
+            }
+            
+            if (ImGui::IsMouseDown(1)) {
+                V = inverse(translate(mat4(), vec3(0, difference * 0.01, 0))) * V;
+            }
+            
+            if (ImGui::IsMouseDown(2)) {
+                V = inverse(translate(mat4(), vec3(0, 0, difference * 0.01))) * V;
+            }
+        } else if (curr_mode == 'P') {
+            if (ImGui::IsMouseDown(0)) {
+                fov = fov + difference * 0.01;
+                if (fov > 160) {
+                    fov = 160;
+                }
+                if (fov < 5) {
+                    fov = 5;
+                }
+                
+                cout << "fov: " << fov << endl;
+            }
+            
+            if (ImGui::IsMouseDown(1)) {
+                float new_near = near + difference * 0.01;
+                if (far - new_near > 1){
+                    near = new_near;
+                }
+                cout << "near: " << near << endl;
+            }
+            
+            if (ImGui::IsMouseDown(2)) {
+                float new_far = far + difference * 0.01;
+                if (new_far - near > 1){
+                    far = new_far;
+                }
+                cout << "far: " << far << endl;
+            }
+        }
 
+        mouse_x_pos = xPos;
+    }
+    
 	return eventHandled;
 }
 
@@ -414,6 +525,7 @@ bool A2::mouseButtonInputEvent (
 	bool eventHandled(false);
 
 	// Fill in with event handling code...
+
 
 	return eventHandled;
 }
@@ -464,23 +576,33 @@ bool A2::keyInputEvent (
 		switch(key){
 			case GLFW_KEY_T:
 				cout << "Model Translation Mode." << endl;
+                curr_mode = 'T';
 				break;
 			case GLFW_KEY_R:
 				cout << "Model Rotation Mode" << endl;
+                curr_mode = 'R';
 				break;
 			case GLFW_KEY_S:
 				cout << "Model Scale Mode" << endl;
+                curr_mode = 'S';
 				break;
 			case GLFW_KEY_U:
 				cout << "Enter Unit Test Mode" << endl;
 				test_debug();
 				break;
+            case GLFW_KEY_N:
+                cout << "View Translation Mode " << endl;
+                curr_mode = 'N';
+                break;
+            case GLFW_KEY_O:
+                cout << "View Rotation Mode" << endl;
+                curr_mode = 'O';
+                break;
             case GLFW_KEY_W:
-                V = inverse(translate(mat4(), vec3(0, 0.1, 0))) * V;
+                curr_mode = 'W';
                 break;
-            case GLFW_KEY_A:
-                break;
-            case GLFW_KEY_D:
+            case GLFW_KEY_P:
+                curr_mode = 'P';
                 break;
 			case GLFW_KEY_Q:
 				cout << "Quit" << endl;

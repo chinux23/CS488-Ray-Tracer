@@ -124,6 +124,13 @@ private:
 	// As user interact with the environment, we need to update our transformation matrix V and M.
 	void update_model_transformation(const glm::mat4 & T);
 	void update_view_transoformation(const glm::mat4 & T);
+    
+    // mouse position
+    double mouse_x_pos;
+    double mouse_y_pos;
+    char   curr_mode;
+    float near = 2;
+    float far = 20;
 
 
 public:
