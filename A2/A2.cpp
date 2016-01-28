@@ -475,6 +475,13 @@ bool A2::keyInputEvent (
 				cout << "Enter Unit Test Mode" << endl;
 				test_debug();
 				break;
+            case GLFW_KEY_W:
+                V = inverse(translate(mat4(), vec3(0, 0.1, 0))) * V;
+                break;
+            case GLFW_KEY_A:
+                break;
+            case GLFW_KEY_D:
+                break;
 			case GLFW_KEY_Q:
 				cout << "Quit" << endl;
 				glfwSetWindowShouldClose(m_window, GL_TRUE);
