@@ -76,6 +76,9 @@ protected:
 private:
 	// Stores lines for the cube in model coordinates.
 	std::vector<pair<glm::vec4, glm::vec4>> cube_vertices;
+    
+    std::vector<pair<glm::vec4, glm::vec4>> world_reference;
+    std::vector<pair<glm::vec4, glm::vec4>> model_reference;
 
 	// Cube location in the world coordinates
 	glm::vec4 cube_location;
@@ -104,6 +107,9 @@ private:
 public:
 	// Initialize cube vertices
 	void initCube();
+    
+    // Initialize gnomon
+    void initGnomon();
 
 	// Initialize view
 	void initView();
@@ -142,6 +148,11 @@ public:
 
 	// Scale cube in model coordinates.
 	void scale_cube();
+	
+	// Clip in homogenous coordinate.
+	// when false is returned, both vertices should be disgarded.
+	// when true is returned, v1 and v2 stores the values for the vertices after clip. v1 and v2 values may or maynot change.
+	bool clip(vec4 & v1, vec4 & v2);
 
 public:
 	// The following functions are for unit tests.

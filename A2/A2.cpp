@@ -69,12 +69,12 @@ void A2::init()
 
 	// Modification
 	M = glm::mat4();
-    M = M * rotate(mat4(), vec3(0, 1, 0));
+//    M = M * rotate(mat4(), vec3(0, 1, 0));
 	cout << "Initial Model Transformation: " << M << endl;
 	
 	// V is the inverse of View coordinate frame, assuming standard world frame (identity matrix).
-	V = inverse(glm::mat4(vec4(1, 0, 0, 0), vec4(0, 1, 0, 0), vec4(0, 0, -1, 0), vec4(0, 8, 30, 1)));
-    V = inverse(rotate(mat4(), vec3(0.2, 0, 0))) * V;
+	V = inverse(glm::mat4(vec4(1, 0, 0, 0), vec4(0, 1, 0, 0), vec4(0, 0, -1, 0), vec4(0, 0, 30, 1)));
+//    V = inverse(rotate(mat4(), vec3(0.2, 0, 0))) * V;
 	cout << "initial view frame:" << V << endl;
 	
 	fov = 30.0;
@@ -94,6 +94,9 @@ void A2::init()
 
 	// Init the cube in the standard world frame.
 	initCube();
+    
+    // Init world and model reference coordinate.
+    initGnomon();
 	
 	// Test & debug
     curr_mode = 'R';    // default mode is rotate model.
@@ -122,6 +125,19 @@ void A2::initCube()
 	cube_location = glm::vec4(0.0f, 0.0f, 0.0f, 1);
 
 	std::cout << "Cube location:\n" << cube_location << std::endl;
+}
+
+void A2::initGnomon()
+{
+    // world reference frame
+    world_reference.push_back({vec4(0, 0, 0, 1), vec4(1.0f, 0.0f, 0.0f, 1)});
+    world_reference.push_back({vec4(0, 0, 0, 1), vec4(0.0f, 1.0f, 0.0f, 1)});
+    world_reference.push_back({vec4(0, 0, 0, 1), vec4(0.0f, 0.0f, 1.0f, 1)});
+    
+    // Model reference frame
+    model_reference.push_back({vec4(0, 0, 0, 1), vec4(1.0f, 0.0f, 0.0f, 1)});
+    model_reference.push_back({vec4(0, 0, 0, 1), vec4(0.0f, 1.0f, 0.0f, 1)});
+    model_reference.push_back({vec4(0, 0, 0, 1), vec4(0.0f, 0.0f, 1.0f, 1)});
 }
 
 //----------------------------------------------------------------------------------------
@@ -279,12 +295,151 @@ void A2::appLogic()
 	setLineColour(vec3(1.0f, 0.7f, 0.8f));
 	
 	for (const auto & line: cube_vertices) {
-		const vec4 &v1 = P * V * M * line.first;
-		const vec4 &v2 = P * V * M * line.second;
+		vec4 v1 = P * V * M * line.first;
+		vec4 v2 = P * V * M * line.second;
 //		cout << "v1: " << v1 << endl << "v2: " << v2 << endl;
+		
+		// Do clipping.
+		clip(v1, v2);
+		
 		drawLine({v1.x/v1.w, v1.y/v1.w}, {v2.x/v2.w, v2.y/v2.w});
 	}
+    
+    // draw world reference
+    for (int i = 0; i < 3; i++) {
+        vec4 v1 = world_reference[i].first;
+        vec4 v2 = world_reference[i].second;
+        
+        if ( i == 0)
+            setLineColour(vec3(1.0f, 0.0f, 0.0f));
+        else if (i == 1)
+            setLineColour(vec3(0.0f, 1.0f, 0.0f));
+        else if (i == 2)
+            setLineColour(vec3(0.0f, 0.0f, 1.0f));
+        
+        v1 = P * V * v1;
+        v2 = P * V * v2;
+        drawLine({v1.x/v1.w, v1.y/v1.w}, {v2.x/v2.w, v2.y/v2.w});
+    }
+    
+    // draw model reference
+    for (int i = 0; i < 3; i++) {
+        vec4 v1 = model_reference[i].first;
+        vec4 v2 = model_reference[i].second;
+        
+        if ( i == 0)
+            setLineColour(vec3(1.0f, 0.0f, 0.0f));
+        else if (i == 1)
+            setLineColour(vec3(0.0f, 1.0f, 0.0f));
+        else if (i == 2)
+            setLineColour(vec3(0.0f, 0.0f, 1.0f));
+        
+        v1 = P * V * M * v1;
+        v2 = P * V * M * v2;
+        drawLine({v1.x/v1.w, v1.y/v1.w}, {v2.x/v2.w, v2.y/v2.w});
+    }
 
+}
+
+bool A2::clip(vec4& v1, vec4& v2)
+{
+	int c1 = 0;
+	int c2 = 0;
+	
+	float bl1 = v1.w + v1.x;
+	if (bl1 < 0)
+		c1 = c1 << 1 & 1;
+	else
+		c1 = c1 << 1 & 0;
+	
+	float br1 = v1.w - v1.x;
+	if (br1 < 0)
+		c1 = c1 << 1 & 1;
+	else
+		c1 = c1 << 1 & 0;
+	
+	float bb1 = v1.w + v1.y;
+	if (bb1 < 0)
+		c1 = c1 << 1 & 1;
+	else
+		c1 = c1 << 1 & 0;
+	
+	float bt1 = v1.w - v1.y;
+	if (bt1 < 0)
+		c1 = c1 << 1 & 1;
+	else
+		c1 = c1 << 1 & 0;
+	
+	float bn1 = v1.w + v1.z;
+	if (bn1 < 0)
+		c1 = c1 << 1 & 1;
+	else
+		c1 = c1 << 1 & 0;
+	
+	float bf1 = v1.w - v1.z;
+	if (bf1 < 0)
+		c1 = c1 << 1 & 1;
+	else
+		c1 = c1 << 1 & 0;
+	
+	float bl2 = v2.w + v2.x;
+	if (bl2 < 0)
+		c2 = c2 << 1 & 1;
+	else
+		c2 = c2 << 1 & 0;
+	
+	float br2 = v2.w - v2.x;
+	if (br2 < 0)
+		c2 = c2 << 1 & 1;
+	else
+		c2 = c2 << 1 & 0;
+	
+	float bb2 = v2.w + v2.y;
+	if (bb2 < 0)
+		c2 = c2 << 1 & 1;
+	else
+		c2 = c2 << 1 & 0;
+	
+	float bt2 = v2.w - v2.y;
+	if (bt2 < 0)
+		c2 = c2 << 1 & 1;
+	else
+		c2 = c2 << 1 & 0;
+	
+	float bn2 = v2.w + v2.z;
+	if (bn2 < 0)
+		c2 = c2 << 1 & 1;
+	else
+		c2 = c2 << 1 & 0;
+	
+	float bf2 = v2.w - v2.z;
+	if (bf2 < 0)
+		c2 = c2 << 1 & 1;
+	else
+		c2 = c2 << 1 & 0;
+	
+	if (c1 & c2) {
+		// trivally reject
+		return false;
+	}
+	
+	if ((c1 | c2) == 0) {
+		// trivally accept
+		return true;
+	}
+	
+	// Compute t and update v1 and v2 with new point.
+	float t = bl1 / (bl1 - bl2);
+	
+	if (c1 == 0) {
+		// Update v2
+		
+	} else {
+		// Update v1
+		
+	}
+    
+    return true;
 }
 
 //----------------------------------------------------------------------------------------
@@ -422,11 +577,11 @@ bool A2::mouseMoveEvent (
                 M = M * rotate(mat4(), vec3(difference * 0.01, 0, 0));
             }
             
-            if (ImGui::IsMouseDown(1)) {
+            if (ImGui::IsMouseDown(2)) {
                 M = M * rotate(mat4(), vec3(0, difference * 0.01, 0));
             }
             
-            if (ImGui::IsMouseDown(2)) {
+            if (ImGui::IsMouseDown(1)) {
                 M = M * rotate(mat4(), vec3(0, 0, difference * 0.01));
             }
         } else if (curr_mode == 'T') {
@@ -434,11 +589,11 @@ bool A2::mouseMoveEvent (
                 M = M * translate(mat4(), vec3(difference * 0.01, 0, 0));
             }
             
-            if (ImGui::IsMouseDown(1)) {
+            if (ImGui::IsMouseDown(2)) {
                 M = M * translate(mat4(), vec3(0, difference * 0.01, 0));
             }
             
-            if (ImGui::IsMouseDown(2)) {
+            if (ImGui::IsMouseDown(1)) {
                 M = M * translate(mat4(), vec3(0, 0, difference * 0.01));
             }
         } else if (curr_mode == 'S') {
@@ -446,11 +601,11 @@ bool A2::mouseMoveEvent (
                 M = M * scale(mat4(), vec3(1 + difference * 0.01, 1, 1));
             }
             
-            if (ImGui::IsMouseDown(1)) {
+            if (ImGui::IsMouseDown(2)) {
                 M = M * scale(mat4(), vec3(1, 1 + difference * 0.01, 1));
             }
             
-            if (ImGui::IsMouseDown(2)) {
+            if (ImGui::IsMouseDown(1)) {
                 M = M * scale(mat4(), vec3(1, 1, 1 + difference * 0.01));
             }
         } else if (curr_mode == 'O') {
@@ -458,11 +613,11 @@ bool A2::mouseMoveEvent (
                 V = inverse(rotate(mat4(), vec3(difference * 0.01, 0, 0))) * V;
             }
             
-            if (ImGui::IsMouseDown(1)) {
+            if (ImGui::IsMouseDown(2)) {
                 V = inverse(rotate(mat4(), vec3(0, difference * 0.01, 0))) * V;
             }
             
-            if (ImGui::IsMouseDown(2)) {
+            if (ImGui::IsMouseDown(1)) {
                 V = inverse(rotate(mat4(), vec3(0, 0, difference * 0.01))) * V;
             }
         } else if (curr_mode == 'N') {
@@ -470,11 +625,11 @@ bool A2::mouseMoveEvent (
                 V = inverse(translate(mat4(), vec3(difference * 0.01, 0, 0))) * V;
             }
             
-            if (ImGui::IsMouseDown(1)) {
+            if (ImGui::IsMouseDown(2)) {
                 V = inverse(translate(mat4(), vec3(0, difference * 0.01, 0))) * V;
             }
             
-            if (ImGui::IsMouseDown(2)) {
+            if (ImGui::IsMouseDown(1)) {
                 V = inverse(translate(mat4(), vec3(0, 0, difference * 0.01))) * V;
             }
         } else if (curr_mode == 'P') {
