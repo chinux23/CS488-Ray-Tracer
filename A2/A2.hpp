@@ -137,7 +137,20 @@ private:
     char   curr_mode;
     float near = 2;
     float far = 20;
-
+	
+	// store 4 view port vertices
+	vec4 view_port_center;
+	float view_port_side_x;
+	float view_port_side_y;
+	vector<vec2> view_port;
+	
+	// Construct view_port vertices using view_port_center, view_port_side_x, view_port_side_y.
+	void construct_view_port();
+	
+	// Update view_port with two points
+	void update_view_port(const vec2 & p1, const vec2 & p2);
+	
+	void reset();
 
 public:
 	// Translate cube in model coordinates
@@ -153,6 +166,9 @@ public:
 	// when false is returned, both vertices should be disgarded.
 	// when true is returned, v1 and v2 stores the values for the vertices after clip. v1 and v2 values may or maynot change.
 	bool clip(vec4 & v1, vec4 & v2);
+	
+	// draw line on the view port. Pass the NDC coordinates to v0 and v1. This function will draw the line onto the view port.
+	void drawLineInViewPort(const glm::vec2 & v0, const glm::vec2 & v1);
 
 public:
 	// The following functions are for unit tests.

@@ -103,6 +103,12 @@ void A2::init()
     curr_mode = 'R';    // default mode is rotate model.
     mouse_x_pos = 0;
     mouse_y_pos = 0;
+	
+	view_port_center = vec4({0, 0, 0, 1});
+	view_port_side_x = 0.95;
+	view_port_side_y = 0.95;
+	
+	construct_view_port();
 
 }
 
@@ -303,7 +309,7 @@ void A2::appLogic()
 
 		// Do clipping.
 		if (clip(v1, v2)){
-			drawLine({v1.x/v1.w, v1.y/v1.w}, {v2.x/v2.w, v2.y/v2.w});
+			drawLineInViewPort({v1.x/v1.w, v1.y/v1.w}, {v2.x/v2.w, v2.y/v2.w});
 		}
 	}
     
@@ -321,7 +327,9 @@ void A2::appLogic()
         
         v1 = P * V * v1;
         v2 = P * V * v2;
-        drawLine({v1.x/v1.w, v1.y/v1.w}, {v2.x/v2.w, v2.y/v2.w});
+		if (clip(v1, v2)){
+			drawLineInViewPort({v1.x/v1.w, v1.y/v1.w}, {v2.x/v2.w, v2.y/v2.w});
+		}
     }
     
     // draw model reference
@@ -338,9 +346,61 @@ void A2::appLogic()
         
         v1 = P * V * M * v1;
         v2 = P * V * M * v2;
-        drawLine({v1.x/v1.w, v1.y/v1.w}, {v2.x/v2.w, v2.y/v2.w});
+		if (clip(v1, v2)){
+			drawLineInViewPort({v1.x/v1.w, v1.y/v1.w}, {v2.x/v2.w, v2.y/v2.w});
+		}
     }
+	
+	// draw view port
+	setLineColour(vec3(0.7f, 0.7f, 0.1f));
+	for (int i = 0; i < 4; i++) {
+		vec2 v1 = view_port[i % 4];
+		vec2 v2 = view_port[(i + 1) % 4];
+		
+		drawLine(v1, v2);
+	}
 
+}
+
+void A2::construct_view_port()
+{
+	view_port.clear();
+	
+	// Top left
+	view_port.push_back({view_port_center.x - view_port_side_x, view_port_center.y + view_port_side_y});
+	
+	// Top right
+	view_port.push_back({view_port_center.x + view_port_side_x, view_port_center.y + view_port_side_y});
+	
+	// Bottom right
+	view_port.push_back({view_port_center.x + view_port_side_x, view_port_center.y - view_port_side_y});
+	
+	// bottom left
+	view_port.push_back({view_port_center.x - view_port_side_x, view_port_center.y - view_port_side_y});
+}
+
+void A2::update_view_port(const vec2 & p1, const vec2 & p2)
+{
+	float t = 0.5;
+	vec2 center = t * p1 + t * p2;
+	view_port_center.x = center.x;
+	view_port_center.y = center.y;
+	view_port_side_x = center.x - std::min(p1.x, p2.x);
+	view_port_side_y = center.y - std::min(p1.y, p2.y);
+}
+
+void A2::drawLineInViewPort(const glm::vec2 & v0, const glm::vec2 & v1)
+{
+	mat4 scale_matrix = scale(mat4(), vec3(view_port_side_x, view_port_side_y, 1));
+	mat4 translation_matrix = translate(mat4(), vec3(view_port_center.x, view_port_center.y, 0));
+	
+	vec4 point1(v0.x, v0.y, 0, 1);
+	vec4 point2(v1.x, v1.y, 0, 1);
+	
+	point1 = translation_matrix * scale_matrix * point1;
+	point2 = translation_matrix * scale_matrix * point2;
+	
+	drawLine({point1.x, point1.y}, {point2.x, point2.y});
 }
 
 bool A2::clip(vec4& v1, vec4& v2)
@@ -546,6 +606,10 @@ void A2::guiLogic()
 		// Create Button, and check if it was clicked:
 		if( ImGui::Button( "Quit Application" ) ) {
 			glfwSetWindowShouldClose(m_window, GL_TRUE);
+		}
+	
+		if( ImGui::Button( "Reset" ) ) {
+			reset();
 		}
 
 		ImGui::Text( "Framerate: %.1f FPS", ImGui::GetIO().Framerate );
@@ -839,6 +903,12 @@ bool A2::keyInputEvent (
                 curr_mode = 'P';
                 eventHandled = true;
                 break;
+			case GLFW_KEY_V:
+				curr_mode = 'V';
+				break;
+			case GLFW_KEY_A:
+				reset();
+				break;
 			case GLFW_KEY_Q:
 				cout << "Quit" << endl;
 				glfwSetWindowShouldClose(m_window, GL_TRUE);
@@ -849,6 +919,11 @@ bool A2::keyInputEvent (
 	}
 
 	return eventHandled;
+}
+
+void A2::reset()
+{
+	
 }
 
 
