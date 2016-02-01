@@ -68,14 +68,20 @@ void A2::init()
 
 	mapVboDataToVertexAttributeLocation();
 
+	reset();
+
+}
+
+void A2::reset()
+{
 	// Modification
 	M = glm::mat4();
-//    M = M * rotate(mat4(), vec3(0, 1, 0));
+	//    M = M * rotate(mat4(), vec3(0, 1, 0));
 	cout << "Initial Model Transformation: " << M << endl;
 	
 	// V is the inverse of View coordinate frame, assuming standard world frame (identity matrix).
 	V = inverse(glm::mat4(vec4(1, 0, 0, 0), vec4(0, 1, 0, 0), vec4(0, 0, -1, 0), vec4(0, 0, 10, 1)));
-//    V = inverse(rotate(mat4(), vec3(0.2, 0, 0))) * V;
+	//    V = inverse(rotate(mat4(), vec3(0.2, 0, 0))) * V;
 	cout << "initial view frame:" << V << endl;
 	
 	fov = 30.0;
@@ -83,7 +89,7 @@ void A2::init()
 	
 	near = 5;
 	far = 20;
-    
+	
 	cout << "near plane is " << near << " distance away" << endl;
 	cout << "far  plane is " << far  << " distance away" << endl;
 	
@@ -92,17 +98,17 @@ void A2::init()
 			 vec4(0, 0, (far + near)/(far - near), 1),
 			 vec4(0, 0, -2 * far * near / (far - near), 0));
 	
-
+	
 	// Init the cube in the standard world frame.
 	initCube();
-    
-    // Init world and model reference coordinate.
-    initGnomon();
+	
+	// Init world and model reference coordinate.
+	initGnomon();
 	
 	// Test & debug
-    curr_mode = 'R';    // default mode is rotate model.
-    mouse_x_pos = 0;
-    mouse_y_pos = 0;
+	curr_mode = 'R';    // default mode is rotate model.
+	mouse_x_pos = 0;
+	mouse_y_pos = 0;
 	
 	view_port_center = vec4({0, 0, 0, 1});
 	view_port_side_x = 0.95;
@@ -110,18 +116,12 @@ void A2::init()
 	
 	construct_view_port();
 	
-	int width;
-	int height;
-	
-	glfwGetWindowSize(m_window, &width, &height);
-	cout << "Window size: " << width << " " << height << endl;
-	
 	shouldViewportResize = false;
-
 }
 
 void A2::initCube()
 {
+	cube_vertices.clear();
 	cube_vertices.push_back({glm::vec4(-1.0f, -1.0f,  1.0f, 1), glm::vec4( 1.0f, -1.0f,  1.0f, 1)});
 	cube_vertices.push_back({glm::vec4( 1.0f, -1.0f,  1.0f, 1), glm::vec4( 1.0f, -1.0f, -1.0f, 1)});
 	cube_vertices.push_back({glm::vec4(-1.0f, -1.0f, -1.0f, 1), glm::vec4( 1.0f, -1.0f, -1.0f, 1)});
@@ -144,12 +144,14 @@ void A2::initCube()
 
 void A2::initGnomon()
 {
+	world_reference.clear();
     // world reference frame
     world_reference.push_back({vec4(0, 0, 0, 1), vec4(1.0f, 0.0f, 0.0f, 1)});
     world_reference.push_back({vec4(0, 0, 0, 1), vec4(0.0f, 1.0f, 0.0f, 1)});
     world_reference.push_back({vec4(0, 0, 0, 1), vec4(0.0f, 0.0f, 1.0f, 1)});
     
     // Model reference frame
+	model_reference.clear();
     model_reference.push_back({vec4(0, 0, 0, 1), vec4(1.0f, 0.0f, 0.0f, 1)});
     model_reference.push_back({vec4(0, 0, 0, 1), vec4(0.0f, 1.0f, 0.0f, 1)});
     model_reference.push_back({vec4(0, 0, 0, 1), vec4(0.0f, 0.0f, 1.0f, 1)});
@@ -743,7 +745,7 @@ bool A2::mouseMoveEvent (
 ) {
 	bool eventHandled(false);
 	
-	cout << xPos << " " << yPos << endl;
+//	cout << xPos << " " << yPos << endl;
 
 	// Fill in with event handling code...
     if (!ImGui::IsMouseHoveringAnyWindow()) {
@@ -977,11 +979,6 @@ bool A2::keyInputEvent (
 	}
 
 	return eventHandled;
-}
-
-void A2::reset()
-{
-	
 }
 
 
