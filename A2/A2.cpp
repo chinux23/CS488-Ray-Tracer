@@ -119,6 +119,15 @@ void A2::reset()
 	shouldViewportResize = false;
 }
 
+void A2::update_perspective_view()
+{
+	// Update persepective view.
+	P = mat4(vec4(1/tan(glm::radians(fov/2)), 0, 0, 0),
+			 vec4(0, 1/tan(radians(fov/2)), 0, 0),
+			 vec4(0, 0, (far + near)/(far - near), 1),
+			 vec4(0, 0, -2 * far * near / (far - near), 0));
+}
+
 void A2::initCube()
 {
 	cube_vertices.clear();
@@ -136,10 +145,6 @@ void A2::initCube()
 	cube_vertices.push_back({glm::vec4(-1.0f, -1.0f, -1.0f, 1), glm::vec4(-1.0f,  1.0f, -1.0f, 1)});
 	cube_vertices.push_back({glm::vec4( 1.0f, -1.0f,  1.0f, 1), glm::vec4( 1.0f,  1.0f,  1.0f, 1)});
 	cube_vertices.push_back({glm::vec4( 1.0f, -1.0f, -1.0f, 1), glm::vec4( 1.0f,  1.0f, -1.0f, 1)});
-
-	cube_location = glm::vec4(0.0f, 0.0f, 0.0f, 1);
-
-	std::cout << "Cube location:\n" << cube_location << std::endl;
 }
 
 void A2::initGnomon()
@@ -331,20 +336,11 @@ void A2::appLogic()
 		construct_view_port();
 	}
 	
-	
-    P = mat4(vec4(1/tan(glm::radians(fov/2)), 0, 0, 0),
-             vec4(0, 1/tan(radians(fov/2)), 0, 0),
-             vec4(0, 0, (far + near)/(far - near), 1),
-             vec4(0, 0, -2 * far * near / (far - near), 0));
-    
+	// draw cube
 	setLineColour(vec3(1.0f, 0.7f, 0.8f));
-	
 	for (const auto & line: cube_vertices) {
-//		cout << "Computing line:" << line.first << " " << line.second << endl;
-		
 		vec4 v1 = P * V * M * line.first;
 		vec4 v2 = P * V * M * line.second;
-
 		// Do clipping.
 		if (clip(v1, v2)){
 			drawLineInViewPort({v1.x/v1.w, v1.y/v1.w}, {v2.x/v2.w, v2.y/v2.w});
@@ -518,27 +514,18 @@ bool A2::clip(vec4& v1, vec4& v2)
 			c2 = c2 << 1 | 1;
 		else
 			c2 = c2 << 1 | 0;
-//		
-//		cout << "c1 " << c1 << endl;
-//		cout << "c2 " << c2 << endl;
 		
 		if (c1 & c2) {
 			// trivally reject
-//			cout << "Trivally reject" << endl;
 			return false;
 		}
 		
 		if ((c1 | c2) == 0) {
 			// trivally accept
-//			cout << "Trivally accept" << endl;
 			return true;
 		}
-//		
-//		// Compute t and update v1 and v2 with new point.
-//		cout << "Computing non-trival case for v1 and v2" << endl;
-//		cout << "v1: " << v1 << endl;
-//		cout << "v2: " << v2 << endl;
 		
+		// non-trival case. Clip against each plane.
 		float t = 0.0;
 		switch (i) {
 			case 0:
@@ -574,10 +561,6 @@ bool A2::clip(vec4& v1, vec4& v2)
 			default:
 				break;
 		}
-		
-//		cout << "After clipping" << endl;
-//		cout << "v1: " << v1 << endl;
-//		cout << "v2: " << v2 << endl;
 	}
 	
     return true;
@@ -826,23 +809,23 @@ bool A2::mouseMoveEvent (
                 if (fov < 5) {
                     fov = 5;
                 }
-                
-//                cout << "fov: " << fov << endl;
-            }
+			}
             
             if (ImGui::IsMouseDown(2)) {
                 float new_near = near + difference * 0.01;
-//                if (far - new_near > 1){
                 near = new_near;
-//                }
             }
             
             if (ImGui::IsMouseDown(1)) {
                 float new_far = far + difference * 0.01;
-//                if (new_far - near > 1){
                 far = new_far;
-//                }
             }
+			
+			if (ImGui::IsMouseDown(0) || ImGui::IsMouseDown(1) || ImGui::IsMouseDown(2)) {
+				update_perspective_view();
+			}
+			
+			
 		} else if (curr_mode == 'V') {
 			if (ImGui::IsMouseDown(0)) {
 				if (!shouldViewportResize){
@@ -975,22 +958,6 @@ bool A2::keyInputEvent (
 	}
 
 	return eventHandled;
-}
-
-
-void A2::translate_cube(const glm::vec3& movement)
-{
-	glm::vec4 movement_vector(movement.x, movement.y, movement.z, 0);
-
-	for (auto & line : cube_vertices) {
-		line.first  = translate(mat4(), movement) * line.first;
-		line.second = translate(mat4(), movement) * line.second;
-	}
-}
-
-void A2::rotate_cube(glm::vec3 rotation_radian)
-{
-	
 }
 
 glm::mat4 A2::scale(glm::mat4 const & m, const glm::vec3 & v)
