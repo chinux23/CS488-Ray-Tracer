@@ -109,6 +109,14 @@ void A2::init()
 	view_port_side_y = 0.95;
 	
 	construct_view_port();
+	
+	int width;
+	int height;
+	
+	glfwGetWindowSize(m_window, &width, &height);
+	cout << "Window size: " << width << " " << height << endl;
+	
+	shouldViewportResize = false;
 
 }
 
@@ -293,6 +301,34 @@ void A2::appLogic()
 //	drawLine(vec2(0.25f, -0.25f), vec2(0.25f, 0.25f));
 //	drawLine(vec2(0.25f, 0.25f), vec2(-0.25f, 0.25f));
 //	drawLine(vec2(-0.25f, 0.25f), vec2(-0.25f, -0.25f));
+	
+	// Update viewport
+	if (shouldViewportResize) {
+		int width;
+		int height;
+		vec2 v1, v2;
+		
+		glfwGetWindowSize(m_window, &width, &height);
+		v1.x = viewport_v1.first < 0 ? 0 : viewport_v1.first;
+		v1.x = v1.x > width ? width : v1.x;
+		v1.x = (v1.x * 2 / width) - 1;	// normalize
+		
+		v1.y = viewport_v1.second < 0 ? 0 : viewport_v1.second;
+		v1.y = v1.y > height ? height : v1.y;
+		v1.y = 1 - (v1.y * 2 / height);	// normalize
+		
+		v2.x = viewport_v2.first < 0 ? 0 : viewport_v2.first;
+		v2.x = v2.x > width ? width : v2.x;
+		v2.x = (v2.x * 2 / width) - 1;
+		
+		v2.y = viewport_v2.second < 0 ? 0 : viewport_v2.second;
+		v2.y = v2.y > height ? height : v2.y;
+		v2.y = 1 - (v2.y * 2 / height);	// normalize
+		
+		update_view_port(v1, v2);
+		construct_view_port();
+	}
+	
 	
     P = mat4(vec4(1/tan(glm::radians(fov/2)), 0, 0, 0),
              vec4(0, 1/tan(radians(fov/2)), 0, 0),
@@ -706,6 +742,8 @@ bool A2::mouseMoveEvent (
 		double yPos
 ) {
 	bool eventHandled(false);
+	
+	cout << xPos << " " << yPos << endl;
 
 	// Fill in with event handling code...
     if (!ImGui::IsMouseHoveringAnyWindow()) {
@@ -803,7 +841,27 @@ bool A2::mouseMoveEvent (
                 far = new_far;
 //                }
             }
-        }
+		} else if (curr_mode == 'V') {
+			if (ImGui::IsMouseDown(0)) {
+				if (!shouldViewportResize){
+					viewport_v1.first = xPos;
+					viewport_v1.second = yPos;
+					shouldViewportResize = true;
+				} else {
+					viewport_v2.first = xPos;
+					viewport_v2.second = yPos;
+				}
+				
+			}
+			if (!ImGui::IsMouseDown(0)){
+				if (shouldViewportResize) {
+					viewport_v2.first = xPos;
+					viewport_v2.second = yPos;
+					shouldViewportResize = false;
+				}
+			}
+			
+		}
 
         mouse_x_pos = xPos;
     }

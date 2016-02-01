@@ -150,7 +150,13 @@ private:
 	// Update view_port with two points
 	void update_view_port(const vec2 & p1, const vec2 & p2);
 	
+	// Reset all the state
 	void reset();
+	
+	// store one viewport point
+	pair<double, double> viewport_v1;
+	pair<double, double> viewport_v2;
+	bool shouldViewportResize;
 
 public:
 	// Translate cube in model coordinates
