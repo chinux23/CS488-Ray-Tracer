@@ -176,12 +176,4 @@ public:
 	// draw line on the view port. Pass the NDC coordinates to v0 and v1. This function will draw the line onto the view port.
 	void drawLineInViewPort(const glm::vec2 & v0, const glm::vec2 & v1);
 
-public:
-	// The following functions are for unit tests.
-	void test_translate_model();
-	void test_rotate_model();
-	void test_scale_model();
-
-	void print_line_vertices();
-
 };
