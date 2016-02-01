@@ -15,6 +15,7 @@ using namespace std;
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/reciprocal.hpp>
 
+#include <sstream>
 
 using namespace glm;
 
@@ -73,14 +74,14 @@ void A2::init()
 	cout << "Initial Model Transformation: " << M << endl;
 	
 	// V is the inverse of View coordinate frame, assuming standard world frame (identity matrix).
-	V = inverse(glm::mat4(vec4(1, 0, 0, 0), vec4(0, 1, 0, 0), vec4(0, 0, -1, 0), vec4(0, 0, 30, 1)));
+	V = inverse(glm::mat4(vec4(1, 0, 0, 0), vec4(0, 1, 0, 0), vec4(0, 0, -1, 0), vec4(0, 0, 10, 1)));
 //    V = inverse(rotate(mat4(), vec3(0.2, 0, 0))) * V;
 	cout << "initial view frame:" << V << endl;
 	
 	fov = 30.0;
 	cout << "initial Fov is " << fov << endl;
 	
-	near = 2;
+	near = 5;
 	far = 20;
     
 	cout << "near plane is " << near << " distance away" << endl;
@@ -295,14 +296,15 @@ void A2::appLogic()
 	setLineColour(vec3(1.0f, 0.7f, 0.8f));
 	
 	for (const auto & line: cube_vertices) {
+//		cout << "Computing line:" << line.first << " " << line.second << endl;
+		
 		vec4 v1 = P * V * M * line.first;
 		vec4 v2 = P * V * M * line.second;
-//		cout << "v1: " << v1 << endl << "v2: " << v2 << endl;
-		
+
 		// Do clipping.
-		clip(v1, v2);
-		
-		drawLine({v1.x/v1.w, v1.y/v1.w}, {v2.x/v2.w, v2.y/v2.w});
+		if (clip(v1, v2)){
+			drawLine({v1.x/v1.w, v1.y/v1.w}, {v2.x/v2.w, v2.y/v2.w});
+		}
 	}
     
     // draw world reference
@@ -343,102 +345,143 @@ void A2::appLogic()
 
 bool A2::clip(vec4& v1, vec4& v2)
 {
-	int c1 = 0;
-	int c2 = 0;
-	
-	float bl1 = v1.w + v1.x;
-	if (bl1 < 0)
-		c1 = c1 << 1 & 1;
-	else
-		c1 = c1 << 1 & 0;
-	
-	float br1 = v1.w - v1.x;
-	if (br1 < 0)
-		c1 = c1 << 1 & 1;
-	else
-		c1 = c1 << 1 & 0;
-	
-	float bb1 = v1.w + v1.y;
-	if (bb1 < 0)
-		c1 = c1 << 1 & 1;
-	else
-		c1 = c1 << 1 & 0;
-	
-	float bt1 = v1.w - v1.y;
-	if (bt1 < 0)
-		c1 = c1 << 1 & 1;
-	else
-		c1 = c1 << 1 & 0;
-	
-	float bn1 = v1.w + v1.z;
-	if (bn1 < 0)
-		c1 = c1 << 1 & 1;
-	else
-		c1 = c1 << 1 & 0;
-	
-	float bf1 = v1.w - v1.z;
-	if (bf1 < 0)
-		c1 = c1 << 1 & 1;
-	else
-		c1 = c1 << 1 & 0;
-	
-	float bl2 = v2.w + v2.x;
-	if (bl2 < 0)
-		c2 = c2 << 1 & 1;
-	else
-		c2 = c2 << 1 & 0;
-	
-	float br2 = v2.w - v2.x;
-	if (br2 < 0)
-		c2 = c2 << 1 & 1;
-	else
-		c2 = c2 << 1 & 0;
-	
-	float bb2 = v2.w + v2.y;
-	if (bb2 < 0)
-		c2 = c2 << 1 & 1;
-	else
-		c2 = c2 << 1 & 0;
-	
-	float bt2 = v2.w - v2.y;
-	if (bt2 < 0)
-		c2 = c2 << 1 & 1;
-	else
-		c2 = c2 << 1 & 0;
-	
-	float bn2 = v2.w + v2.z;
-	if (bn2 < 0)
-		c2 = c2 << 1 & 1;
-	else
-		c2 = c2 << 1 & 0;
-	
-	float bf2 = v2.w - v2.z;
-	if (bf2 < 0)
-		c2 = c2 << 1 & 1;
-	else
-		c2 = c2 << 1 & 0;
-	
-	if (c1 & c2) {
-		// trivally reject
-		return false;
-	}
-	
-	if ((c1 | c2) == 0) {
-		// trivally accept
-		return true;
-	}
-	
-	// Compute t and update v1 and v2 with new point.
-	float t = bl1 / (bl1 - bl2);
-	
-	if (c1 == 0) {
-		// Update v2
+	for (int i = 0; i < 6; i++){
+		int c1 = 0;
+		int c2 = 0;
 		
-	} else {
-		// Update v1
+		float bl1 = v1.w + v1.x;
+		if (bl1 < 0)
+			c1 = c1 << 1 | 1;
+		else
+			c1 = c1 << 1 | 0;
 		
+		float br1 = v1.w - v1.x;
+		if (br1 < 0)
+			c1 = c1 << 1 | 1;
+		else
+			c1 = c1 << 1 | 0;
+		
+		float bb1 = v1.w + v1.y;
+		if (bb1 < 0)
+			c1 = c1 << 1 | 1;
+		else
+			c1 = c1 << 1 | 0;
+		
+		float bt1 = v1.w - v1.y;
+		if (bt1 < 0)
+			c1 = c1 << 1 | 1;
+		else
+			c1 = c1 << 1 | 0;
+		
+		float bn1 = v1.w + v1.z;
+		if (bn1 < 0)
+			c1 = c1 << 1 | 1;
+		else
+			c1 = c1 << 1 | 0;
+		
+		float bf1 = v1.w - v1.z;
+		if (bf1 < 0)
+			c1 = c1 << 1 | 1;
+		else
+			c1 = c1 << 1 | 0;
+		
+		float bl2 = v2.w + v2.x;
+		if (bl2 < 0)
+			c2 = c2 << 1 | 1;
+		else
+			c2 = c2 << 1 | 0;
+		
+		float br2 = v2.w - v2.x;
+		if (br2 < 0)
+			c2 = c2 << 1 | 1;
+		else
+			c2 = c2 << 1 | 0;
+		
+		float bb2 = v2.w + v2.y;
+		if (bb2 < 0)
+			c2 = c2 << 1 | 1;
+		else
+			c2 = c2 << 1 | 0;
+		
+		float bt2 = v2.w - v2.y;
+		if (bt2 < 0)
+			c2 = c2 << 1 | 1;
+		else
+			c2 = c2 << 1 | 0;
+		
+		float bn2 = v2.w + v2.z;
+		if (bn2 < 0)
+			c2 = c2 << 1 | 1;
+		else
+			c2 = c2 << 1 | 0;
+		
+		float bf2 = v2.w - v2.z;
+		if (bf2 < 0)
+			c2 = c2 << 1 | 1;
+		else
+			c2 = c2 << 1 | 0;
+//		
+//		cout << "c1 " << c1 << endl;
+//		cout << "c2 " << c2 << endl;
+		
+		if (c1 & c2) {
+			// trivally reject
+//			cout << "Trivally reject" << endl;
+			return false;
+		}
+		
+		if ((c1 | c2) == 0) {
+			// trivally accept
+//			cout << "Trivally accept" << endl;
+			return true;
+		}
+//		
+//		// Compute t and update v1 and v2 with new point.
+//		cout << "Computing non-trival case for v1 and v2" << endl;
+//		cout << "v1: " << v1 << endl;
+//		cout << "v2: " << v2 << endl;
+		
+		float t = 0.0;
+		switch (i) {
+			case 0:
+				t = bl1 / (bl1 - bl2);
+				if (bl1 < 0) v1 = (1 - t) * v1 + t * v2;
+				if (bl2 < 0) v2 = (1 - t) * v1 + t * v2;
+				break;
+			case 1:
+				t = br1 / (br1 - br2);
+				if (br1 < 0) v1 = (1 - t) * v1 + t * v2;
+				if (br2 < 0) v2 = (1 - t) * v1 + t * v2;
+				break;
+			case 2:
+				t = bt1 / (bt1 - bt2);
+				if (bt1 < 0) v1 = (1 - t) * v1 + t * v2;
+				if (bt2 < 0) v2 = (1 - t) * v1 + t * v2;
+				break;
+			case 3:
+				t = bb1 / (bb1 - bb2);
+				if (bb1 < 0) v1 = (1 - t) * v1 + t * v2;
+				if (bb2 < 0) v2 = (1 - t) * v1 + t * v2;
+				break;
+			case 4:
+				t = bn1 / (bn1 - bn2);
+				if (bn1 < 0) v1 = (1 - t) * v1 + t * v2;
+				if (bn2 < 0) v2 = (1 - t) * v1 + t * v2;
+				break;
+			case 5:
+				t = bf1 / (bf1 - bf2);
+				if (bf1 < 0) v1 = (1 - t) * v1 + t * v2;
+				if (bf2 < 0) v2 = (1 - t) * v1 + t * v2;
+				break;
+			default:
+				break;
+		}
+		
+//		cout << "After clipping" << endl;
+//		cout << "v1: " << v1 << endl;
+//		cout << "v2: " << v2 << endl;
 	}
-    
+	
     return true;
 }
 
@@ -463,7 +506,42 @@ void A2::guiLogic()
 
 
 		// Add more gui elements here here ...
-
+        for (char mode : vector<char>({'O', 'N', 'P', 'R', 'T', 'S', 'V'})) {
+            switch (mode) {
+                case 'O':
+                    ImGui::Text("Rotate View (O):          ");
+                    break;
+                case 'N':
+                    ImGui::Text("Translate View (N):       ");
+                    break;
+                case 'P':
+                    ImGui::Text("Perspective (P):          ");
+                    break;
+                case 'R':
+                    ImGui::Text("Rotate Model (R):         ");
+                    break;
+                case 'T':
+                    ImGui::Text("Translate Model (T):      ");
+                    break;
+                case 'S':
+                    ImGui::Text("Scale Model (S):          ");
+                    break;
+                case 'V':
+                    ImGui::Text("Viewport (V):             ");
+                    break;
+                default:
+                    break;
+            }
+            std::stringstream ss;
+            ss << mode;
+            bool selected;
+            selected = (curr_mode == mode);
+            ImGui::SameLine();
+            if (ImGui::RadioButton(ss.str().c_str(), selected)) {
+                curr_mode = mode;
+            }
+        }
+    
 
 		// Create Button, and check if it was clicked:
 		if( ImGui::Button( "Quit Application" ) ) {
@@ -471,6 +549,8 @@ void A2::guiLogic()
 		}
 
 		ImGui::Text( "Framerate: %.1f FPS", ImGui::GetIO().Framerate );
+        ImGui::Text( "Near Plane: %.2f distance away.", near);
+        ImGui::Text( "Far  Plane: %.2f distance away.", far);
 
 	ImGui::End();
 }
@@ -633,6 +713,7 @@ bool A2::mouseMoveEvent (
                 V = inverse(translate(mat4(), vec3(0, 0, difference * 0.01))) * V;
             }
         } else if (curr_mode == 'P') {
+            
             if (ImGui::IsMouseDown(0)) {
                 fov = fov + difference * 0.01;
                 if (fov > 160) {
@@ -642,23 +723,21 @@ bool A2::mouseMoveEvent (
                     fov = 5;
                 }
                 
-                cout << "fov: " << fov << endl;
-            }
-            
-            if (ImGui::IsMouseDown(1)) {
-                float new_near = near + difference * 0.01;
-                if (far - new_near > 1){
-                    near = new_near;
-                }
-                cout << "near: " << near << endl;
+//                cout << "fov: " << fov << endl;
             }
             
             if (ImGui::IsMouseDown(2)) {
+                float new_near = near + difference * 0.01;
+//                if (far - new_near > 1){
+                near = new_near;
+//                }
+            }
+            
+            if (ImGui::IsMouseDown(1)) {
                 float new_far = far + difference * 0.01;
-                if (new_far - near > 1){
-                    far = new_far;
-                }
-                cout << "far: " << far << endl;
+//                if (new_far - near > 1){
+                far = new_far;
+//                }
             }
         }
 
@@ -758,6 +837,7 @@ bool A2::keyInputEvent (
                 break;
             case GLFW_KEY_P:
                 curr_mode = 'P';
+                eventHandled = true;
                 break;
 			case GLFW_KEY_Q:
 				cout << "Quit" << endl;
