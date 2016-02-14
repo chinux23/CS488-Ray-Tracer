@@ -57,4 +57,9 @@ public:
 private:
 	// The number of SceneNode instances.
 	static unsigned int nodeInstanceCount;
+
+
+public:
+    // Render the object
+    virtual void render();
 };

@@ -7,7 +7,7 @@ using namespace std;
 #include "GeometryNode.hpp"
 #include "JointNode.hpp"
 
-#include <imgui/imgui.h>
+#include "imgui/imgui.h"
 
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/io.hpp>
@@ -421,7 +421,6 @@ void A3::renderSceneGraph(const SceneNode & root) {
 		const GeometryNode * geometryNode = static_cast<const GeometryNode *>(node);
 
 		updateShaderUniforms(m_shader, *geometryNode, m_view);
-
 
 		// Get the BatchInfo corresponding to the GeometryNode's unique MeshId.
 		BatchInfo batchInfo = m_batchInfoMap[geometryNode->meshId];

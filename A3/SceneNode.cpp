@@ -110,6 +110,12 @@ int SceneNode::totalSceneNodes() const {
 	return nodeInstanceCount;
 }
 
+void SceneNode::render()
+{
+	// This function should be overriden by subclass
+	throw "SceneNode render should be overriden by sublcass";
+}
+
 //---------------------------------------------------------------------------------------
 std::ostream & operator << (std::ostream & os, const SceneNode & node) {
 
@@ -133,3 +139,5 @@ std::ostream & operator << (std::ostream & os, const SceneNode & node) {
 
 	return os;
 }
+
+

@@ -14,4 +14,7 @@ public:
 	// Mesh Identifier. This must correspond to an object name of
 	// a loaded .obj file.
 	std::string meshId;
+	
+public:
+	virtual void render();
 };
