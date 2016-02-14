@@ -18,6 +18,30 @@
 		0C80C93E1BA3366B004E48C5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CDFBEDE1BA1E8A500325567 /* Cocoa.framework */; };
 		0C80C93F1BA33717004E48C5 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C602DA31BA23E5700CD438A /* CoreVideo.framework */; };
 		0C80C9401BA38CC5004E48C5 /* A0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0C602D9D1BA23C4A00CD438A /* A0.cpp */; };
+		7446D2BB1C711303000E7174 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7446D2BA1C711303000E7174 /* main.cpp */; };
+		7446D2CC1C711329000E7174 /* A3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7446D2BF1C711329000E7174 /* A3.cpp */; };
+		7446D2CD1C711329000E7174 /* GeometryNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7446D2C21C711329000E7174 /* GeometryNode.cpp */; };
+		7446D2CE1C711329000E7174 /* JointNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7446D2C41C711329000E7174 /* JointNode.cpp */; };
+		7446D2CF1C711329000E7174 /* scene_lua.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7446D2C81C711329000E7174 /* scene_lua.cpp */; };
+		7446D2D01C711329000E7174 /* SceneNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7446D2CA1C711329000E7174 /* SceneNode.cpp */; };
+		7446D2D11C711C4C000E7174 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CDFBEDC1BA1E8A000325567 /* OpenGL.framework */; };
+		7446D2D21C711C55000E7174 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CDFBEDA1BA1E89B00325567 /* IOKit.framework */; };
+		7446D2D31C711C5D000E7174 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C602DA31BA23E5700CD438A /* CoreVideo.framework */; };
+		7446D2D41C711C62000E7174 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CDFBEDE1BA1E8A500325567 /* Cocoa.framework */; };
+		7446D2D61C711C8D000E7174 /* libcs488-framework.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7446D2D51C711C8D000E7174 /* libcs488-framework.a */; };
+		7446D2D81C711C8F000E7174 /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7446D2D71C711C8F000E7174 /* libglfw3.a */; };
+		7446D2DA1C711C92000E7174 /* libimgui.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7446D2D91C711C92000E7174 /* libimgui.a */; };
+		7446D2DC1C711C94000E7174 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7446D2DB1C711C94000E7174 /* liblua.a */; };
+		7446D2DE1C711F0F000E7174 /* a3mark.lua in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7446D2DD1C711F0F000E7174 /* a3mark.lua */; };
+		7446D2E91C711F25000E7174 /* arc_FragmentShader.fs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7446D2E01C711F25000E7174 /* arc_FragmentShader.fs */; };
+		7446D2EA1C711F25000E7174 /* arc_VertexShader.vs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7446D2E11C711F25000E7174 /* arc_VertexShader.vs */; };
+		7446D2EB1C711F25000E7174 /* cube.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7446D2E21C711F25000E7174 /* cube.obj */; };
+		7446D2EC1C711F25000E7174 /* FragmentShader.fs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7446D2E31C711F25000E7174 /* FragmentShader.fs */; };
+		7446D2ED1C711F25000E7174 /* puppet.lua in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7446D2E41C711F25000E7174 /* puppet.lua */; };
+		7446D2EE1C711F25000E7174 /* simpleScene.lua in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7446D2E51C711F25000E7174 /* simpleScene.lua */; };
+		7446D2EF1C711F25000E7174 /* sphere.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7446D2E61C711F25000E7174 /* sphere.obj */; };
+		7446D2F01C711F25000E7174 /* suzanne.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7446D2E71C711F25000E7174 /* suzanne.obj */; };
+		7446D2F11C711F25000E7174 /* VertexShader.vs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7446D2E81C711F25000E7174 /* VertexShader.vs */; };
 		749836971C42B6350042DD2D /* cube.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 749836951C42B6350042DD2D /* cube.cpp */; };
 		7498369A1C42B70A0042DD2D /* Shape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 749836981C42B70A0042DD2D /* Shape.cpp */; };
 		74D3C2361C547724009B4EB7 /* A2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 74D3C2331C547724009B4EB7 /* A2.cpp */; };
@@ -48,6 +72,25 @@
 			files = (
 				0C6927721BA5E37E0033976C /* FragmentShader.fs in CopyFiles */,
 				0C6927731BA5E37E0033976C /* VertexShader.vs in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7446D2B61C711302000E7174 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = Assets;
+			dstSubfolderSpec = 16;
+			files = (
+				7446D2E91C711F25000E7174 /* arc_FragmentShader.fs in CopyFiles */,
+				7446D2EA1C711F25000E7174 /* arc_VertexShader.vs in CopyFiles */,
+				7446D2EB1C711F25000E7174 /* cube.obj in CopyFiles */,
+				7446D2EC1C711F25000E7174 /* FragmentShader.fs in CopyFiles */,
+				7446D2ED1C711F25000E7174 /* puppet.lua in CopyFiles */,
+				7446D2EE1C711F25000E7174 /* simpleScene.lua in CopyFiles */,
+				7446D2EF1C711F25000E7174 /* sphere.obj in CopyFiles */,
+				7446D2F01C711F25000E7174 /* suzanne.obj in CopyFiles */,
+				7446D2F11C711F25000E7174 /* VertexShader.vs in CopyFiles */,
+				7446D2DE1C711F0F000E7174 /* a3mark.lua in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +162,34 @@
 		0CDFBEDA1BA1E89B00325567 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		0CDFBEDC1BA1E8A000325567 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		0CDFBEDE1BA1E8A500325567 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		7446D2B81C711302000E7174 /* A3 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = A3; sourceTree = BUILT_PRODUCTS_DIR; };
+		7446D2BA1C711303000E7174 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		7446D2BF1C711329000E7174 /* A3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = A3.cpp; sourceTree = "<group>"; };
+		7446D2C01C711329000E7174 /* A3.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = A3.hpp; sourceTree = "<group>"; };
+		7446D2C21C711329000E7174 /* GeometryNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GeometryNode.cpp; sourceTree = "<group>"; };
+		7446D2C31C711329000E7174 /* GeometryNode.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GeometryNode.hpp; sourceTree = "<group>"; };
+		7446D2C41C711329000E7174 /* JointNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JointNode.cpp; sourceTree = "<group>"; };
+		7446D2C51C711329000E7174 /* JointNode.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = JointNode.hpp; sourceTree = "<group>"; };
+		7446D2C61C711329000E7174 /* lua488.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = lua488.hpp; sourceTree = "<group>"; };
+		7446D2C71C711329000E7174 /* Material.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Material.hpp; sourceTree = "<group>"; };
+		7446D2C81C711329000E7174 /* scene_lua.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scene_lua.cpp; sourceTree = "<group>"; };
+		7446D2C91C711329000E7174 /* scene_lua.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = scene_lua.hpp; sourceTree = "<group>"; };
+		7446D2CA1C711329000E7174 /* SceneNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneNode.cpp; sourceTree = "<group>"; };
+		7446D2CB1C711329000E7174 /* SceneNode.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SceneNode.hpp; sourceTree = "<group>"; };
+		7446D2D51C711C8D000E7174 /* libcs488-framework.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libcs488-framework.a"; path = "lib/libcs488-framework.a"; sourceTree = "<group>"; };
+		7446D2D71C711C8F000E7174 /* libglfw3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglfw3.a; path = lib/libglfw3.a; sourceTree = "<group>"; };
+		7446D2D91C711C92000E7174 /* libimgui.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libimgui.a; path = lib/libimgui.a; sourceTree = "<group>"; };
+		7446D2DB1C711C94000E7174 /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = lib/liblua.a; sourceTree = "<group>"; };
+		7446D2DD1C711F0F000E7174 /* a3mark.lua */ = {isa = PBXFileReference; lastKnownFileType = text; name = a3mark.lua; path = Assets/a3mark.lua; sourceTree = "<group>"; };
+		7446D2E01C711F25000E7174 /* arc_FragmentShader.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = arc_FragmentShader.fs; path = Assets/arc_FragmentShader.fs; sourceTree = "<group>"; };
+		7446D2E11C711F25000E7174 /* arc_VertexShader.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = arc_VertexShader.vs; path = Assets/arc_VertexShader.vs; sourceTree = "<group>"; };
+		7446D2E21C711F25000E7174 /* cube.obj */ = {isa = PBXFileReference; lastKnownFileType = text; name = cube.obj; path = Assets/cube.obj; sourceTree = "<group>"; };
+		7446D2E31C711F25000E7174 /* FragmentShader.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = FragmentShader.fs; path = Assets/FragmentShader.fs; sourceTree = "<group>"; };
+		7446D2E41C711F25000E7174 /* puppet.lua */ = {isa = PBXFileReference; lastKnownFileType = text; name = puppet.lua; path = Assets/puppet.lua; sourceTree = "<group>"; };
+		7446D2E51C711F25000E7174 /* simpleScene.lua */ = {isa = PBXFileReference; lastKnownFileType = text; name = simpleScene.lua; path = Assets/simpleScene.lua; sourceTree = "<group>"; };
+		7446D2E61C711F25000E7174 /* sphere.obj */ = {isa = PBXFileReference; lastKnownFileType = text; name = sphere.obj; path = Assets/sphere.obj; sourceTree = "<group>"; };
+		7446D2E71C711F25000E7174 /* suzanne.obj */ = {isa = PBXFileReference; lastKnownFileType = text; name = suzanne.obj; path = Assets/suzanne.obj; sourceTree = "<group>"; };
+		7446D2E81C711F25000E7174 /* VertexShader.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = VertexShader.vs; path = Assets/VertexShader.vs; sourceTree = "<group>"; };
 		749836951C42B6350042DD2D /* cube.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cube.cpp; sourceTree = "<group>"; };
 		749836961C42B6350042DD2D /* cube.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cube.hpp; sourceTree = "<group>"; };
 		749836981C42B70A0042DD2D /* Shape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shape.cpp; sourceTree = "<group>"; };
@@ -153,6 +224,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7446D2B51C711302000E7174 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7446D2D41C711C62000E7174 /* Cocoa.framework in Frameworks */,
+				7446D2D31C711C5D000E7174 /* CoreVideo.framework in Frameworks */,
+				7446D2D21C711C55000E7174 /* IOKit.framework in Frameworks */,
+				7446D2D61C711C8D000E7174 /* libcs488-framework.a in Frameworks */,
+				7446D2DA1C711C92000E7174 /* libimgui.a in Frameworks */,
+				7446D2D81C711C8F000E7174 /* libglfw3.a in Frameworks */,
+				7446D2DC1C711C94000E7174 /* liblua.a in Frameworks */,
+				7446D2D11C711C4C000E7174 /* OpenGL.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		74D3C2291C5476E4009B4EB7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -181,6 +267,10 @@
 		0C260AAA1BA10BC2009DAF93 = {
 			isa = PBXGroup;
 			children = (
+				7446D2DB1C711C94000E7174 /* liblua.a */,
+				7446D2D91C711C92000E7174 /* libimgui.a */,
+				7446D2D71C711C8F000E7174 /* libglfw3.a */,
+				7446D2D51C711C8D000E7174 /* libcs488-framework.a */,
 				0C602DA31BA23E5700CD438A /* CoreVideo.framework */,
 				0CDFBEDE1BA1E8A500325567 /* Cocoa.framework */,
 				0CDFBEDC1BA1E8A000325567 /* OpenGL.framework */,
@@ -189,6 +279,7 @@
 				0CFB967E1BA10CE3009EA4B5 /* A0 */,
 				74E95E9B1C3DF2040057973E /* A1 */,
 				74D3C22D1C5476E4009B4EB7 /* A2 */,
+				7446D2B91C711303000E7174 /* A3 */,
 				0C260AB41BA10BC2009DAF93 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -199,6 +290,7 @@
 				0C260AB31BA10BC2009DAF93 /* A0 */,
 				74E95E9A1C3DF2040057973E /* A1 */,
 				74D3C22C1C5476E4009B4EB7 /* A2 */,
+				7446D2B81C711302000E7174 /* A3 */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -298,6 +390,44 @@
 			name = A0;
 			sourceTree = "<group>";
 		};
+		7446D2B91C711303000E7174 /* A3 */ = {
+			isa = PBXGroup;
+			children = (
+				7446D2DF1C711F13000E7174 /* Assets */,
+				7446D2BF1C711329000E7174 /* A3.cpp */,
+				7446D2C01C711329000E7174 /* A3.hpp */,
+				7446D2C21C711329000E7174 /* GeometryNode.cpp */,
+				7446D2C31C711329000E7174 /* GeometryNode.hpp */,
+				7446D2C41C711329000E7174 /* JointNode.cpp */,
+				7446D2C51C711329000E7174 /* JointNode.hpp */,
+				7446D2C61C711329000E7174 /* lua488.hpp */,
+				7446D2C71C711329000E7174 /* Material.hpp */,
+				7446D2C81C711329000E7174 /* scene_lua.cpp */,
+				7446D2C91C711329000E7174 /* scene_lua.hpp */,
+				7446D2CA1C711329000E7174 /* SceneNode.cpp */,
+				7446D2CB1C711329000E7174 /* SceneNode.hpp */,
+				7446D2BA1C711303000E7174 /* main.cpp */,
+			);
+			path = A3;
+			sourceTree = "<group>";
+		};
+		7446D2DF1C711F13000E7174 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				7446D2E01C711F25000E7174 /* arc_FragmentShader.fs */,
+				7446D2E11C711F25000E7174 /* arc_VertexShader.vs */,
+				7446D2E21C711F25000E7174 /* cube.obj */,
+				7446D2E31C711F25000E7174 /* FragmentShader.fs */,
+				7446D2E41C711F25000E7174 /* puppet.lua */,
+				7446D2E51C711F25000E7174 /* simpleScene.lua */,
+				7446D2E61C711F25000E7174 /* sphere.obj */,
+				7446D2E71C711F25000E7174 /* suzanne.obj */,
+				7446D2E81C711F25000E7174 /* VertexShader.vs */,
+				7446D2DD1C711F0F000E7174 /* a3mark.lua */,
+			);
+			name = Assets;
+			sourceTree = "<group>";
+		};
 		74D3C22D1C5476E4009B4EB7 /* A2 */ = {
 			isa = PBXGroup;
 			children = (
@@ -373,6 +503,23 @@
 			productReference = 0C260AB31BA10BC2009DAF93 /* A0 */;
 			productType = "com.apple.product-type.tool";
 		};
+		7446D2B71C711302000E7174 /* A3 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7446D2BE1C711303000E7174 /* Build configuration list for PBXNativeTarget "A3" */;
+			buildPhases = (
+				7446D2B41C711302000E7174 /* Sources */,
+				7446D2B51C711302000E7174 /* Frameworks */,
+				7446D2B61C711302000E7174 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = A3;
+			productName = A3;
+			productReference = 7446D2B81C711302000E7174 /* A3 */;
+			productType = "com.apple.product-type.tool";
+		};
 		74D3C22B1C5476E4009B4EB7 /* A2 */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 74D3C2321C5476E4009B4EB7 /* Build configuration list for PBXNativeTarget "A2" */;
@@ -419,6 +566,9 @@
 					0C260AB21BA10BC2009DAF93 = {
 						CreatedOnToolsVersion = 6.1.1;
 					};
+					7446D2B71C711302000E7174 = {
+						CreatedOnToolsVersion = 7.3;
+					};
 					74D3C22B1C5476E4009B4EB7 = {
 						CreatedOnToolsVersion = 7.3;
 					};
@@ -443,6 +593,7 @@
 				0C260AB21BA10BC2009DAF93 /* A0 */,
 				74E95E991C3DF2040057973E /* A1 */,
 				74D3C22B1C5476E4009B4EB7 /* A2 */,
+				7446D2B71C711302000E7174 /* A3 */,
 			);
 		};
 /* End PBXProject section */
@@ -457,6 +608,19 @@
 				0C6926F91BA51BFA0033976C /* ShaderProgram.cpp in Sources */,
 				0C6926F61BA51BFA0033976C /* CS488Window.cpp in Sources */,
 				0C80C9401BA38CC5004E48C5 /* A0.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7446D2B41C711302000E7174 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7446D2D01C711329000E7174 /* SceneNode.cpp in Sources */,
+				7446D2CE1C711329000E7174 /* JointNode.cpp in Sources */,
+				7446D2CF1C711329000E7174 /* scene_lua.cpp in Sources */,
+				7446D2CD1C711329000E7174 /* GeometryNode.cpp in Sources */,
+				7446D2BB1C711303000E7174 /* main.cpp in Sources */,
+				7446D2CC1C711329000E7174 /* A3.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -634,6 +798,39 @@
 			};
 			name = Release;
 		};
+		7446D2BC1C711303000E7174 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "-";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/lib",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		7446D2BD1C711303000E7174 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/lib",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		74D3C2301C5476E4009B4EB7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -729,6 +926,14 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		7446D2BE1C711303000E7174 /* Build configuration list for PBXNativeTarget "A3" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7446D2BC1C711303000E7174 /* Debug */,
+				7446D2BD1C711303000E7174 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		74D3C2321C5476E4009B4EB7 /* Build configuration list for PBXNativeTarget "A2" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -736,6 +941,7 @@
 				74D3C2311C5476E4009B4EB7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		74E95E9E1C3DF2040057973E /* Build configuration list for PBXNativeTarget "A1" */ = {
 			isa = XCConfigurationList;
