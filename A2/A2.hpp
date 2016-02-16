@@ -79,18 +79,6 @@ private:
     
     std::vector<pair<glm::vec4, glm::vec4>> world_reference;
     std::vector<pair<glm::vec4, glm::vec4>> model_reference;
-
-	// Cube location in the world coordinates
-	glm::vec4 cube_location;
-
-	// View Reference Point
-	glm::vec4 vrp;
-
-	// View Plane Normal
-	glm::vec4 vpn;
-
-	// View Up Vector
-	glm::vec4 vup;
 	
 	// View transformations.
 	glm::mat4 V;
@@ -103,6 +91,51 @@ private:
 
 	// Field of View in degree
 	float fov;
+	
+	// mouse position
+	double mouse_x_pos;
+	double mouse_y_pos;
+	char   curr_mode;
+	float near = 2;
+	float far = 20;
+	
+	// view port definition.
+	vec4 view_port_center;
+	float view_port_side_x;
+	float view_port_side_y;
+	vector<vec2> view_port;
+	
+	// store one viewport point
+	pair<double, double> viewport_v1;
+	pair<double, double> viewport_v2;
+	bool shouldViewportResize;
+	
+private:
+	// Calculate a new translated matrix for m.
+	glm::mat4 translate(glm::mat4 const & m, const glm::vec3 & v);
+	
+	// Calculate a new roated matrix for m.
+	glm::mat4 rotate(glm::mat4 const & m, const glm::vec3 & v);
+	
+	// Calculate a new scaled matrix for m.
+	glm::mat4 scale(glm::mat4 const & m, const glm::vec3 & v);
+	
+	// As user interact with the environment, we need to update our transformation matrix V and M.
+	void update_model_transformation(const glm::mat4 & T);
+	void update_view_transoformation(const glm::mat4 & T);
+	
+	
+	// Construct view_port vertices using view_port_center, view_port_side_x, view_port_side_y.
+	void construct_view_port();
+	
+	// Update view_port with two points
+	void update_view_port(const vec2 & p1, const vec2 & p2);
+	
+	// Reset all the state
+	void reset();
+	
+	// update perspective view
+	void update_perspective_view();
 
 public:
 	// Initialize cube vertices
@@ -114,60 +147,6 @@ public:
 	// Initialize view
 	void initView();
 
-private:
-	// Calculate a new translated matrix for m.
-	glm::mat4 translate(glm::mat4 const & m, const glm::vec3 & v);
-
-	// Calculate a new roated matrix for m.
-	glm::mat4 rotate(glm::mat4 const & m, const glm::vec3 & v);
-
-	// Calculate a new scaled matrix for m.
-	glm::mat4 scale(glm::mat4 const & m, const glm::vec3 & v);
-
-	// test & debug
-	void test_debug();
-	
-	// As user interact with the environment, we need to update our transformation matrix V and M.
-	void update_model_transformation(const glm::mat4 & T);
-	void update_view_transoformation(const glm::mat4 & T);
-    
-    // mouse position
-    double mouse_x_pos;
-    double mouse_y_pos;
-    char   curr_mode;
-    float near = 2;
-    float far = 20;
-	
-	// store 4 view port vertices
-	vec4 view_port_center;
-	float view_port_side_x;
-	float view_port_side_y;
-	vector<vec2> view_port;
-	
-	// Construct view_port vertices using view_port_center, view_port_side_x, view_port_side_y.
-	void construct_view_port();
-	
-	// Update view_port with two points
-	void update_view_port(const vec2 & p1, const vec2 & p2);
-	
-	// Reset all the state
-	void reset();
-	
-	// store one viewport point
-	pair<double, double> viewport_v1;
-	pair<double, double> viewport_v2;
-	bool shouldViewportResize;
-
-public:
-	// Translate cube in model coordinates
-	void translate_cube(const glm::vec3 &movement);
-
-	// Rotate cube in model coordinates.
-	void rotate_cube(glm::vec3 rotation_radian);
-
-	// Scale cube in model coordinates.
-	void scale_cube();
-	
 	// Clip in homogenous coordinate.
 	// when false is returned, both vertices should be disgarded.
 	// when true is returned, v1 and v2 stores the values for the vertices after clip. v1 and v2 values may or maynot change.
@@ -175,13 +154,5 @@ public:
 	
 	// draw line on the view port. Pass the NDC coordinates to v0 and v1. This function will draw the line onto the view port.
 	void drawLineInViewPort(const glm::vec2 & v0, const glm::vec2 & v1);
-
-public:
-	// The following functions are for unit tests.
-	void test_translate_model();
-	void test_rotate_model();
-	void test_scale_model();
-
-	void print_line_vertices();
 
 };
