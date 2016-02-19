@@ -13,7 +13,23 @@ public:
 	struct JointRange {
 		double min, init, max;
 	};
-
-
+	
 	JointRange m_joint_x, m_joint_y;
+	float angle_x, angle_y;
+
+public:
+
+	// Override rotate to take account of limitation on rotation.
+	virtual void rotate(char axis, float angle);
+
+	// virtual void render(
+	// 	const ShaderProgram & shader,
+	// 	const glm::mat4 & viewMatrix,
+	// 	BatchInfoMap & m_batchInfoMap,
+	// 	std::deque<glm::mat4> & stack) const;
+
+	// virtual void updateShaderUniforms(
+	// 	const ShaderProgram & shader,
+	// 	const glm::mat4 & viewMatrix, 
+	// 	std::deque<glm::mat4> & stack) const;
 };

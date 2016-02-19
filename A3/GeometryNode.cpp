@@ -27,9 +27,6 @@ void GeometryNode::render(
 
 	// render all children.
 	for (const SceneNode * node : this->children) {
-		if (node->m_nodeType != NodeType::GeometryNode)
-			continue;
-
 		node->render(shader, viewMatrix, m_batchInfoMap, stack);
 	}
 

@@ -41,9 +41,9 @@ public:
     void remove_child(SceneNode* child);
 
 	//-- Transformations:
-    void rotate(char axis, float angle);
-    void scale(const glm::vec3& amount);
-    void translate(const glm::vec3& amount);
+    virtual void rotate(char axis, float angle);
+    virtual void scale(const glm::vec3& amount);
+    virtual void translate(const glm::vec3& amount);
 
 
 	friend std::ostream & operator << (std::ostream & os, const SceneNode & node);
@@ -68,11 +68,14 @@ private:
 
 public:
     // Render the object
-        virtual void render(
+    virtual void render(
         const ShaderProgram & shader,
         const glm::mat4 & viewMatrix,
         BatchInfoMap & m_batchInfoMap,
         std::deque<glm::mat4> & stack) const;
 
-    virtual void updateShaderUniforms(const ShaderProgram & shader, const glm::mat4 & viewMatrix, std::deque<glm::mat4> & stack) const;
+    virtual void updateShaderUniforms(
+        const ShaderProgram & shader,
+        const glm::mat4 & viewMatrix,
+        std::deque<glm::mat4> & stack) const;
 };
