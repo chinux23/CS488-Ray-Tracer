@@ -42,6 +42,8 @@
 		7446D2EF1C711F25000E7174 /* sphere.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7446D2E61C711F25000E7174 /* sphere.obj */; };
 		7446D2F01C711F25000E7174 /* suzanne.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7446D2E71C711F25000E7174 /* suzanne.obj */; };
 		7446D2F11C711F25000E7174 /* VertexShader.vs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7446D2E81C711F25000E7174 /* VertexShader.vs */; };
+		7446D2F41C7A51A4000E7174 /* a3mark2.lua in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7446D2F21C7A519F000E7174 /* a3mark2.lua */; };
+		7446D2F51C7A51A6000E7174 /* mypuppet.lua in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7446D2F31C7A519F000E7174 /* mypuppet.lua */; };
 		749836971C42B6350042DD2D /* cube.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 749836951C42B6350042DD2D /* cube.cpp */; };
 		7498369A1C42B70A0042DD2D /* Shape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 749836981C42B70A0042DD2D /* Shape.cpp */; };
 		74D3C2361C547724009B4EB7 /* A2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 74D3C2331C547724009B4EB7 /* A2.cpp */; };
@@ -84,9 +86,11 @@
 				7446D2E91C711F25000E7174 /* arc_FragmentShader.fs in CopyFiles */,
 				7446D2EA1C711F25000E7174 /* arc_VertexShader.vs in CopyFiles */,
 				7446D2EB1C711F25000E7174 /* cube.obj in CopyFiles */,
+				7446D2F51C7A51A6000E7174 /* mypuppet.lua in CopyFiles */,
 				7446D2EC1C711F25000E7174 /* FragmentShader.fs in CopyFiles */,
 				7446D2ED1C711F25000E7174 /* puppet.lua in CopyFiles */,
 				7446D2EE1C711F25000E7174 /* simpleScene.lua in CopyFiles */,
+				7446D2F41C7A51A4000E7174 /* a3mark2.lua in CopyFiles */,
 				7446D2EF1C711F25000E7174 /* sphere.obj in CopyFiles */,
 				7446D2F01C711F25000E7174 /* suzanne.obj in CopyFiles */,
 				7446D2F11C711F25000E7174 /* VertexShader.vs in CopyFiles */,
@@ -190,6 +194,8 @@
 		7446D2E61C711F25000E7174 /* sphere.obj */ = {isa = PBXFileReference; lastKnownFileType = text; name = sphere.obj; path = Assets/sphere.obj; sourceTree = "<group>"; };
 		7446D2E71C711F25000E7174 /* suzanne.obj */ = {isa = PBXFileReference; lastKnownFileType = text; name = suzanne.obj; path = Assets/suzanne.obj; sourceTree = "<group>"; };
 		7446D2E81C711F25000E7174 /* VertexShader.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = VertexShader.vs; path = Assets/VertexShader.vs; sourceTree = "<group>"; };
+		7446D2F21C7A519F000E7174 /* a3mark2.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = a3mark2.lua; path = Assets/a3mark2.lua; sourceTree = "<group>"; };
+		7446D2F31C7A519F000E7174 /* mypuppet.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = mypuppet.lua; path = Assets/mypuppet.lua; sourceTree = "<group>"; };
 		749836951C42B6350042DD2D /* cube.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cube.cpp; sourceTree = "<group>"; };
 		749836961C42B6350042DD2D /* cube.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cube.hpp; sourceTree = "<group>"; };
 		749836981C42B70A0042DD2D /* Shape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shape.cpp; sourceTree = "<group>"; };
@@ -424,6 +430,8 @@
 				7446D2E71C711F25000E7174 /* suzanne.obj */,
 				7446D2E81C711F25000E7174 /* VertexShader.vs */,
 				7446D2DD1C711F0F000E7174 /* a3mark.lua */,
+				7446D2F21C7A519F000E7174 /* a3mark2.lua */,
+				7446D2F31C7A519F000E7174 /* mypuppet.lua */,
 			);
 			name = Assets;
 			sourceTree = "<group>";
@@ -933,6 +941,7 @@
 				7446D2BD1C711303000E7174 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		74D3C2321C5476E4009B4EB7 /* Build configuration list for PBXNativeTarget "A2" */ = {
 			isa = XCConfigurationList;
