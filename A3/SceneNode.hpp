@@ -9,6 +9,7 @@
 #include <iostream>
 #include <deque>
 #include <map>
+#include <unordered_map>
 
 #include "cs488-framework/CS488Window.hpp"
 #include "cs488-framework/OpenGLImport.hpp"
@@ -62,13 +63,20 @@ public:
 	std::string m_name;
 	unsigned int m_nodeId;
 
-
-private:
+#pragma mark - Picking
+protected:
 	// The number of SceneNode instances.
-	static unsigned int nodeInstanceCount;
-    unsigned int id;
-    static std::map<unsigned int, SceneNode *> Nodes;
+	static unsigned int							nodeInstanceCount;
+	
+	// a shared data structure to store all nodes.
+    static std::unordered_map<unsigned int, SceneNode *>	Nodes;
 
+	// The id of this node.
+	unsigned int								id;
+	
+	// shared flag to indicate that we are doing picking.
+	static bool									do_picking;
+	
 public:
     // Render the object
     virtual void render(
@@ -81,4 +89,10 @@ public:
         const ShaderProgram & shader,
         const glm::mat4 & viewMatrix,
         std::deque<glm::mat4> & stack) const;
+	
+	void enablePicking() const;
+	void disablePicking() const;
+	
+	bool hasID(unsigned int) const;
+	SceneNode *nodeFromID(unsigned int i) const;
 };

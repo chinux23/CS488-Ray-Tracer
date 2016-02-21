@@ -56,26 +56,37 @@ void GeometryNode::updateShaderUniforms(const ShaderProgram & shader, const glm:
 		modelView = viewMatrix * modelView;
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(modelView));
 		CHECK_GL_ERRORS;
+		
+		if (do_picking) {
+			float r = float( id        & 0xff) / 255.0f;
+			float g = float((id >> 8)  & 0xff) / 255.0f;
+			float b = float((id >> 16) & 0xff) / 255.0f;
+			
+			location = shader.getUniformLocation("material.kd");
+			glUniform3f( location, r, g, b );
+			CHECK_GL_ERRORS;
 
-		//-- Set NormMatrix:
-		location = shader.getUniformLocation("NormalMatrix");
-		glm::mat3 normalMatrix = glm::transpose(glm::inverse(glm::mat3(modelView)));
-		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(normalMatrix));
-		CHECK_GL_ERRORS;
+		} else {
+			//-- Set NormMatrix:
+			location = shader.getUniformLocation("NormalMatrix");
+			glm::mat3 normalMatrix = glm::transpose(glm::inverse(glm::mat3(modelView)));
+			glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(normalMatrix));
+			CHECK_GL_ERRORS;
 
 
-		//-- Set Material values:
-		location = shader.getUniformLocation("material.kd");
-		glm::vec3 kd = material.kd;
-		glUniform3fv(location, 1, glm::value_ptr(kd));
-		CHECK_GL_ERRORS;
-		location = shader.getUniformLocation("material.ks");
-		glm::vec3 ks = material.ks;
-		glUniform3fv(location, 1, glm::value_ptr(ks));
-		CHECK_GL_ERRORS;
-		location = shader.getUniformLocation("material.shininess");
-		glUniform1f(location, material.shininess);
-		CHECK_GL_ERRORS;
+			//-- Set Material values:
+			location = shader.getUniformLocation("material.kd");
+			glm::vec3 kd = material.kd;
+			glUniform3fv(location, 1, glm::value_ptr(kd));
+			CHECK_GL_ERRORS;
+			location = shader.getUniformLocation("material.ks");
+			glm::vec3 ks = material.ks;
+			glUniform3fv(location, 1, glm::value_ptr(ks));
+			CHECK_GL_ERRORS;
+			location = shader.getUniformLocation("material.shininess");
+			glUniform1f(location, material.shininess);
+			CHECK_GL_ERRORS;
+		}
 
 	}
 	shader.disable();

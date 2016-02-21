@@ -421,6 +421,7 @@ static void updateShaderUniforms(
 void A3::draw() {
 
 	glEnable( GL_DEPTH_TEST );
+	
 	renderSceneGraph(*m_rootNode);
 
 
@@ -530,6 +531,58 @@ bool A3::mouseButtonInputEvent (
 	bool eventHandled(false);
 
 	// Fill in with event handling code...
+	
+	if (button == GLFW_MOUSE_BUTTON_LEFT && actions == GLFW_PRESS) {
+		double xpos, ypos;
+		glfwGetCursorPos( m_window, &xpos, &ypos );
+		
+		do_picking = true;
+		
+		if (do_picking) {
+			m_rootNode->enablePicking();
+		} else {
+			m_rootNode->disablePicking();
+		}
+		
+		uploadCommonSceneUniforms();
+		glClearColor(1.0, 1.0, 1.0, 1.0 );
+		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+		glClearColor(0.35, 0.35, 0.35, 1.0);
+		
+		draw();
+		
+		// Ugly -- FB coordinates might be different than Window coordinates
+		// (e.g., on a retina display).  Must compensate.
+		xpos *= double(m_framebufferWidth) / double(m_windowWidth);
+		// WTF, don't know why I have to measure y relative to the bottom of
+		// the window in this case.
+		ypos = m_windowHeight - ypos;
+		ypos *= double(m_framebufferHeight) / double(m_windowHeight);
+		
+		GLubyte buffer[ 4 ] = { 0, 0, 0, 0 };
+		// A bit ugly -- don't want to swap the just-drawn false colours
+		// to the screen, so read from the back buffer.
+		glReadBuffer( GL_BACK );
+		// Actually read the pixel at the mouse location.
+		glReadPixels( int(xpos), int(ypos), 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, buffer );
+		CHECK_GL_ERRORS;
+		
+		// Reassemble the object ID.
+		unsigned int what = buffer[0] + (buffer[1] << 8) + (buffer[2] << 16);
+		
+		if (m_rootNode->hasID(what)) {
+			cout << "Picking node with ID: " << what << " [" << m_rootNode->nodeFromID(what)->m_name << "]" << endl;
+		}
+		
+		do_picking = false;
+		if (do_picking) {
+			m_rootNode->enablePicking();
+		} else {
+			m_rootNode->disablePicking();
+		}
+
+		CHECK_GL_ERRORS;
+	}
 
 	return eventHandled;
 }

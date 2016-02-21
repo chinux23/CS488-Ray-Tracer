@@ -17,7 +17,8 @@ using namespace glm;
 
 // Static class variable
 unsigned int SceneNode::nodeInstanceCount = 0;
-std::map<unsigned int, SceneNode *> SceneNode::Nodes;
+std::unordered_map<unsigned int, SceneNode *> SceneNode::Nodes;
+bool SceneNode::do_picking = false;
 
 
 //---------------------------------------------------------------------------------------
@@ -163,6 +164,26 @@ std::ostream & operator << (std::ostream & os, const SceneNode & node) {
 	os << "]";
 
 	return os;
+}
+
+void SceneNode::enablePicking() const
+{
+	do_picking = true;
+}
+
+void SceneNode::disablePicking() const
+{
+	do_picking = false;
+}
+
+bool SceneNode::hasID(unsigned int id) const
+{
+	return Nodes.find(id) != Nodes.end();
+}
+
+SceneNode* SceneNode::nodeFromID(unsigned int i) const
+{
+	return Nodes[i];
 }
 
 
