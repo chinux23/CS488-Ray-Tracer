@@ -58,9 +58,9 @@ void GeometryNode::updateShaderUniforms(const ShaderProgram & shader, const glm:
 		CHECK_GL_ERRORS;
 		
 		if (do_picking) {
-			float r = float( id        & 0xff) / 255.0f;
-			float g = float((id >> 8)  & 0xff) / 255.0f;
-			float b = float((id >> 16) & 0xff) / 255.0f;
+			float r = float( m_nodeId        & 0xff) / 255.0f;
+			float g = float((m_nodeId >> 8)  & 0xff) / 255.0f;
+			float b = float((m_nodeId >> 16) & 0xff) / 255.0f;
 			
 			location = shader.getUniformLocation("material.kd");
 			glUniform3f( location, r, g, b );

@@ -571,7 +571,14 @@ bool A3::mouseButtonInputEvent (
 		unsigned int what = buffer[0] + (buffer[1] << 8) + (buffer[2] << 16);
 		
 		if (m_rootNode->hasID(what)) {
-			cout << "Picking node with ID: " << what << " [" << m_rootNode->nodeFromID(what)->m_name << "]" << endl;
+			SceneNode *node = m_rootNode->nodeFromID(what);
+			cout << "Picking node with ID: " << what << " [" << node->m_name << "]" << endl;
+			node->isSelected = !node->isSelected;
+			if (node->isSelected) {
+				cout << node->m_name << " is selected" << endl;
+			} else {
+				cout << node->m_name << " is deselected" << endl;
+			}
 		}
 		
 		do_picking = false;
