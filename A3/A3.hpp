@@ -77,4 +77,7 @@ protected:
 	std::string m_luaSceneFile;
 
 	std::shared_ptr<SceneNode> m_rootNode;
+
+private:
+	bool do_picking;	// indicate whether we should pick
 };

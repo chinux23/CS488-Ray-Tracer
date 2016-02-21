@@ -20,7 +20,7 @@ void GeometryNode::render(
 	BatchInfoMap & m_batchInfoMap,
 	std::deque<glm::mat4> & stack) const
 {
-	std::cout << "Rendering " << m_name << std::endl;
+	// std::cout << "Rendering " << m_name << std::endl;
 
 	// put current transformations into stack
 	stack.push_back(trans);

@@ -71,35 +71,3 @@ void JointNode::rotate(char axis, float angle) {
 	trans = glm::rotate(degreesToRadians(angle_x), vec3(1,0,0)) * trans;
 	trans = glm::rotate(degreesToRadians(angle_y), vec3(0,1,0)) * trans;
 }
-
-// void JointNode::render(
-// 	const ShaderProgram & shader,
-// 	const glm::mat4 & viewMatrix,
-// 	BatchInfoMap & m_batchInfoMap,
-// 	std::deque<glm::mat4> & stack) const
-// {
-// 	std::cout << "Rendering " << m_name << std::endl;
-
-// 	// put current transformations into stack
-// 	stack.push_back(trans);
-
-// 	// render all children.
-// 	for (const SceneNode * node : this->children) {
-// 		if (node->m_nodeType != NodeType::GeometryNode)
-// 			continue;
-
-// 		node->render(shader, viewMatrix, m_batchInfoMap, stack);
-// 	}
-
-// 	// remove current transformation from stack
-// 	stack.pop_back();
-
-// }
-
-// void JointNode::updateShaderUniforms(
-// 	const ShaderProgram & shader,
-// 	const glm::mat4 & viewMatrix, 
-// 	std::deque<glm::mat4> & stack) const
-// {
-
-// }

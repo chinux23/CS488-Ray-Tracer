@@ -17,6 +17,7 @@ using namespace glm;
 
 // Static class variable
 unsigned int SceneNode::nodeInstanceCount = 0;
+std::map<unsigned int, SceneNode *> SceneNode::Nodes;
 
 
 //---------------------------------------------------------------------------------------
@@ -27,7 +28,8 @@ SceneNode::SceneNode(const std::string& name)
 	isSelected(false),
 	m_nodeId(nodeInstanceCount++)
 {
-
+	id = nodeInstanceCount;
+	Nodes[id] = this;
 }
 
 //---------------------------------------------------------------------------------------
@@ -120,7 +122,7 @@ void SceneNode::render(
 	std::deque<glm::mat4> & stack) const
 {
 
-	std::cout << "Rendering " << m_name << std::endl;
+	// std::cout << "Rendering " << m_name << std::endl;
 
 	// put current transformations into stack
 	stack.push_back(trans);

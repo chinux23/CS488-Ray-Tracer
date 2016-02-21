@@ -8,6 +8,7 @@
 #include <string>
 #include <iostream>
 #include <deque>
+#include <map>
 
 #include "cs488-framework/CS488Window.hpp"
 #include "cs488-framework/OpenGLImport.hpp"
@@ -20,6 +21,7 @@ enum class NodeType {
 	GeometryNode,
 	JointNode
 };
+
 
 class SceneNode {
 public:
@@ -64,7 +66,8 @@ public:
 private:
 	// The number of SceneNode instances.
 	static unsigned int nodeInstanceCount;
-
+    unsigned int id;
+    static std::map<unsigned int, SceneNode *> Nodes;
 
 public:
     // Render the object
