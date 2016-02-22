@@ -115,4 +115,7 @@ private:
 	// mouse position
 	double mouse_x_pos;
 	double mouse_y_pos;
+	
+	// computer the vector in view coordinates.
+	glm::vec3 arcballVector(float x, float y);
 };

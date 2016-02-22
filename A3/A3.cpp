@@ -557,12 +557,13 @@ bool A3::mouseMoveEvent (
 		double yPos
 ) {
 	bool eventHandled(false);
+	
+//	cout << "xPos: " << xPos << " yPos: " << yPos << endl;
 
 	// Fill in with event handling code...
 	double xdiff = xPos - mouse_x_pos;
 	double ydiff = yPos - mouse_y_pos;
-	mouse_x_pos = xPos;
-	mouse_y_pos = yPos;
+
 	
 	if (curr_mode == Mode_PositionOrientation && sub_mode == SubMode1) {
 		// Translate puppet in X Y.
@@ -573,8 +574,37 @@ bool A3::mouseMoveEvent (
 		// Translate pupeet in Z
 		m_rootNode->translate(vec3(0, 0, ydiff * 0.01));
 	}
+	
+	if (curr_mode == Mode_PositionOrientation && sub_mode == SubMode3) {
+		glm::vec3 va = arcballVector(mouse_x_pos, mouse_y_pos);
+		glm::vec3 vb = arcballVector(xPos, yPos);
+		
+		float angle = acos(std::min(1.0f, glm::dot(va, vb)));
+		// normal in device coordinate
+		glm::vec3 axis_in_camera_coord = glm::cross(va, vb);
+//		glm::mat3 camera2object = glm::inverse(m_view * m_rootNode->trans);
+		
+	}
 
+	mouse_x_pos = xPos;
+	mouse_y_pos = yPos;
 	return eventHandled;
+}
+
+glm::vec3 A3::arcballVector(float x, float y)
+{
+	ImVec2 window_size = ImGui::GetWindowSize();
+	glm::vec3 P = glm::vec3(x/window_size.x * 2 - 1.0, y / window_size.y * 2 - 1.0, 0);
+	
+	// The following code is referenced from
+	// https://en.wikibooks.org/wiki/OpenGL_Programming/Modern_OpenGL_Tutorial_Arcball
+	float OP_squared = P.x * P.x + P.y * P.y;
+	if (OP_squared <= 1*1) {
+		P.z = sqrt(1*1 - OP_squared);
+	} else {
+		P = glm::normalize(P);
+	}
+	return P;
 }
 
 //----------------------------------------------------------------------------------------
