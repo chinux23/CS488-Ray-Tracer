@@ -576,14 +576,26 @@ bool A3::mouseMoveEvent (
 	}
 	
 	if (curr_mode == Mode_PositionOrientation && sub_mode == SubMode3) {
+		xdiff = -xdiff;
 		glm::vec3 va = arcballVector(mouse_x_pos, mouse_y_pos);
 		glm::vec3 vb = arcballVector(xPos, yPos);
 		
-		float angle = acos(std::min(1.0f, glm::dot(va, vb)));
-		// normal in device coordinate
-		glm::vec3 axis_in_camera_coord = glm::cross(va, vb);
-//		glm::mat3 camera2object = glm::inverse(m_view * m_rootNode->trans);
+		// angle in view coordinate
+		float angle_in_view_frame = acos(std::min(1.0f, glm::dot(va, vb)));
 		
+		// normal in view coordinate
+		glm::vec3 axis = glm::cross(va, vb);
+		glm::vec4 axis_in_viewframe = {axis.x, axis.y, axis.z, 0};	// vector
+		
+		glm::vec4 axis_in_worldframe = glm::inverse(m_view) * axis_in_viewframe;
+		
+		cout << "Rotation angle is " << glm::degrees(angle_in_view_frame) << endl;
+		cout << "Rotating around axis: " << axis_in_worldframe << endl;
+		
+		glm::mat4 rotation = glm::rotate(glm::mat4(),
+										 glm::degrees(angle_in_view_frame),
+										 {axis_in_worldframe.x, axis_in_worldframe.y, axis_in_worldframe.z});
+		m_rootNode->trans = m_rootNode->trans * rotation;
 	}
 
 	mouse_x_pos = xPos;
@@ -593,8 +605,9 @@ bool A3::mouseMoveEvent (
 
 glm::vec3 A3::arcballVector(float x, float y)
 {
-	ImVec2 window_size = ImGui::GetWindowSize();
-	glm::vec3 P = glm::vec3(x/window_size.x * 2 - 1.0, y / window_size.y * 2 - 1.0, 0);
+	int width, height;
+	glfwGetWindowSize(m_window, &width, &height);
+	glm::vec3 P = glm::vec3(x/width * 2 - 1.0, y / height * 2 - 1.0, 0);
 	
 	// The following code is referenced from
 	// https://en.wikibooks.org/wiki/OpenGL_Programming/Modern_OpenGL_Tutorial_Arcball
