@@ -15,6 +15,25 @@ struct LightSource {
 	glm::vec3 rgbIntensity;
 };
 
+typedef enum {
+	Option_Circle,
+	Option_Z_Buffer,
+	Option_Backface_Culling,
+	Option_Frontface_Culling
+} OPTIONS_TYPE;
+
+typedef enum {
+	Mode_PositionOrientation,
+	Mode_Joints
+} MODE_TYPE;
+
+typedef enum {
+	SubMode_Unselected,
+	SubMode1,
+	SubMode2,
+	SubMode3
+} SUBMODE_TYPE;
+
 
 class A3 : public CS488Window {
 public:
@@ -80,4 +99,20 @@ protected:
 
 private:
 	bool do_picking;	// indicate whether we should pick
+	
+private:
+	bool option_circle_enabled;
+	bool option_zbuffer_enabled;
+	bool option_backface_culling;
+	bool option_frontface_culling;
+	
+	void enableFaceCulling();
+	void disableFaceCulling();
+	
+	MODE_TYPE curr_mode;
+	SUBMODE_TYPE sub_mode;		// Submodes inside Position/Orientation or Joints.
+	
+	// mouse position
+	double mouse_x_pos;
+	double mouse_y_pos;
 };

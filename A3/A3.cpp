@@ -50,6 +50,13 @@ A3::~A3()
 void A3::init()
 {
 	do_picking = false;
+	
+	option_circle_enabled		= false;
+	option_zbuffer_enabled		= true;
+	option_backface_culling		= false;
+	option_frontface_culling	= false;
+	
+	curr_mode = Mode_PositionOrientation;
 
 	// Set the background colour.
 	glClearColor(0.35, 0.35, 0.35, 1.0);
@@ -86,8 +93,7 @@ void A3::init()
 	initViewMatrix();
 
 	initLightSources();
-
-
+	
 	// Exiting the current scope calls delete automatically on meshConsolidator freeing
 	// all vertex data resources.  This is fine since we already copied this data to
 	// VBOs on the GPU.  We have no use for storing vertex data on the CPU side beyond
@@ -356,18 +362,25 @@ void A3::guiLogic()
 	        }
 
 	       	if (ImGui::BeginMenu("Options")) {
-	            if (ImGui::MenuItem("Circle", "C", false, true)) {}
-	            if (ImGui::MenuItem("Z-buffer", "Z", true, true)) {}
-            	if (ImGui::MenuItem("Backface culling", "B", false, true)) {}
-        		if (ImGui::MenuItem("Frontface culling", "F", false, true)) {}
+	            if (ImGui::MenuItem("Circle", "C", &option_circle_enabled, true)) {}
+	            if (ImGui::MenuItem("Z-buffer", "Z", &option_zbuffer_enabled, true)) {}
+            	if (ImGui::MenuItem("Backface culling", "B", &option_backface_culling, true)) {}
+        		if (ImGui::MenuItem("Frontface culling", "F", &option_frontface_culling, true)) {}
 	            ImGui::EndMenu();
 	        }
 	        ImGui::EndMainMenuBar();
     	}
 
     	bool selected;
-        if (ImGui::RadioButton("Position/Orientation (P)", selected)) {}
-        if (ImGui::RadioButton("Joints               (J)", selected)) {}
+		selected = curr_mode == Mode_PositionOrientation;
+        if (ImGui::RadioButton("Position/Orientation (P)", selected)) {
+			curr_mode = Mode_PositionOrientation;
+		}
+	
+		selected = curr_mode == Mode_Joints;
+        if (ImGui::RadioButton("Joints               (J)", selected)) {
+			curr_mode = Mode_Joints;
+		}
 		ImGui::Text( "Framerate: %.1f FPS", ImGui::GetIO().Framerate );
 
 	ImGui::End();
@@ -419,14 +432,45 @@ static void updateShaderUniforms(
  * Called once per frame, after guiLogic().
  */
 void A3::draw() {
-
-	glEnable( GL_DEPTH_TEST );
+	
+	if (option_zbuffer_enabled) {
+		glEnable( GL_DEPTH_TEST );
+	}
+	
+	enableFaceCulling();
 	
 	renderSceneGraph(*m_rootNode);
+	
+	if (option_zbuffer_enabled) {
+		glDisable( GL_DEPTH_TEST );
+	}
+	
+	disableFaceCulling();
+		
+	if (option_circle_enabled) {
+		renderArcCircle();
+	}
+}
 
+void A3::enableFaceCulling()
+{
+	if (option_frontface_culling & !option_backface_culling) {
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+	} else if (option_backface_culling & !option_frontface_culling) {
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+	} else if (option_frontface_culling & option_backface_culling){
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT_AND_BACK);
+	} else {
+		glDisable(GL_CULL_FACE);
+	}
+}
 
-	glDisable( GL_DEPTH_TEST );
-	renderArcCircle();
+void A3::disableFaceCulling()
+{
+	glDisable(GL_CULL_FACE);
 }
 
 //----------------------------------------------------------------------------------------
@@ -515,6 +559,20 @@ bool A3::mouseMoveEvent (
 	bool eventHandled(false);
 
 	// Fill in with event handling code...
+	double xdiff = xPos - mouse_x_pos;
+	double ydiff = yPos - mouse_y_pos;
+	mouse_x_pos = xPos;
+	mouse_y_pos = yPos;
+	
+	if (curr_mode == Mode_PositionOrientation && sub_mode == SubMode1) {
+		// Translate puppet in X Y.
+		m_rootNode->translate(vec3(xdiff * 0.01, -ydiff * 0.01, 0));
+	}
+	
+	if (curr_mode == Mode_PositionOrientation && sub_mode == SubMode2) {
+		// Translate pupeet in Z
+		m_rootNode->translate(vec3(0, 0, ydiff * 0.01));
+	}
 
 	return eventHandled;
 }
@@ -532,64 +590,102 @@ bool A3::mouseButtonInputEvent (
 
 	// Fill in with event handling code...
 	
-	if (button == GLFW_MOUSE_BUTTON_LEFT && actions == GLFW_PRESS) {
-		double xpos, ypos;
-		glfwGetCursorPos( m_window, &xpos, &ypos );
-		
-		do_picking = true;
-		
-		if (do_picking) {
-			m_rootNode->enablePicking();
-		} else {
-			m_rootNode->disablePicking();
+	if (curr_mode == Mode_PositionOrientation) {
+		if (button == GLFW_MOUSE_BUTTON_LEFT && actions == GLFW_PRESS) {
+			sub_mode = SubMode1;
 		}
 		
-		uploadCommonSceneUniforms();
-		glClearColor(1.0, 1.0, 1.0, 1.0 );
-		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-		glClearColor(0.35, 0.35, 0.35, 1.0);
+		if (button == GLFW_MOUSE_BUTTON_LEFT && actions == GLFW_RELEASE) {
+			sub_mode = SubMode_Unselected;
+		}
 		
-		draw();
+		if (button == GLFW_MOUSE_BUTTON_MIDDLE && actions == GLFW_PRESS) {
+			sub_mode = SubMode2;
+		}
 		
-		// Ugly -- FB coordinates might be different than Window coordinates
-		// (e.g., on a retina display).  Must compensate.
-		xpos *= double(m_framebufferWidth) / double(m_windowWidth);
-		// WTF, don't know why I have to measure y relative to the bottom of
-		// the window in this case.
-		ypos = m_windowHeight - ypos;
-		ypos *= double(m_framebufferHeight) / double(m_windowHeight);
+		if (button == GLFW_MOUSE_BUTTON_MIDDLE && actions == GLFW_RELEASE) {
+			sub_mode = SubMode_Unselected;
+		}
 		
-		GLubyte buffer[ 4 ] = { 0, 0, 0, 0 };
-		// A bit ugly -- don't want to swap the just-drawn false colours
-		// to the screen, so read from the back buffer.
-		glReadBuffer( GL_BACK );
-		// Actually read the pixel at the mouse location.
-		glReadPixels( int(xpos), int(ypos), 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, buffer );
-		CHECK_GL_ERRORS;
+		if (button == GLFW_MOUSE_BUTTON_RIGHT && actions == GLFW_PRESS) {
+			sub_mode = SubMode3;
+		}
 		
-		// Reassemble the object ID.
-		unsigned int what = buffer[0] + (buffer[1] << 8) + (buffer[2] << 16);
+		if (button == GLFW_MOUSE_BUTTON_RIGHT && actions == GLFW_RELEASE) {
+			sub_mode = SubMode_Unselected;
+		}
 		
-		if (m_rootNode->hasID(what)) {
-			SceneNode *node = m_rootNode->nodeFromID(what);
-			cout << "Picking node with ID: " << what << " [" << node->m_name << "]" << endl;
-			node->isSelected = !node->isSelected;
-			if (node->isSelected) {
-				cout << node->m_name << " is selected" << endl;
+	} else if (curr_mode == Mode_Joints) {
+		if (button == GLFW_MOUSE_BUTTON_LEFT && actions == GLFW_PRESS) {
+			double xpos, ypos;
+			glfwGetCursorPos( m_window, &xpos, &ypos );
+			
+			do_picking = true;
+			
+			if (do_picking) {
+				m_rootNode->enablePicking();
 			} else {
-				cout << node->m_name << " is deselected" << endl;
+				m_rootNode->disablePicking();
 			}
+			
+			uploadCommonSceneUniforms();
+			glClearColor(1.0, 1.0, 1.0, 1.0 );
+			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+			glClearColor(0.35, 0.35, 0.35, 1.0);
+			
+			draw();
+			
+			// Ugly -- FB coordinates might be different than Window coordinates
+			// (e.g., on a retina display).  Must compensate.
+			xpos *= double(m_framebufferWidth) / double(m_windowWidth);
+			// WTF, don't know why I have to measure y relative to the bottom of
+			// the window in this case.
+			ypos = m_windowHeight - ypos;
+			ypos *= double(m_framebufferHeight) / double(m_windowHeight);
+			
+			GLubyte buffer[ 4 ] = { 0, 0, 0, 0 };
+			// A bit ugly -- don't want to swap the just-drawn false colours
+			// to the screen, so read from the back buffer.
+			glReadBuffer( GL_BACK );
+			// Actually read the pixel at the mouse location.
+			glReadPixels( int(xpos), int(ypos), 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, buffer );
+			CHECK_GL_ERRORS;
+			
+			// Reassemble the object ID.
+			unsigned int what = buffer[0] + (buffer[1] << 8) + (buffer[2] << 16);
+			
+			if (m_rootNode->hasID(what)) {
+				SceneNode *node = m_rootNode->nodeFromID(what);
+				cout << "Picking node with ID: " << what << " [" << node->m_name << "]" << endl;
+				node->isSelected = !node->isSelected;
+				if (node->isSelected) {
+					cout << node->m_name << " is selected" << endl;
+				} else {
+					cout << node->m_name << " is deselected" << endl;
+				}
+			}
+			
+			do_picking = false;
+			if (do_picking) {
+				m_rootNode->enablePicking();
+			} else {
+				m_rootNode->disablePicking();
+			}
+			
+			CHECK_GL_ERRORS;
 		}
 		
-		do_picking = false;
-		if (do_picking) {
-			m_rootNode->enablePicking();
-		} else {
-			m_rootNode->disablePicking();
+		if (button == GLFW_MOUSE_BUTTON_MIDDLE && actions == GLFW_PRESS) {
+			// Rotate all selected joints.
 		}
-
-		CHECK_GL_ERRORS;
+		
+		if (button == GLFW_MOUSE_BUTTON_RIGHT && actions == GLFW_PRESS) {
+			// Rotate head.
+			
+		}
 	}
+	
+
 
 	return eventHandled;
 }
