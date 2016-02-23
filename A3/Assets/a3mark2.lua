@@ -14,22 +14,22 @@ s0 = gr.mesh('cube','s0')
 rootnode:add_child(s0)
 s0:set_material(white)
 
-j1 = gr.joint('leftShoulderJoint', {0, 0, 0}, {-180, 30, 30})
+j1 = gr.joint('leftShoulderJoint', {-30, 0, 30}, {0, 0, 0})
 s0:add_child(j1)
 
-j0 = gr.joint('rightShoulderJoint', {0, 0, 0}, {-180, -30, 30})
+j0 = gr.joint('rightShoulderJoint', {-30, 0, 30}, {0, 0, 0})
 s0:add_child(j0)
 
 right_arm = gr.mesh('cube','right_arm')
 j0:add_child(right_arm)
-right_arm:translate(1.0, 2.0, 0.0)
-right_arm:scale(1.0, 0.1, 0.1)
+right_arm:translate(10.0, 0.0, 0.0)
+right_arm:scale(0.1, 1, 0.1)
 right_arm:set_material(red)
 
 left_arm = gr.mesh('cube','left_arm')
 j1:add_child(left_arm)
-left_arm:translate(-1.0, 2.0, 0.0)
-left_arm:scale(1.0, 0.1, 0.1)
+left_arm:translate(-10.0, 0.0, 0.0)
+left_arm:scale(0.1, 1, 0.1)
 left_arm:set_material(green)
 
 -- s2 = gr.mesh('sphere','s2')

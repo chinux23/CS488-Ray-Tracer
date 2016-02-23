@@ -46,7 +46,7 @@ void JointNode::rotate(char axis, float angle) {
 			rot_axis = vec3(1,0,0);
 			if ((angle + angle_x) > m_joint_x.max) {
 				angle_x = m_joint_x.max;
-			} else if ((angle + angle_y) < m_joint_y.min) {
+			} else if ((angle + angle_x) < m_joint_x.min) {
 				angle_x = m_joint_x.min;
 			} else {
 				angle_x = angle_x + angle;
@@ -68,8 +68,15 @@ void JointNode::rotate(char axis, float angle) {
 		default:
 			break;
 	}
-	trans = glm::rotate(degreesToRadians(angle_x), vec3(1,0,0)) * trans;
-	trans = glm::rotate(degreesToRadians(angle_y), vec3(0,1,0)) * trans;
+    std::cout << "Rotating along x " << angle_x << std::endl;
+    std::cout << "Rotating along y " << angle_y << std::endl;
+    
+    if (activeAxis() == 'x') {
+        trans = glm::rotate(degreesToRadians(angle_x), vec3(1,0,0));
+    } else {
+        trans = glm::rotate(degreesToRadians(angle_y), vec3(0,1,0));
+    }
+    
 }
 
 char JointNode::activeAxis()

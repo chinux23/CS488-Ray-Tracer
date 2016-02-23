@@ -625,7 +625,7 @@ bool A3::mouseMoveEvent (
 	}
     
     if (curr_mode == Mode_Joints && sub_mode == SubMode2) {
-        float angle = 0.01 * ydiff;
+        float angle = ydiff;
         for (auto joint : selected_joints) {
             cout << "rotating angle " << angle << endl;
             joint->rotate(angle);
@@ -784,25 +784,25 @@ bool A3::mouseButtonInputEvent (
                 CHECK_GL_ERRORS;
             }
             
-            if (button == GLFW_MOUSE_BUTTON_MIDDLE && actions == GLFW_PRESS) {
+            if (button == GLFW_MOUSE_BUTTON_RIGHT && actions == GLFW_PRESS) {
                 // Rotate all selected joints.
                 sub_mode = SubMode2;
                 JointRotateCommand *joint_cmd = new JointRotateCommand({selected_joints.begin(), selected_joints.end()}, 0);
                 curr_cmd.reset(joint_cmd);
             }
             
-            if (button == GLFW_MOUSE_BUTTON_MIDDLE && actions == GLFW_RELEASE) {
+            if (button == GLFW_MOUSE_BUTTON_RIGHT && actions == GLFW_RELEASE) {
                 sub_mode = SubMode_Unselected;
                 commands.push_back(std::move(curr_cmd));
                 curr_cmd.reset(nullptr);
             }
             
-            if (button == GLFW_MOUSE_BUTTON_RIGHT && actions == GLFW_PRESS) {
+            if (button == GLFW_MOUSE_BUTTON_MIDDLE && actions == GLFW_PRESS) {
                 // Rotate head.
                 sub_mode = SubMode3;
             }
             
-            if (button == GLFW_MOUSE_BUTTON_RIGHT && actions == GLFW_RELEASE) {
+            if (button == GLFW_MOUSE_BUTTON_MIDDLE && actions == GLFW_RELEASE) {
                 sub_mode = SubMode_Unselected;
             }
             
