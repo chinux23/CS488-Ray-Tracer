@@ -747,6 +747,7 @@ bool A3::mouseButtonInputEvent (
 				node->isSelected = !node->isSelected;
 				if (node->isSelected) {
 					cout << node->m_name << " is selected" << endl;
+                    cout << node->parent->m_name << " is parent" << endl;
 				} else {
 					cout << node->m_name << " is deselected" << endl;
 				}

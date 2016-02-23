@@ -95,4 +95,6 @@ public:
 	
 	bool hasID(unsigned int) const;
 	SceneNode *nodeFromID(unsigned int i) const;
+    
+    SceneNode *parent;
 };

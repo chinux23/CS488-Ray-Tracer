@@ -30,6 +30,7 @@ SceneNode::SceneNode(const std::string& name)
 	m_nodeId(nodeInstanceCount++)
 {
 	Nodes[m_nodeId] = this;
+    parent = nullptr;
 }
 
 //---------------------------------------------------------------------------------------
@@ -70,6 +71,7 @@ const glm::mat4& SceneNode::get_inverse() const {
 
 //---------------------------------------------------------------------------------------
 void SceneNode::add_child(SceneNode* child) {
+    child->parent = this;
 	children.push_back(child);
 }
 
