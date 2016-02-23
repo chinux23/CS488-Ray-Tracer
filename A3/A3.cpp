@@ -585,8 +585,8 @@ bool A3::mouseMoveEvent (
 	if (curr_mode == Mode_PositionOrientation && sub_mode == SubMode1) {
 		// Translate puppet in X Y.
 		m_rootNode->translate(vec3(xdiff * 0.01, -ydiff * 0.01, 0));
-		MoveCommand * cmd = (MoveCommand *)curr_cmd.get();
-		cmd->trans = glm::translate(glm::mat4(), vec3(xdiff * 0.01, -ydiff * 0.01, 0)) * cmd->trans;
+//		MoveCommand * cmd = (MoveCommand *)curr_cmd.get();
+//		cmd->trans = glm::translate(glm::mat4(), vec3(xdiff * 0.01, -ydiff * 0.01, 0)) * cmd->trans;
 //		cout << "move command: " << cmd->trans << endl;
 //		cout << "curr command: " << ((MoveCommand *)curr_cmd.get())->trans << endl;
 	}
@@ -594,8 +594,8 @@ bool A3::mouseMoveEvent (
 	if (curr_mode == Mode_PositionOrientation && sub_mode == SubMode2) {
 		// Translate pupeet in Z
 		m_rootNode->translate(vec3(0, 0, ydiff * 0.01));
-		MoveCommand * cmd = (MoveCommand *)curr_cmd.get();
-		cmd->trans = glm::translate(cmd->trans, vec3(0, 0, ydiff * 0.01));
+//		MoveCommand * cmd = (MoveCommand *)curr_cmd.get();
+//		cmd->trans = glm::translate(cmd->trans, vec3(0, 0, ydiff * 0.01));
 	}
 	
 	if (curr_mode == Mode_PositionOrientation && sub_mode == SubMode3) {
@@ -621,8 +621,8 @@ bool A3::mouseMoveEvent (
 										 {axis_in_worldframe.x, axis_in_worldframe.y, axis_in_worldframe.z});
 		m_rootNode->trans = m_rootNode->trans * rotation;
 		
-		RotateCommand * cmd = (RotateCommand *)curr_cmd.get();
-		cmd->trans = cmd->trans * rotation;
+//		RotateCommand * cmd = (RotateCommand *)curr_cmd.get();
+//		cmd->trans = cmd->trans * rotation;
 	}
 
 	mouse_x_pos = xPos;
@@ -659,119 +659,123 @@ bool A3::mouseButtonInputEvent (
 	bool eventHandled(false);
 
 	// Fill in with event handling code...
+    
+    if (!ImGui::IsMouseHoveringAnyWindow()) {
 	
-	if (curr_mode == Mode_PositionOrientation) {
-		if (button == GLFW_MOUSE_BUTTON_LEFT && actions == GLFW_PRESS) {
-			sub_mode = SubMode1;
-			std::vector<SceneNode *> actors = {m_rootNode.get()};
-			MoveCommand *move_cmd = new MoveCommand(actors, glm::mat4());
-			curr_cmd.reset(move_cmd);
-		}
-		
-		if (button == GLFW_MOUSE_BUTTON_LEFT && actions == GLFW_RELEASE) {
-			sub_mode = SubMode_Unselected;
-//			cout << "push back curr command: " << ((MoveCommand *)curr_cmd.get())->trans << endl;
-			commands.push_back(std::move(curr_cmd));
-			curr_cmd.reset(nullptr);
-//			cout << "pushed back curr command: " << ((MoveCommand *)commands[0].get())->trans << endl;
-		}
-		
-		if (button == GLFW_MOUSE_BUTTON_MIDDLE && actions == GLFW_PRESS) {
-			sub_mode = SubMode2;
-			std::vector<SceneNode *> actors = {m_rootNode.get()};
-			MoveCommand *move_cmd = new MoveCommand(actors, glm::mat4());
-			curr_cmd.reset(move_cmd);
-		}
-		
-		if (button == GLFW_MOUSE_BUTTON_MIDDLE && actions == GLFW_RELEASE) {
-			sub_mode = SubMode_Unselected;
-			commands.push_back(std::move(curr_cmd));
-			curr_cmd.reset(nullptr);
-		}
-		
-		if (button == GLFW_MOUSE_BUTTON_RIGHT && actions == GLFW_PRESS) {
-			sub_mode = SubMode3;
-			std::vector<SceneNode *> actors = {m_rootNode.get()};
-			RotateCommand *move_cmd = new RotateCommand(actors, glm::mat4());
-			curr_cmd.reset(move_cmd);
-		}
-		
-		if (button == GLFW_MOUSE_BUTTON_RIGHT && actions == GLFW_RELEASE) {
-			sub_mode = SubMode_Unselected;
-			commands.push_back(std::move(curr_cmd));
-			curr_cmd.reset(nullptr);
-		}
-		
-	} else if (curr_mode == Mode_Joints) {
-		if (button == GLFW_MOUSE_BUTTON_LEFT && actions == GLFW_PRESS) {
-			double xpos, ypos;
-			glfwGetCursorPos( m_window, &xpos, &ypos );
-			
-			do_picking = true;
-			
-			if (do_picking) {
-				m_rootNode->enablePicking();
-			} else {
-				m_rootNode->disablePicking();
-			}
-			
-			uploadCommonSceneUniforms();
-			glClearColor(1.0, 1.0, 1.0, 1.0 );
-			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-			glClearColor(0.35, 0.35, 0.35, 1.0);
-			
-			draw();
-			
-			// Ugly -- FB coordinates might be different than Window coordinates
-			// (e.g., on a retina display).  Must compensate.
-			xpos *= double(m_framebufferWidth) / double(m_windowWidth);
-			// WTF, don't know why I have to measure y relative to the bottom of
-			// the window in this case.
-			ypos = m_windowHeight - ypos;
-			ypos *= double(m_framebufferHeight) / double(m_windowHeight);
-			
-			GLubyte buffer[ 4 ] = { 0, 0, 0, 0 };
-			// A bit ugly -- don't want to swap the just-drawn false colours
-			// to the screen, so read from the back buffer.
-			glReadBuffer( GL_BACK );
-			// Actually read the pixel at the mouse location.
-			glReadPixels( int(xpos), int(ypos), 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, buffer );
-			CHECK_GL_ERRORS;
-			
-			// Reassemble the object ID.
-			unsigned int what = buffer[0] + (buffer[1] << 8) + (buffer[2] << 16);
-			
-			if (m_rootNode->hasID(what)) {
-				SceneNode *node = m_rootNode->nodeFromID(what);
-				cout << "Picking node with ID: " << what << " [" << node->m_name << "]" << endl;
-				node->isSelected = !node->isSelected;
-				if (node->isSelected) {
-					cout << node->m_name << " is selected" << endl;
-                    cout << node->parent->m_name << " is parent" << endl;
-				} else {
-					cout << node->m_name << " is deselected" << endl;
-				}
-			}
-			
-			do_picking = false;
-			if (do_picking) {
-				m_rootNode->enablePicking();
-			} else {
-				m_rootNode->disablePicking();
-			}
-			
-			CHECK_GL_ERRORS;
-		}
-		
-		if (button == GLFW_MOUSE_BUTTON_MIDDLE && actions == GLFW_PRESS) {
-			// Rotate all selected joints.
-		}
-		
-		if (button == GLFW_MOUSE_BUTTON_RIGHT && actions == GLFW_PRESS) {
-			// Rotate head.
-			
-		}
-	}
+        if (curr_mode == Mode_PositionOrientation) {
+            if (button == GLFW_MOUSE_BUTTON_LEFT && actions == GLFW_PRESS) {
+                sub_mode = SubMode1;
+    //			std::vector<SceneNode *> actors = {m_rootNode.get()};
+    //			MoveCommand *move_cmd = new MoveCommand(actors, glm::mat4());
+    //			curr_cmd.reset(move_cmd);
+            }
+            
+            if (button == GLFW_MOUSE_BUTTON_LEFT && actions == GLFW_RELEASE) {
+                sub_mode = SubMode_Unselected;
+    //			cout << "push back curr command: " << ((MoveCommand *)curr_cmd.get())->trans << endl;
+    //			commands.push_back(std::move(curr_cmd));
+    //			curr_cmd.reset(nullptr);
+    //			cout << "pushed back curr command: " << ((MoveCommand *)commands[0].get())->trans << endl;
+            }
+            
+            if (button == GLFW_MOUSE_BUTTON_MIDDLE && actions == GLFW_PRESS) {
+                sub_mode = SubMode2;
+    //			std::vector<SceneNode *> actors = {m_rootNode.get()};
+    //			MoveCommand *move_cmd = new MoveCommand(actors, glm::mat4());
+    //			curr_cmd.reset(move_cmd);
+            }
+            
+            if (button == GLFW_MOUSE_BUTTON_MIDDLE && actions == GLFW_RELEASE) {
+                sub_mode = SubMode_Unselected;
+    //			commands.push_back(std::move(curr_cmd));
+    //			curr_cmd.reset(nullptr);
+            }
+            
+            if (button == GLFW_MOUSE_BUTTON_RIGHT && actions == GLFW_PRESS) {
+                sub_mode = SubMode3;
+    //			std::vector<SceneNode *> actors = {m_rootNode.get()};
+    //			RotateCommand *move_cmd = new RotateCommand(actors, glm::mat4());
+    //			curr_cmd.reset(move_cmd);
+            }
+            
+            if (button == GLFW_MOUSE_BUTTON_RIGHT && actions == GLFW_RELEASE) {
+                sub_mode = SubMode_Unselected;
+    //			commands.push_back(std::move(curr_cmd));
+    //			curr_cmd.reset(nullptr);
+            }
+            
+        } else if (curr_mode == Mode_Joints) {
+            if (button == GLFW_MOUSE_BUTTON_LEFT && actions == GLFW_PRESS) {
+                double xpos, ypos;
+                glfwGetCursorPos( m_window, &xpos, &ypos );
+                
+                do_picking = true;
+                
+                if (do_picking) {
+                    m_rootNode->enablePicking();
+                } else {
+                    m_rootNode->disablePicking();
+                }
+                
+                uploadCommonSceneUniforms();
+                glClearColor(1.0, 1.0, 1.0, 1.0 );
+                glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+                glClearColor(0.35, 0.35, 0.35, 1.0);
+                
+                draw();
+                
+                // Ugly -- FB coordinates might be different than Window coordinates
+                // (e.g., on a retina display).  Must compensate.
+                xpos *= double(m_framebufferWidth) / double(m_windowWidth);
+                // WTF, don't know why I have to measure y relative to the bottom of
+                // the window in this case.
+                ypos = m_windowHeight - ypos;
+                ypos *= double(m_framebufferHeight) / double(m_windowHeight);
+                
+                GLubyte buffer[ 4 ] = { 0, 0, 0, 0 };
+                // A bit ugly -- don't want to swap the just-drawn false colours
+                // to the screen, so read from the back buffer.
+                glReadBuffer( GL_BACK );
+                // Actually read the pixel at the mouse location.
+                glReadPixels( int(xpos), int(ypos), 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, buffer );
+                CHECK_GL_ERRORS;
+                
+                // Reassemble the object ID.
+                unsigned int what = buffer[0] + (buffer[1] << 8) + (buffer[2] << 16);
+                
+                if (m_rootNode->hasID(what)) {
+                    SceneNode *node = m_rootNode->nodeFromID(what);
+                    cout << "Picking node with ID: " << what << " [" << node->m_name << "]" << endl;
+                    node->isSelected = !node->isSelected;
+                    if (node->isSelected) {
+                        cout << node->m_name << " is selected" << endl;
+                        cout << node->parent->m_name << " is parent" << endl;
+                    } else {
+                        cout << node->m_name << " is deselected" << endl;
+                    }
+                }
+                
+                do_picking = false;
+                if (do_picking) {
+                    m_rootNode->enablePicking();
+                } else {
+                    m_rootNode->disablePicking();
+                }
+                
+                CHECK_GL_ERRORS;
+            }
+            
+            if (button == GLFW_MOUSE_BUTTON_MIDDLE && actions == GLFW_PRESS) {
+                // Rotate all selected joints.
+            }
+            
+            if (button == GLFW_MOUSE_BUTTON_RIGHT && actions == GLFW_PRESS) {
+                // Rotate head.
+                
+            }
+        }
+            
+    }
 
 	return eventHandled;
 }

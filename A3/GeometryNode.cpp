@@ -76,7 +76,13 @@ void GeometryNode::updateShaderUniforms(const ShaderProgram & shader, const glm:
 
 			//-- Set Material values:
 			location = shader.getUniformLocation("material.kd");
-			glm::vec3 kd = material.kd;
+            glm::vec3 kd;
+            if (!isSelected) {
+                kd = material.kd;
+            } else {
+                kd = {1, 1, 0};
+            }
+			
 			glUniform3fv(location, 1, glm::value_ptr(kd));
 			CHECK_GL_ERRORS;
 			location = shader.getUniformLocation("material.ks");
