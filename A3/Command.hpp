@@ -11,6 +11,8 @@
 
 #include <stdio.h>
 #include "SceneNode.hpp"
+#include "JointNode.hpp"
+
 #include <vector>
 
 // The idea of this module is originally referenced from:
@@ -48,10 +50,15 @@ public:
 
 class JointRotateCommand : public Command {
 public:
-	JointRotateCommand(std::vector<SceneNode *> actors, glm::mat4 trans);
+    JointRotateCommand(std::vector<SceneNode *> actors, float angles);
 	
 	virtual void execute();
 	virtual void undo();
+    float m_angle;
+
+private:
+    std::vector<float> old_angles;
+
 };
 
 class HeadRotateCommand : public Command {

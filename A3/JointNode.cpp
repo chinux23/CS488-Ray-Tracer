@@ -71,3 +71,19 @@ void JointNode::rotate(char axis, float angle) {
 	trans = glm::rotate(degreesToRadians(angle_x), vec3(1,0,0)) * trans;
 	trans = glm::rotate(degreesToRadians(angle_y), vec3(0,1,0)) * trans;
 }
+
+char JointNode::activeAxis()
+{
+    if (m_joint_x.min == m_joint_x.max) {
+        return 'y';
+    } else {
+        return 'x';
+    }
+}
+
+void JointNode::rotate(float angle)
+{
+    char axis = activeAxis();
+    rotate(axis, angle);
+}
+

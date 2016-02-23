@@ -11,6 +11,7 @@
 #include <glm/glm.hpp>
 #include <memory>
 #include <deque>
+#include <unordered_set>
 
 
 struct LightSource {
@@ -134,4 +135,5 @@ public:
 private:
 	std::unique_ptr<Command> curr_cmd;
 	std::deque<std::unique_ptr<Command>> commands;
+    std::unordered_set<JointNode*> selected_joints;
 };

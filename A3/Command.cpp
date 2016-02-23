@@ -30,7 +30,7 @@ void MoveCommand::undo()
 
 
 RotateCommand::RotateCommand(std::vector<SceneNode *> actors, glm::mat4 transformation):
-Command(actors), trans(transformation)
+    Command(actors), trans(transformation)
 {
 	
 }
@@ -49,14 +49,36 @@ void RotateCommand::undo()
 	}
 }
 
+JointRotateCommand::JointRotateCommand(std::vector<SceneNode *> actors, float angle):
+    Command(actors), m_angle(angle)
+{
+    for (auto actor : _actors) {
+        if (((JointNode *)actor)->activeAxis() == 'x') {
+            old_angles.push_back(((JointNode*)actor)->angle_x);
+        } else {
+            old_angles.push_back(((JointNode*)actor)->angle_y);
+        }
+    }
+}
+
 void JointRotateCommand::execute()
 {
-	
+    for (int i = 0; i < _actors.size(); i++) {
+        JointNode *joint_node = (JointNode *)_actors[i];
+        joint_node->rotate(m_angle);
+    }
 }
 
 void JointRotateCommand::undo()
 {
-	
+    for (int i = 0; i < _actors.size(); i++) {
+        JointNode *joint_node = (JointNode *)_actors[i];
+        if (joint_node->activeAxis() == 'x') {
+            joint_node->angle_x = old_angles[i];
+        } else {
+            joint_node->angle_y = old_angles[i];
+        }
+    }
 }
 
 void HeadRotateCommand::execute()

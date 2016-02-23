@@ -22,14 +22,20 @@ public:
 	// Override rotate to take account of limitation on rotation.
 	virtual void rotate(char axis, float angle);
 
-	// virtual void render(
-	// 	const ShaderProgram & shader,
-	// 	const glm::mat4 & viewMatrix,
-	// 	BatchInfoMap & m_batchInfoMap,
-	// 	std::deque<glm::mat4> & stack) const;
-
-	// virtual void updateShaderUniforms(
-	// 	const ShaderProgram & shader,
-	// 	const glm::mat4 & viewMatrix, 
-	// 	std::deque<glm::mat4> & stack) const;
+//	 virtual void render(
+//	 	const ShaderProgram & shader,
+//	 	const glm::mat4 & viewMatrix,
+//	 	BatchInfoMap & m_batchInfoMap,
+//	 	std::deque<glm::mat4> & stack) const;
+//
+//	 virtual void updateShaderUniforms(
+//	 	const ShaderProgram & shader,
+//	 	const glm::mat4 & viewMatrix, 
+//	 	std::deque<glm::mat4> & stack) const;
+    
+    // Assume one joint is rotating around one axis. There is an active Axis.
+    char activeAxis();
+    
+    // Rotate around active Axis;
+    virtual void rotate(float angle);
 };

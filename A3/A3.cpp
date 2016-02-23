@@ -624,6 +624,19 @@ bool A3::mouseMoveEvent (
 //		RotateCommand * cmd = (RotateCommand *)curr_cmd.get();
 //		cmd->trans = cmd->trans * rotation;
 	}
+    
+    if (curr_mode == Mode_Joints && sub_mode == SubMode2) {
+        float angle = 0.01 * ydiff;
+        for (auto joint : selected_joints) {
+            joint->rotate(angle);
+        }
+        JointRotateCommand * cmd = (JointRotateCommand *)curr_cmd.get();
+        cmd->m_angle += angle;
+    }
+    
+    if (curr_mode == Mode_Joints && sub_mode == SubMode3) {
+        
+    }
 
 	mouse_x_pos = xPos;
 	mouse_y_pos = yPos;
@@ -745,13 +758,19 @@ bool A3::mouseButtonInputEvent (
                 
                 if (m_rootNode->hasID(what)) {
                     SceneNode *node = m_rootNode->nodeFromID(what);
-                    cout << "Picking node with ID: " << what << " [" << node->m_name << "]" << endl;
-                    node->isSelected = !node->isSelected;
-                    if (node->isSelected) {
-                        cout << node->m_name << " is selected" << endl;
-                        cout << node->parent->m_name << " is parent" << endl;
-                    } else {
-                        cout << node->m_name << " is deselected" << endl;
+//                    cout << "Picking node with ID: " << what << " [" << node->m_name << "]" << endl;
+                    if (node->parent->m_nodeType == NodeType::JointNode) {
+                        JointNode *jnode = (JointNode *)node->parent;
+                        jnode->isSelected = !jnode->isSelected;
+                        if (jnode->isSelected) {
+                            // This lucky joint node is selected.
+                            cout << jnode->m_name << " is selected" << endl;
+                            selected_joints.insert(jnode);
+                        } else {
+                            cout << jnode->m_name << " is deselected" << endl;
+                            selected_joints.erase(jnode);
+                        }
+                        
                     }
                 }
                 
@@ -767,12 +786,26 @@ bool A3::mouseButtonInputEvent (
             
             if (button == GLFW_MOUSE_BUTTON_MIDDLE && actions == GLFW_PRESS) {
                 // Rotate all selected joints.
+                sub_mode = SubMode2;
+                JointRotateCommand *joint_cmd = new JointRotateCommand({selected_joints.begin(), selected_joints.end()}, 0);
+                curr_cmd.reset(joint_cmd);
+            }
+            
+            if (button == GLFW_MOUSE_BUTTON_MIDDLE && actions == GLFW_RELEASE) {
+                sub_mode = SubMode_Unselected;
+                commands.push_back(std::move(curr_cmd));
+                curr_cmd.reset(nullptr);
             }
             
             if (button == GLFW_MOUSE_BUTTON_RIGHT && actions == GLFW_PRESS) {
                 // Rotate head.
-                
+                sub_mode = SubMode3;
             }
+            
+            if (button == GLFW_MOUSE_BUTTON_RIGHT && actions == GLFW_RELEASE) {
+                sub_mode = SubMode_Unselected;
+            }
+            
         }
             
     }
