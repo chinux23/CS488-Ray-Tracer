@@ -580,7 +580,6 @@ bool A3::mouseMoveEvent (
 	// Fill in with event handling code...
 	double xdiff = xPos - mouse_x_pos;
 	double ydiff = yPos - mouse_y_pos;
-
 	
 	if (curr_mode == Mode_PositionOrientation && sub_mode == SubMode1) {
 		// Translate puppet in X Y.
@@ -628,6 +627,7 @@ bool A3::mouseMoveEvent (
     if (curr_mode == Mode_Joints && sub_mode == SubMode2) {
         float angle = 0.01 * ydiff;
         for (auto joint : selected_joints) {
+            cout << "rotating angle " << angle << endl;
             joint->rotate(angle);
         }
         JointRotateCommand * cmd = (JointRotateCommand *)curr_cmd.get();
