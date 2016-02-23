@@ -14,6 +14,7 @@ using namespace std;
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <deque>
+#include <memory>
 
 using namespace glm;
 
@@ -93,6 +94,7 @@ void A3::init()
 	initViewMatrix();
 
 	initLightSources();
+	
 	
 	// Exiting the current scope calls delete automatically on meshConsolidator freeing
 	// all vertex data resources.  This is fine since we already copied this data to
@@ -344,10 +346,21 @@ void A3::guiLogic()
 		// Add more gui elements here here ...
 		if (ImGui::BeginMainMenuBar()) {
 	        if (ImGui::BeginMenu("Application")) {
-	            if (ImGui::MenuItem("Reset Position")) {}
-	            if (ImGui::MenuItem("Reset Orientation", "O")) {}
-            	if (ImGui::MenuItem("Reset Joints", "N")) {}
-        		if (ImGui::MenuItem("Reset All", "A")) {}
+	            if (ImGui::MenuItem("Reset Position")) {
+					resetPosition();
+				}
+				
+				if (ImGui::MenuItem("Reset Orientation", "O")) {
+					resetOrientation();
+				}
+				
+            	if (ImGui::MenuItem("Reset Joints", "N")) {
+					resetJoints();
+				}
+				
+        		if (ImGui::MenuItem("Reset All", "A")) {
+					resetAll();
+				}
     			
     			if (ImGui::MenuItem("Quit", "Q")) {
     				glfwSetWindowShouldClose(m_window, GL_TRUE);
@@ -356,8 +369,12 @@ void A3::guiLogic()
 	        }
         
 	        if (ImGui::BeginMenu("Edit")) {
-	            if (ImGui::MenuItem("Undo", "U")) {}
-	            if (ImGui::MenuItem("Redo", "R")) {}
+	            if (ImGui::MenuItem("Undo", "U")) {
+					undo();
+				}
+	            if (ImGui::MenuItem("Redo", "R")) {
+					redo();
+				}
 	            ImGui::EndMenu();
 	        }
 
@@ -498,7 +515,7 @@ void A3::renderSceneGraph(const SceneNode & root) {
 	std::deque<glm::mat4> trans_stack;
 
 	root.render(m_shader, m_view, m_batchInfoMap, trans_stack);
-
+	
 	glBindVertexArray(0);
 	CHECK_GL_ERRORS;
 }
@@ -568,15 +585,22 @@ bool A3::mouseMoveEvent (
 	if (curr_mode == Mode_PositionOrientation && sub_mode == SubMode1) {
 		// Translate puppet in X Y.
 		m_rootNode->translate(vec3(xdiff * 0.01, -ydiff * 0.01, 0));
+		MoveCommand * cmd = (MoveCommand *)curr_cmd.get();
+		cmd->trans = glm::translate(glm::mat4(), vec3(xdiff * 0.01, -ydiff * 0.01, 0)) * cmd->trans;
+//		cout << "move command: " << cmd->trans << endl;
+//		cout << "curr command: " << ((MoveCommand *)curr_cmd.get())->trans << endl;
 	}
 	
 	if (curr_mode == Mode_PositionOrientation && sub_mode == SubMode2) {
 		// Translate pupeet in Z
 		m_rootNode->translate(vec3(0, 0, ydiff * 0.01));
+		MoveCommand * cmd = (MoveCommand *)curr_cmd.get();
+		cmd->trans = glm::translate(cmd->trans, vec3(0, 0, ydiff * 0.01));
 	}
 	
 	if (curr_mode == Mode_PositionOrientation && sub_mode == SubMode3) {
 		xdiff = -xdiff;
+		ydiff = -ydiff;
 		glm::vec3 va = arcballVector(mouse_x_pos, mouse_y_pos);
 		glm::vec3 vb = arcballVector(xPos, yPos);
 		
@@ -589,13 +613,16 @@ bool A3::mouseMoveEvent (
 		
 		glm::vec4 axis_in_worldframe = glm::inverse(m_view) * axis_in_viewframe;
 		
-		cout << "Rotation angle is " << glm::degrees(angle_in_view_frame) << endl;
-		cout << "Rotating around axis: " << axis_in_worldframe << endl;
+//		cout << "Rotation angle is " << glm::degrees(angle_in_view_frame) << endl;
+//		cout << "Rotating around axis: " << axis_in_worldframe << endl;
 		
 		glm::mat4 rotation = glm::rotate(glm::mat4(),
 										 glm::degrees(angle_in_view_frame),
 										 {axis_in_worldframe.x, axis_in_worldframe.y, axis_in_worldframe.z});
 		m_rootNode->trans = m_rootNode->trans * rotation;
+		
+		RotateCommand * cmd = (RotateCommand *)curr_cmd.get();
+		cmd->trans = cmd->trans * rotation;
 	}
 
 	mouse_x_pos = xPos;
@@ -636,26 +663,43 @@ bool A3::mouseButtonInputEvent (
 	if (curr_mode == Mode_PositionOrientation) {
 		if (button == GLFW_MOUSE_BUTTON_LEFT && actions == GLFW_PRESS) {
 			sub_mode = SubMode1;
+			std::vector<SceneNode *> actors = {m_rootNode.get()};
+			MoveCommand *move_cmd = new MoveCommand(actors, glm::mat4());
+			curr_cmd.reset(move_cmd);
 		}
 		
 		if (button == GLFW_MOUSE_BUTTON_LEFT && actions == GLFW_RELEASE) {
 			sub_mode = SubMode_Unselected;
+//			cout << "push back curr command: " << ((MoveCommand *)curr_cmd.get())->trans << endl;
+			commands.push_back(std::move(curr_cmd));
+			curr_cmd.reset(nullptr);
+//			cout << "pushed back curr command: " << ((MoveCommand *)commands[0].get())->trans << endl;
 		}
 		
 		if (button == GLFW_MOUSE_BUTTON_MIDDLE && actions == GLFW_PRESS) {
 			sub_mode = SubMode2;
+			std::vector<SceneNode *> actors = {m_rootNode.get()};
+			MoveCommand *move_cmd = new MoveCommand(actors, glm::mat4());
+			curr_cmd.reset(move_cmd);
 		}
 		
 		if (button == GLFW_MOUSE_BUTTON_MIDDLE && actions == GLFW_RELEASE) {
 			sub_mode = SubMode_Unselected;
+			commands.push_back(std::move(curr_cmd));
+			curr_cmd.reset(nullptr);
 		}
 		
 		if (button == GLFW_MOUSE_BUTTON_RIGHT && actions == GLFW_PRESS) {
 			sub_mode = SubMode3;
+			std::vector<SceneNode *> actors = {m_rootNode.get()};
+			RotateCommand *move_cmd = new RotateCommand(actors, glm::mat4());
+			curr_cmd.reset(move_cmd);
 		}
 		
 		if (button == GLFW_MOUSE_BUTTON_RIGHT && actions == GLFW_RELEASE) {
 			sub_mode = SubMode_Unselected;
+			commands.push_back(std::move(curr_cmd));
+			curr_cmd.reset(nullptr);
 		}
 		
 	} else if (curr_mode == Mode_Joints) {
@@ -727,8 +771,6 @@ bool A3::mouseButtonInputEvent (
 			
 		}
 	}
-	
-
 
 	return eventHandled;
 }
@@ -777,8 +819,56 @@ bool A3::keyInputEvent (
 			show_gui = !show_gui;
 			eventHandled = true;
 		}
+		
+		if ( key == GLFW_KEY_U) {
+			undo();
+		}
+		
+		if ( key == GLFW_KEY_R) {
+			redo();
+		}
 	}
 	// Fill in with event handling code...
 
 	return eventHandled;
 }
+
+void A3::resetPosition()
+{
+	
+}
+
+void A3::resetOrientation()
+{
+	
+}
+
+void A3::resetJoints()
+{
+	
+}
+
+void A3::resetAll()
+{
+	resetPosition();
+	resetOrientation();
+	resetJoints();
+}
+
+void A3::undo()
+{
+//	cout << "calling undo " << endl;
+//	cout << "undo command: " << ((MoveCommand *)commands[0].get())->trans << endl;
+	if (commands.size()) {
+		std::unique_ptr<Command> cmd = std::move(commands.back());
+		commands.pop_back();
+		cmd->undo();
+	}
+
+}
+
+void A3::redo()
+{
+	cout << "calling redo " << endl;
+}
+

@@ -45,6 +45,6 @@ left_arm:set_material(green)
 -- s3:translate(0.0, -2.0, 2.0)
 -- s3:set_material(green)
 
-rootnode:translate(-2.75, 0.0, -10.0)
+rootnode:translate(0.0, 0.0, -10.0)
 
 return rootnode

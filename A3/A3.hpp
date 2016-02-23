@@ -6,9 +6,12 @@
 #include "cs488-framework/MeshConsolidator.hpp"
 
 #include "SceneNode.hpp"
+#include "Command.hpp"
 
 #include <glm/glm.hpp>
 #include <memory>
+#include <deque>
+
 
 struct LightSource {
 	glm::vec3 position;
@@ -118,4 +121,17 @@ private:
 	
 	// computer the vector in view coordinates.
 	glm::vec3 arcballVector(float x, float y);
+	
+public:
+	void resetPosition();
+	void resetOrientation();
+	void resetJoints();
+	void resetAll();
+	void undo();
+	void redo();
+	
+	
+private:
+	std::unique_ptr<Command> curr_cmd;
+	std::deque<std::unique_ptr<Command>> commands;
 };
