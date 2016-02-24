@@ -136,4 +136,7 @@ private:
 	std::unique_ptr<Command> curr_cmd;
 	std::deque<std::unique_ptr<Command>> commands;
     std::unordered_set<JointNode*> selected_joints;
+	
+	glm::mat4 translation;
+	glm::mat4 rotation;
 };

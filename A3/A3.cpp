@@ -95,7 +95,6 @@ void A3::init()
 
 	initLightSources();
 	
-	
 	// Exiting the current scope calls delete automatically on meshConsolidator freeing
 	// all vertex data resources.  This is fine since we already copied this data to
 	// VBOs on the GPU.  We have no use for storing vertex data on the CPU side beyond
@@ -346,7 +345,7 @@ void A3::guiLogic()
 		// Add more gui elements here here ...
 		if (ImGui::BeginMainMenuBar()) {
 	        if (ImGui::BeginMenu("Application")) {
-	            if (ImGui::MenuItem("Reset Position")) {
+	            if (ImGui::MenuItem("Reset Position", "I")) {
 					resetPosition();
 				}
 				
@@ -458,11 +457,13 @@ void A3::draw() {
 	
 	renderSceneGraph(*m_rootNode);
 	
+	disableFaceCulling();
+	
 	if (option_zbuffer_enabled) {
 		glDisable( GL_DEPTH_TEST );
 	}
 	
-	disableFaceCulling();
+	
 		
 	if (option_circle_enabled) {
 		renderArcCircle();
@@ -513,8 +514,15 @@ void A3::renderSceneGraph(const SceneNode & root) {
 	// cout << "Render Scene Graph" << endl;
 
 	std::deque<glm::mat4> trans_stack;
-
-	root.render(m_shader, m_view, m_batchInfoMap, trans_stack);
+	
+	glm::mat4 before = root.get_transform();
+	
+	m_rootNode->trans = m_rootNode->trans * rotation;
+	m_rootNode->trans = translation * m_rootNode->trans;
+	
+	m_rootNode->render(m_shader, m_view, m_batchInfoMap, trans_stack);
+	
+	m_rootNode->set_transform(before);
 	
 	glBindVertexArray(0);
 	CHECK_GL_ERRORS;
@@ -583,7 +591,8 @@ bool A3::mouseMoveEvent (
 	
 	if (curr_mode == Mode_PositionOrientation && sub_mode == SubMode1) {
 		// Translate puppet in X Y.
-		m_rootNode->translate(vec3(xdiff * 0.01, -ydiff * 0.01, 0));
+		translation = glm::translate(translation, vec3(xdiff * 0.01, -ydiff * 0.01, 0));
+//		m_rootNode->translate(vec3(xdiff * 0.01, -ydiff * 0.01, 0));
 //		MoveCommand * cmd = (MoveCommand *)curr_cmd.get();
 //		cmd->trans = glm::translate(glm::mat4(), vec3(xdiff * 0.01, -ydiff * 0.01, 0)) * cmd->trans;
 //		cout << "move command: " << cmd->trans << endl;
@@ -592,6 +601,7 @@ bool A3::mouseMoveEvent (
 	
 	if (curr_mode == Mode_PositionOrientation && sub_mode == SubMode2) {
 		// Translate pupeet in Z
+		translation = glm::translate(translation, vec3(xdiff * 0.01, -ydiff * 0.01, 0));
 		m_rootNode->translate(vec3(0, 0, ydiff * 0.01));
 //		MoveCommand * cmd = (MoveCommand *)curr_cmd.get();
 //		cmd->trans = glm::translate(cmd->trans, vec3(0, 0, ydiff * 0.01));
@@ -613,10 +623,10 @@ bool A3::mouseMoveEvent (
 //		cout << "Rotation angle is " << glm::degrees(angle_in_view_frame) << endl;
 //		cout << "Rotating around axis: " << axis_in_worldframe << endl;
 		
-		glm::mat4 rotation = glm::rotate(glm::mat4(),
-										 glm::degrees(angle_in_view_frame),
-										 {axis_in_worldframe.x, -axis_in_worldframe.y, axis_in_worldframe.z});
-		m_rootNode->trans = m_rootNode->trans * rotation;
+		rotation = glm::rotate(rotation,
+							   glm::degrees(angle_in_view_frame),
+							   {axis_in_worldframe.x, -axis_in_worldframe.y, axis_in_worldframe.z});
+//		m_rootNode->trans = m_rootNode->trans * rotation;
 		
 //		RotateCommand * cmd = (RotateCommand *)curr_cmd.get();
 //		cmd->trans = cmd->trans * rotation;
@@ -764,9 +774,12 @@ bool A3::mouseButtonInputEvent (
                             // This lucky joint node is selected.
                             cout << jnode->m_name << " is selected" << endl;
                             selected_joints.insert(jnode);
+							// mark it's joint geometric node as selected as well for selection.
+							jnode->parent->isSelected = true;
                         } else {
                             cout << jnode->m_name << " is deselected" << endl;
                             selected_joints.erase(jnode);
+							jnode->parent->isSelected = false;
                         }
                         
                     }
@@ -863,6 +876,26 @@ bool A3::keyInputEvent (
 		if ( key == GLFW_KEY_R) {
 			redo();
 		}
+		
+		if (key == GLFW_KEY_I) {
+			resetPosition();
+		}
+		
+		if (key == GLFW_KEY_O) {
+			resetOrientation();
+		}
+		
+		if (key == GLFW_KEY_N) {
+			resetJoints();
+		}
+		
+		if (key == GLFW_KEY_A) {
+			resetAll();
+		}
+		
+		if (key == GLFW_KEY_Q) {
+			glfwSetWindowShouldClose(m_window, GL_TRUE);
+		}
 	}
 	// Fill in with event handling code...
 
@@ -871,16 +904,17 @@ bool A3::keyInputEvent (
 
 void A3::resetPosition()
 {
-	
+	translation = glm::mat4();
 }
 
 void A3::resetOrientation()
 {
-	
+	rotation = glm::mat4();
 }
 
 void A3::resetJoints()
 {
+	// trverse through all joint nodes. and set its angle to init.
 	
 }
 

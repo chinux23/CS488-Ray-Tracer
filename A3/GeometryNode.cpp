@@ -25,8 +25,8 @@ void GeometryNode::render(
 	// std::cout << "Rendering " << m_name << std::endl;
 	
 //	if (m_name == "leftArm") {
-		std::cout << "Rendering " << m_name << std::endl;
-		std::cout << glm::to_string(trans) << std::endl;
+//		std::cout << "Rendering " << m_name << std::endl;
+//		std::cout << glm::to_string(trans) << std::endl;
 //	}
 
 	// put current transformations into stack
