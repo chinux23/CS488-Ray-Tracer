@@ -71,12 +71,7 @@ void JointNode::rotate(char axis, float angle) {
     std::cout << "Rotating along x " << angle_x << std::endl;
     std::cout << "Rotating along y " << angle_y << std::endl;
     
-    if (activeAxis() == 'x') {
-        trans = glm::rotate(degreesToRadians(angle_x), vec3(1,0,0));
-    } else {
-        trans = glm::rotate(degreesToRadians(angle_y), vec3(0,1,0));
-    }
-    
+	update_transformation();
 }
 
 char JointNode::activeAxis()
@@ -92,5 +87,14 @@ void JointNode::rotate(float angle)
 {
     char axis = activeAxis();
     rotate(axis, angle);
+}
+
+void JointNode::update_transformation()
+{
+	if (activeAxis() == 'x') {
+		trans = glm::rotate(degreesToRadians(angle_x), vec3(1,0,0));
+	} else {
+		trans = glm::rotate(degreesToRadians(angle_y), vec3(0,1,0));
+	}
 }
 

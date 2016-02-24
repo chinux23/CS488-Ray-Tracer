@@ -634,9 +634,10 @@ bool A3::mouseMoveEvent (
     
     if (curr_mode == Mode_Joints && sub_mode == SubMode2) {
         float angle = ydiff;
+		cout << "rotating angle " << angle << endl;
+
         for (auto joint : selected_joints) {
-            cout << "rotating angle " << angle << endl;
-            joint->rotate(angle);
+			joint->rotate(angle);
         }
         JointRotateCommand * cmd = (JointRotateCommand *)curr_cmd.get();
         cmd->m_angle += angle;
@@ -804,8 +805,12 @@ bool A3::mouseButtonInputEvent (
             
             if (button == GLFW_MOUSE_BUTTON_MIDDLE && actions == GLFW_RELEASE) {
                 sub_mode = SubMode_Unselected;
+				std::cout << "Add command " << ((JointRotateCommand *)curr_cmd.get())->m_angle << std::endl;
                 commands.push_back(std::move(curr_cmd));
                 curr_cmd.reset(nullptr);
+				
+				// Made a new adjustment and added to undo queue. We need to clear old redo queue.
+				redo_queue.clear();
             }
             
             if (button == GLFW_MOUSE_BUTTON_RIGHT && actions == GLFW_PRESS) {
@@ -915,6 +920,15 @@ void A3::resetOrientation()
 void A3::resetJoints()
 {
 	// trverse through all joint nodes. and set its angle to init.
+	while (commands.size()){
+		std::unique_ptr<Command> cmd = std::move(commands.back());
+		commands.pop_back();
+		cmd->undo();
+		redo_queue.push_back(std::move(cmd));
+	}
+	
+	commands.clear();
+	redo_queue.clear();
 	
 }
 
@@ -927,18 +941,25 @@ void A3::resetAll()
 
 void A3::undo()
 {
-//	cout << "calling undo " << endl;
+	cout << "calling undo " << endl;
 //	cout << "undo command: " << ((MoveCommand *)commands[0].get())->trans << endl;
 	if (commands.size()) {
 		std::unique_ptr<Command> cmd = std::move(commands.back());
 		commands.pop_back();
 		cmd->undo();
+		redo_queue.push_back(std::move(cmd));
 	}
-
 }
 
 void A3::redo()
 {
 	cout << "calling redo " << endl;
+	
+	if (redo_queue.size()) {
+		std::unique_ptr<Command> cmd = std::move(redo_queue.back());
+		redo_queue.pop_back();
+		cmd->execute();
+		commands.push_back(std::move(cmd));
+	}
 }
 

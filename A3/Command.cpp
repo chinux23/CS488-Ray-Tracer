@@ -78,6 +78,7 @@ void JointRotateCommand::undo()
         } else {
             joint_node->angle_y = old_angles[i];
         }
+		joint_node->update_transformation();
     }
 }
 

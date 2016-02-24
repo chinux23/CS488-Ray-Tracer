@@ -38,4 +38,6 @@ public:
     
     // Rotate around active Axis;
     virtual void rotate(float angle);
+	
+	void update_transformation();
 };
