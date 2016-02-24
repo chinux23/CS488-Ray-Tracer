@@ -56,7 +56,13 @@ public:
     // Transformations
     glm::mat4 trans;
     glm::mat4 invtrans;
-    
+	
+	glm::mat4 trans_scale;
+	glm::mat4 trans_rotate;
+	glm::mat4 trans_translate;
+	
+	glm::mat4 get_trans() const;
+	
     std::list<SceneNode*> children;
 
 	NodeType m_nodeType;
