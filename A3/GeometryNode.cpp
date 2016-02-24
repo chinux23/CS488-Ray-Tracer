@@ -1,6 +1,8 @@
 #include "GeometryNode.hpp"
 
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/string_cast.hpp>
+#include <glm/gtx/transform.hpp>
 #include "cs488-framework/GlErrorCheck.hpp"
 
 //---------------------------------------------------------------------------------------
@@ -21,6 +23,11 @@ void GeometryNode::render(
 	std::deque<glm::mat4> & stack) const
 {
 	// std::cout << "Rendering " << m_name << std::endl;
+	
+//	if (m_name == "leftArm") {
+		std::cout << "Rendering " << m_name << std::endl;
+		std::cout << glm::to_string(trans) << std::endl;
+//	}
 
 	// put current transformations into stack
 	stack.push_back(trans);

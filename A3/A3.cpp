@@ -598,13 +598,11 @@ bool A3::mouseMoveEvent (
 	}
 	
 	if (curr_mode == Mode_PositionOrientation && sub_mode == SubMode3) {
-		xdiff = -xdiff;
-		ydiff = -ydiff;
 		glm::vec3 va = arcballVector(mouse_x_pos, mouse_y_pos);
 		glm::vec3 vb = arcballVector(xPos, yPos);
 		
 		// angle in view coordinate
-		float angle_in_view_frame = acos(std::min(1.0f, glm::dot(va, vb)));
+		float angle_in_view_frame = -acos(std::min(1.0f, glm::dot(vb, va))) * 0.1;
 		
 		// normal in view coordinate
 		glm::vec3 axis = glm::cross(va, vb);
@@ -617,7 +615,7 @@ bool A3::mouseMoveEvent (
 		
 		glm::mat4 rotation = glm::rotate(glm::mat4(),
 										 glm::degrees(angle_in_view_frame),
-										 {axis_in_worldframe.x, axis_in_worldframe.y, axis_in_worldframe.z});
+										 {axis_in_worldframe.x, -axis_in_worldframe.y, axis_in_worldframe.z});
 		m_rootNode->trans = m_rootNode->trans * rotation;
 		
 //		RotateCommand * cmd = (RotateCommand *)curr_cmd.get();
@@ -784,25 +782,25 @@ bool A3::mouseButtonInputEvent (
                 CHECK_GL_ERRORS;
             }
             
-            if (button == GLFW_MOUSE_BUTTON_RIGHT && actions == GLFW_PRESS) {
+            if (button == GLFW_MOUSE_BUTTON_MIDDLE && actions == GLFW_PRESS) {
                 // Rotate all selected joints.
                 sub_mode = SubMode2;
                 JointRotateCommand *joint_cmd = new JointRotateCommand({selected_joints.begin(), selected_joints.end()}, 0);
                 curr_cmd.reset(joint_cmd);
             }
             
-            if (button == GLFW_MOUSE_BUTTON_RIGHT && actions == GLFW_RELEASE) {
+            if (button == GLFW_MOUSE_BUTTON_MIDDLE && actions == GLFW_RELEASE) {
                 sub_mode = SubMode_Unselected;
                 commands.push_back(std::move(curr_cmd));
                 curr_cmd.reset(nullptr);
             }
             
-            if (button == GLFW_MOUSE_BUTTON_MIDDLE && actions == GLFW_PRESS) {
+            if (button == GLFW_MOUSE_BUTTON_RIGHT && actions == GLFW_PRESS) {
                 // Rotate head.
                 sub_mode = SubMode3;
             }
             
-            if (button == GLFW_MOUSE_BUTTON_MIDDLE && actions == GLFW_RELEASE) {
+            if (button == GLFW_MOUSE_BUTTON_RIGHT && actions == GLFW_RELEASE) {
                 sub_mode = SubMode_Unselected;
             }
             
