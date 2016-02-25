@@ -57,14 +57,14 @@ void GeometryNode::updateShaderUniforms(const ShaderProgram & shader, const glm:
 		//-- Set ModelView matrix:
 		GLint location = shader.getUniformLocation("ModelView");
 		glm::mat4 modelView;
-		std::cout << " ------------- " << std::endl;
+//		std::cout << " ------------- " << std::endl;
 		for (auto it = stack.rbegin(); it < stack.rend(); it++) {
-			if (m_name == "head") {
-				std::cout << "Applying transformation: " << glm::to_string(*it) << std::endl;
-			}
+//			if (m_name == "head") {
+//				std::cout << "Applying transformation: " << glm::to_string(*it) << std::endl;
+//			}
 			modelView = (*it) * modelView;
 		}
-		std::cout << " ------------- " << std::endl;
+//		std::cout << " ------------- " << std::endl;
 		modelView = viewMatrix * modelView;
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(modelView));
 		CHECK_GL_ERRORS;
