@@ -278,8 +278,6 @@ rightFoot:scale(0.3, 0.3, 0.1)
 rightFoot:set_material(green)
 rightFoot:translate(0, -1, 0)
 
-
-
 ears = gr.mesh('sphere', 'ears')
 head:add_child(ears)
 ears:scale(1.2, 0.08, 0.08)

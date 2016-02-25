@@ -82,12 +82,25 @@ void JointRotateCommand::undo()
     }
 }
 
+HeadRotateCommand::HeadRotateCommand(std::vector<SceneNode *> actors, float angle, float *headangle):
+    Command(actors), m_angle(angle)
+{
+	_head_angle = headangle;
+}
+
 void HeadRotateCommand::execute()
 {
-	
+	head_angle = old_head_angle = *_head_angle;
+	if ((m_angle + head_angle) <= 45.0 || (m_angle + head_angle) >= -45.0) {
+		head_angle = m_angle + head_angle;
+	} else if ((m_angle + head_angle) > 45.0) {
+		head_angle = 45.0;
+	} else if ((m_angle + head_angle) < -45.0) {
+		head_angle = -45.0;
+	}
 }
 
 void HeadRotateCommand::undo()
 {
-	
+	*_head_angle = old_head_angle;
 }

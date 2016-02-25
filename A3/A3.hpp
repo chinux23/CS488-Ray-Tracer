@@ -140,4 +140,8 @@ private:
 	
 	glm::mat4 translation;
 	glm::mat4 rotation;
+	
+	SceneNode *headNode;
+	void findHead();
+	float headAngle;
 };

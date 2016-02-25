@@ -15,6 +15,7 @@ using namespace std;
 
 #include <deque>
 #include <memory>
+#include <stack>
 
 using namespace glm;
 
@@ -99,6 +100,34 @@ void A3::init()
 	// all vertex data resources.  This is fine since we already copied this data to
 	// VBOs on the GPU.  We have no use for storing vertex data on the CPU side beyond
 	// this point.
+	
+	findHead();
+	headAngle = 0;
+	
+}
+
+void A3::findHead()
+{
+	std::stack<SceneNode *> fringe;
+	
+	fringe.push(m_rootNode.get());
+	
+	do {
+		SceneNode *node = fringe.top();
+		fringe.pop();
+		
+		if (node->m_name == "head") {
+			headNode = node;
+			std::cout << "Found head node " << std::endl;
+			return;
+		}
+		
+		for (auto child : node->children) {
+			fringe.push(child);
+		}
+		
+	} while (fringe.size() > 0);
+	
 }
 
 //----------------------------------------------------------------------------------------
@@ -378,7 +407,8 @@ void A3::guiLogic()
 	        }
 
 	       	if (ImGui::BeginMenu("Options")) {
-	            if (ImGui::MenuItem("Circle", "C", &option_circle_enabled, true)) {}
+	            if (ImGui::MenuItem("Circle", "C", &option_circle_enabled, true)) {
+				}
 	            if (ImGui::MenuItem("Z-buffer", "Z", &option_zbuffer_enabled, true)) {}
             	if (ImGui::MenuItem("Backface culling", "B", &option_backface_culling, true)) {}
         		if (ImGui::MenuItem("Frontface culling", "F", &option_frontface_culling, true)) {}
@@ -472,13 +502,13 @@ void A3::draw() {
 
 void A3::enableFaceCulling()
 {
-	if (option_frontface_culling & !option_backface_culling) {
+	if (option_frontface_culling && !option_backface_culling) {
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_FRONT);
-	} else if (option_backface_culling & !option_frontface_culling) {
+	} else if (option_backface_culling && !option_frontface_culling) {
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_FRONT);
-	} else if (option_frontface_culling & option_backface_culling){
+	} else if (option_frontface_culling && option_backface_culling){
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_FRONT_AND_BACK);
 	} else {
@@ -516,13 +546,17 @@ void A3::renderSceneGraph(const SceneNode & root) {
 	std::deque<glm::mat4> trans_stack;
 	
 	glm::mat4 before = root.get_transform();
+	glm::mat4 head_before = headNode->get_transform();
 	
 	m_rootNode->trans = m_rootNode->trans * rotation;
 	m_rootNode->trans = translation * m_rootNode->trans;
 	
+	headNode->rotate('z', headAngle);
+	
 	m_rootNode->render(m_shader, m_view, m_batchInfoMap, trans_stack);
 	
 	m_rootNode->set_transform(before);
+	headNode->set_transform(head_before);
 	
 	glBindVertexArray(0);
 	CHECK_GL_ERRORS;
@@ -644,7 +678,19 @@ bool A3::mouseMoveEvent (
     }
     
     if (curr_mode == Mode_Joints && sub_mode == SubMode3) {
-        
+		float angle = ydiff;
+		HeadRotateCommand *cmd = (HeadRotateCommand *)curr_cmd.get();
+		cmd->m_angle += angle;
+		
+		if ((headAngle + angle) <= 45.0 && (headAngle + angle) >= -45.0){
+			headAngle = headAngle + angle;
+		} else if ((headAngle + angle) >= 45.0) {
+			headAngle = 45.0;
+		} else if ((headAngle + angle) <= -45.0) {
+			headAngle = -45.0;
+		}
+		cmd->head_angle = headAngle;
+		cout << "head angle" << headAngle << endl;
     }
 
 	mouse_x_pos = xPos;
@@ -783,9 +829,9 @@ bool A3::mouseButtonInputEvent (
 							jnode->parent->isSelected = false;
                         }
                         
-                    }
+					}
                 }
-                
+				
                 do_picking = false;
                 if (do_picking) {
                     m_rootNode->enablePicking();
@@ -816,10 +862,16 @@ bool A3::mouseButtonInputEvent (
             if (button == GLFW_MOUSE_BUTTON_RIGHT && actions == GLFW_PRESS) {
                 // Rotate head.
                 sub_mode = SubMode3;
+				HeadRotateCommand *head_cmd = new HeadRotateCommand({headNode}, 0, &headAngle);
+				head_cmd->old_head_angle = headAngle;
+				curr_cmd.reset(head_cmd);
             }
             
             if (button == GLFW_MOUSE_BUTTON_RIGHT && actions == GLFW_RELEASE) {
                 sub_mode = SubMode_Unselected;
+				commands.push_back(std::move(curr_cmd));
+				curr_cmd.reset(nullptr);
+				redo_queue.clear();
             }
             
         }
@@ -900,6 +952,22 @@ bool A3::keyInputEvent (
 		
 		if (key == GLFW_KEY_Q) {
 			glfwSetWindowShouldClose(m_window, GL_TRUE);
+		}
+		
+		if (key == GLFW_KEY_C) {
+			option_circle_enabled = !option_circle_enabled;
+		}
+		
+		if (key == GLFW_KEY_Z) {
+			option_zbuffer_enabled = !option_zbuffer_enabled;
+		}
+		
+		if (key == GLFW_KEY_B) {
+			option_backface_culling = !option_backface_culling;
+		}
+		
+		if (key == GLFW_KEY_F) {
+			option_frontface_culling = !option_frontface_culling;
 		}
 	}
 	// Fill in with event handling code...

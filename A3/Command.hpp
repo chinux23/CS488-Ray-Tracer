@@ -63,9 +63,13 @@ private:
 
 class HeadRotateCommand : public Command {
 public:
-	HeadRotateCommand(std::vector<SceneNode *> actors, glm::mat4 trans);
+	HeadRotateCommand(std::vector<SceneNode *> actors, float angle, float *headangle);
 	virtual void execute();
 	virtual void undo();
+	float m_angle;
+	float head_angle;
+	float old_head_angle;
+	float *_head_angle;
 };
 
 
