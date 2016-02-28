@@ -65,6 +65,9 @@ void A4_Render(
 	
 	for (uint y = 0; y < h; ++y) {
 		for (uint x = 0; x < w; ++x) {
+			
+			std::cout << root->m_name << std::endl;
+
 			// Red: increasing from top to bottom
 			image(x, y, 0) = (double)y / h;
 			// Green: increasing from left to right

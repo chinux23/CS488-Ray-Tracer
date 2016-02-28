@@ -19,6 +19,7 @@ public:
 	
 	Ray(glm::dvec4 o, glm::dvec4 d);
 	Ray(glm::dvec3 o, glm::dvec3 d);
+	Ray(const Ray & ray);
 };
 
 #endif /* Ray_hpp */

@@ -16,3 +16,8 @@ Ray::Ray(glm::dvec3 o, glm::dvec3 d) : origin({o.x, o.y, o.z, 1}), direction(d.x
 {
 	
 }
+
+Ray::Ray(const Ray & ray) : origin(ray.origin), direction(ray.direction)
+{
+	
+}
