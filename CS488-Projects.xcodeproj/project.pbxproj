@@ -128,6 +128,7 @@
 		0CC118E01BB997F000C87A4F /* VertexShader.vs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0CC118CB1BB9976F00C87A4F /* VertexShader.vs */; };
 		0CC118E21BB998CA00C87A4F /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0CC118D41BB9976F00C87A4F /* Main.cpp */; };
 		0CC118E51BB9999000C87A4F /* IndexExample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0CC118E31BB9999000C87A4F /* IndexExample.cpp */; };
+		7444582B1C826D7900D7C652 /* Ray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 744458291C826D7900D7C652 /* Ray.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -440,6 +441,8 @@
 		0CFA619F1BA8C8E50041C6E5 /* Main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Main.cpp; sourceTree = "<group>"; };
 		0CFA61A01BA8C8E50041C6E5 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		0CFA61A11BA8C8E50041C6E5 /* premake4.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = premake4.lua; sourceTree = "<group>"; };
+		744458291C826D7900D7C652 /* Ray.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Ray.cpp; sourceTree = "<group>"; };
+		7444582A1C826D7900D7C652 /* Ray.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Ray.hpp; sourceTree = "<group>"; };
 		746353101C7FA5BC009E0DC9 /* buckyball.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = buckyball.obj; sourceTree = "<group>"; };
 		746353111C7FA5BC009E0DC9 /* cube.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cube.obj; sourceTree = "<group>"; };
 		746353121C7FA5BC009E0DC9 /* cylinder.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cylinder.obj; sourceTree = "<group>"; };
@@ -682,6 +685,8 @@
 			children = (
 				0C021ADC1BDEF0F900B28537 /* A4.cpp */,
 				0C021ADD1BDEF0F900B28537 /* A4.hpp */,
+				744458291C826D7900D7C652 /* Ray.cpp */,
+				7444582A1C826D7900D7C652 /* Ray.hpp */,
 				0C021ADE1BDEF0F900B28537 /* Assets */,
 				0C021AEE1BDEF0F900B28537 /* build */,
 				0C021B0B1BDEF0F900B28537 /* GeometryNode.cpp */,
@@ -1507,6 +1512,7 @@
 				0C021B591BDEF26A00B28537 /* Light.cpp in Sources */,
 				0C021B5A1BDEF26A00B28537 /* Main.cpp in Sources */,
 				0C021B5B1BDEF26A00B28537 /* Material.cpp in Sources */,
+				7444582B1C826D7900D7C652 /* Ray.cpp in Sources */,
 				0C021B5C1BDEF26A00B28537 /* Mesh.cpp in Sources */,
 				0C021B5D1BDEF26A00B28537 /* PhongMaterial.cpp in Sources */,
 				0C021B5E1BDEF26A00B28537 /* polyroots.cpp in Sources */,
