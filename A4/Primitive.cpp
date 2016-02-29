@@ -51,7 +51,7 @@ Intersection NonhierSphere::intersect(const Ray &ray)
 	
 	double A = glm::dot(l, l);
 	double B = 2 * glm::dot(l, o_c);
-	double C = glm::dot(o_c, o_c) - m_radius;
+	double C = glm::dot(o_c, o_c) - m_radius * m_radius;
 	double roots[2];
 	size_t num_of_roots = quadraticRoots(A, B, C, roots);
 	

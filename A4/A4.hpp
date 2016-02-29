@@ -29,16 +29,15 @@ void A4_Render(
 
 double calculate_d(double h, double fovy);
 glm::dvec4 calculate_p_in_view_coordinates(double x, double y, double w, double h, double d);
+glm::dvec4 calculate_p_in_world(double x, double y, const glm::dmat4 & trans);
+
+glm::dmat4 T1(double nx, double ny, double d);
+glm::dmat4 S2(double w, double h, double nx, double ny);
 glm::dmat4 R3(glm::vec3 up, glm::vec3 eye, glm::vec3 view);
 glm::dmat4 T4(glm::vec3 eye);
 
 // create a Ray from image pixel.
-Ray createRay(double x, double y,
-			  const glm::dmat4 & r3,
-			  const glm::dmat4 & t4,
-			  const double & fovy,
-			  const double & d,
-			  const glm::vec3 & eye);
+Ray createRay(glm::dvec4 p1, glm::dvec4 p2);
 
 // Test to see if r hit anything.
 Intersection hit(const Ray & r, SceneNode * root);
