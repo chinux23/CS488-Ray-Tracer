@@ -79,28 +79,47 @@ void A4_Render(
 			Intersection primary_intersect = hit(r, root);
 			
 			if (primary_intersect.hit) {
+//				std::cout << "[ " << x << " " << y << " ]" << " hit " << primary_intersect.node->m_name << std::endl;
+				
 				// Calculate ambient
 				color = ambient;		// TO-DO get the K_e and multiply it with ambient.
 				
 				// Calculate diffusion first
 				glm::dvec4 hitPoint = r.origin + primary_intersect.t * r.direction;
 				
+				std::cout << "primary ray hitPoint: " << glm::to_string(hitPoint) << std::endl;
+				
 				// Test with all lights
 				for (auto light : lights) {
 					glm::dvec4 shadow_ray_direction = glm::dvec4(light->position, 1) - hitPoint;
-					Ray shadow_ray = Ray(hitPoint, shadow_ray_direction);
+					
+//					std::cout << "Shadow Ray direction " << glm::to_string(shadow_ray_direction) << std::endl;
+					Ray shadow_ray = Ray(hitPoint + glm::normalize(shadow_ray_direction), shadow_ray_direction);
 					
 					double shadow_ray_length = glm::length(shadow_ray_direction);
+					std::cout << "shadow_ray_length: " << shadow_ray_length << std::endl;
 					
 					Intersection shadow_intersect = hit(shadow_ray, root);
 					
+					if (shadow_intersect.hit)
+						assert(shadow_intersect.t > 0);
+					
 					// if no object or hitpoint is longer than the light
-					if (shadow_intersect.hit && shadow_intersect.t < shadow_ray_length) {
+					if (shadow_intersect.hit) // &&
+//						glm::length(shadow_intersect.t * shadow_ray.direction) < shadow_ray_length)
+					{
+						glm::dvec4 s_hitPoint = shadow_ray.origin + shadow_intersect.t * shadow_ray.direction;
+						std::cout << "Shadow ray hitPoint: " << glm::to_string(s_hitPoint) << std::endl;
 						// Blocked
+//						std::cout << "Shadow ray hit " << shadow_intersect.node->m_name << std::endl;
+//						std::cout << "ShadowRay hit t " << shadow_intersect.t << std::endl;
 						
 					} else {
+						std::cout << "Calculating diffused color " << std::endl;
+						
 						// Get the diffused color
-						color += light->colour / (light->falloff[0] +
+						glm::vec3 kd = primary_intersect.material->m_kd;
+						color += kd * light->colour / (light->falloff[0] +
 										 light->falloff[1] * shadow_ray_length +
 										 light->falloff[2] * shadow_ray_length * shadow_ray_length);
 						
@@ -201,7 +220,10 @@ Intersection hit(const Ray & r, SceneNode * root) {
 	for (auto node : root->children) {
 		if (node->m_nodeType == NodeType::GeometryNode) {
 			Intersection intersection = node->intersect(r);
-			if (intersection.hit && result.hit && std::abs(intersection.t) < std::abs(result.t)) {
+			if (intersection.hit && !result.hit) {
+				result = intersection;
+			} else if (intersection.hit && result.hit && intersection.t < result.t) {
+				assert(intersection.t > 0);
 				result = intersection;
 			}
 		}

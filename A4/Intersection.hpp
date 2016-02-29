@@ -15,6 +15,8 @@
 #include "Ray.hpp"
 #include "PhongMaterial.hpp"
 
+class SceneNode;
+
 
 struct Intersection {
 
@@ -31,6 +33,7 @@ struct Intersection {
 	// normal of the intersection point in the geometry
 	PhongMaterial *material;
 	glm::dvec4	   normal;
+	SceneNode	  *node;
 	
 	// Construct an intersection point.
 	Intersection(const Ray & ray,

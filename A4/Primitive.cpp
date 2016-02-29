@@ -58,24 +58,21 @@ Intersection NonhierSphere::intersect(const Ray &ray)
 	if (num_of_roots == 0) {
 		// No roots, miss.
 		result.hit = false;
-	
 	} else if (num_of_roots == 1) {
-		result.hit = true;
+		result.hit = roots[0] > 0;
 		result.t = roots[0];
-		
 	} else if (num_of_roots == 2) {
-		result.hit = true;
-		
-		if (std::abs(roots[0]) > std::abs(roots[1])) {
-			result.t = roots[0];
-		} else {
-			result.t = roots[1];
-		}
+		// Return the smallest positive number
+		result.t = std::max(roots[0], roots[1]);
+		result.hit = result.t > 0;
 	} else {
 		// Should never happen here.
 		assert(false);
 	}
 	
+	if (result.hit) {
+		assert(result.t > 0);
+	}
 	// update normal
 	glm::dvec4 point = ray.origin + ray.direction * result.t;
 	glm::dvec4 normal = glm::normalize(point - c);

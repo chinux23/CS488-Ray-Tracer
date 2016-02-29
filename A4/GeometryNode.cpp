@@ -32,6 +32,7 @@ Intersection GeometryNode::intersect(const Ray & ray)
 	if (i.hit) {
 		// update material at the point of the hit
 		i.material = (PhongMaterial *)m_material;
+		i.node = this;
 	}
 	return i;
 }

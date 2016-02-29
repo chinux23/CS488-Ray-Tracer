@@ -10,15 +10,15 @@
 
 Ray::Ray(glm::dvec4 o, glm::dvec4 d) : origin(o), direction(d)
 {
-	direction = glm::normalize(direction);
+//	direction = glm::normalize(direction);
 }
 
 Ray::Ray(glm::dvec3 o, glm::dvec3 d) : origin({o.x, o.y, o.z, 1}), direction(d.x, d.y, d.z, 0)
 {
-	direction = glm::normalize(direction);
+//	direction = glm::normalize(direction);
 }
 
 Ray::Ray(const Ray & ray) : origin(ray.origin), direction(ray.direction)
 {
-	direction = glm::normalize(direction);
+//	direction = glm::normalize(direction);
 }
