@@ -6,6 +6,7 @@
 #include "Light.hpp"
 #include "Image.hpp"
 #include "Ray.hpp"
+#include "Intersection.hpp"
 
 
 void A4_Render(
@@ -31,10 +32,14 @@ glm::dvec4 calculate_p_in_view_coordinates(double x, double y, double w, double 
 glm::dmat4 R3(glm::vec3 up, glm::vec3 eye, glm::vec3 view);
 glm::dmat4 T4(glm::vec3 eye);
 
+// create a Ray from image pixel.
 Ray createRay(double x, double y,
 			  const glm::dmat4 & r3,
 			  const glm::dmat4 & t4,
 			  const double & fovy,
 			  const double & d,
 			  const glm::vec3 & eye);
+
+// Test to see if r hit anything.
+Intersection hit(const Ray & r, SceneNode * root);
 

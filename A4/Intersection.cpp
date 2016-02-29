@@ -20,3 +20,12 @@ Intersection::Intersection(const Ray & ray, double t)
 	
 }
 
+Intersection::Intersection() :
+	incoming_ray({glm::vec4(),
+	glm::vec4()}),
+	t(0),
+	hit(false)
+{
+	
+}
+

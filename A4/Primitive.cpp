@@ -76,6 +76,11 @@ Intersection NonhierSphere::intersect(const Ray &ray)
 		assert(false);
 	}
 	
+	// update normal
+	glm::dvec4 point = ray.origin + ray.direction * result.t;
+	glm::dvec4 normal = glm::normalize(point - c);
+	result.normal = normal;
+	
 	return result;
 }
 

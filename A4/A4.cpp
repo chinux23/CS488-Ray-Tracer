@@ -2,6 +2,10 @@
 
 #include "A4.hpp"
 
+static double IMAGEWIDTH;
+static double IMAGEHEIGHT;
+
+
 void A4_Render(
 		// What to render
 		SceneNode * root,
@@ -40,13 +44,15 @@ void A4_Render(
 
 	size_t h = image.height();
 	size_t w = image.width();
+	IMAGEWIDTH = image.width();
+	IMAGEHEIGHT = image.height();
 	
 	
 #pragma mark - test
 	double d = calculate_d(h, fovy);
 	std::cout << "distance d: " << d << std::endl;
 	double x = 128, y = 128;
-	glm::dvec4 point_in_view_coord = calculate_p_in_view_coordinates(x, y, 256, 256, d);
+	glm::dvec4 point_in_view_coord = calculate_p_in_view_coordinates(x, y, image.width(), image.height(), d);
 	std::cout << "Point [" << x << ", " << y << "] (in device)" << " become (in view): ";
 	std::cout << glm::to_string(point_in_view_coord) << std::endl;
 	
@@ -66,15 +72,60 @@ void A4_Render(
 	for (uint y = 0; y < h; ++y) {
 		for (uint x = 0; x < w; ++x) {
 			
-			std::cout << root->m_name << std::endl;
+			Ray r = createRay(x, y, r3, t4, fovy, d, eye);
+			
+			glm::dvec3 color(0, 0, 0);
+			
+			Intersection primary_intersect = hit(r, root);
+			
+			if (primary_intersect.hit) {
+				// Calculate ambient
+				color = ambient;		// TO-DO get the K_e and multiply it with ambient.
+				
+				// Calculate diffusion first
+				glm::dvec4 hitPoint = r.origin + primary_intersect.t * r.direction;
+				
+				// Test with all lights
+				for (auto light : lights) {
+					glm::dvec4 shadow_ray_direction = glm::dvec4(light->position, 1) - hitPoint;
+					Ray shadow_ray = Ray(hitPoint, shadow_ray_direction);
+					
+					double shadow_ray_length = glm::length(shadow_ray_direction);
+					
+					Intersection shadow_intersect = hit(shadow_ray, root);
+					
+					// if no object or hitpoint is longer than the light
+					if (shadow_intersect.hit && shadow_intersect.t < shadow_ray_length) {
+						// Blocked
+						
+					} else {
+						// Get the diffused color
+						color += light->colour / (light->falloff[0] +
+										 light->falloff[1] * shadow_ray_length +
+										 light->falloff[2] * shadow_ray_length * shadow_ray_length);
+						
+					}
+					
+				}
+				
+				// Get reflected color
+				
+				
+				// Set color for the pixel.
+				image(x, y, 0) = color.r;
+				image(x, y, 1) = color.g;
+				image(x, y, 2) = color.b;
+				
+			} else {
+				// Red: increasing from top to bottom
+				image(x, y, 0) = (double)y / h;
+				// Green: increasing from left to right
+				image(x, y, 1) = (double)x / w;
+				// Blue: in lower-left and upper-right corners
+				image(x, y, 2) = ((y < h/2 && x < w/2)
+								  || (y >= h/2 && x >= w/2)) ? 1.0 : 0.0;
+			}
 
-			// Red: increasing from top to bottom
-			image(x, y, 0) = (double)y / h;
-			// Green: increasing from left to right
-			image(x, y, 1) = (double)x / w;
-			// Blue: in lower-left and upper-right corners
-			image(x, y, 2) = ((y < h/2 && x < w/2)
-						  || (y >= h/2 && x >= w/2)) ? 1.0 : 0.0;
 		}
 	}
 
@@ -132,7 +183,7 @@ Ray createRay(double x, double y,
 			  const double & d,
 			  const glm::vec3 & eye)
 {
-	glm::dvec4 point_in_view_coord = calculate_p_in_view_coordinates(x, y, 256, 256, d);
+	glm::dvec4 point_in_view_coord = calculate_p_in_view_coordinates(x, y, IMAGEWIDTH, IMAGEHEIGHT, d);
 	glm::dvec4 point_in_world = t4 * r3 * point_in_view_coord;
 	
 	glm::dvec4 origin({eye.x, eye.y, eye.z, 1});
@@ -140,6 +191,28 @@ Ray createRay(double x, double y,
 	Ray r = Ray(origin, point_in_world - origin);
 	return r;
 }
+
+Intersection hit(const Ray & r, SceneNode * root) {
+	// Brute force approach to test all SceneNodes.
+	// Return the hit which is closest to the ray's origin.
+	
+	Intersection result(r, 0);
+	
+	for (auto node : root->children) {
+		if (node->m_nodeType == NodeType::GeometryNode) {
+			Intersection intersection = node->intersect(r);
+			if (intersection.hit && result.hit && std::abs(intersection.t) < std::abs(result.t)) {
+				result = intersection;
+			}
+		}
+	}
+	
+	return result;
+}
+
+
+
+
 
 
 

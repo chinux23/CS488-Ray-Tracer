@@ -14,4 +14,9 @@ private:
   glm::vec3 m_ks;
 
   double m_shininess;
+
+public:
+	PhongMaterial & operator=(const PhongMaterial & other);
+	PhongMaterial & operator=(PhongMaterial other);
+	
 };

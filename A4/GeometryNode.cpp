@@ -26,3 +26,13 @@ void GeometryNode::setMaterial( Material *mat )
 	m_material = mat;
 }
 
+Intersection GeometryNode::intersect(const Ray & ray)
+{
+	Intersection i = m_primitive->intersect(ray);
+	if (i.hit) {
+		// update material at the point of the hit
+		i.material = (PhongMaterial *)m_material;
+	}
+	return i;
+}
+

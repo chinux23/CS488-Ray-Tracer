@@ -9,3 +9,22 @@ PhongMaterial::PhongMaterial(
 
 PhongMaterial::~PhongMaterial()
 {}
+
+
+PhongMaterial & PhongMaterial::operator=(const PhongMaterial & other)
+{
+	this->m_kd = other.m_kd;
+	this->m_ks = other.m_ks;
+	this->m_shininess = other.m_shininess;
+	
+	return *this;
+}
+
+PhongMaterial & PhongMaterial::operator=(PhongMaterial other)
+{
+	this->m_kd = other.m_kd;
+	this->m_ks = other.m_ks;
+	this->m_shininess = other.m_shininess;
+	
+	return *this;
+}

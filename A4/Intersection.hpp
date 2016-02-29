@@ -13,6 +13,8 @@
 #include <glm/ext.hpp>
 #include <vector>
 #include "Ray.hpp"
+#include "PhongMaterial.hpp"
+
 
 struct Intersection {
 
@@ -27,6 +29,8 @@ struct Intersection {
 	bool hit;				// ray miss or ray hit
 	
 	// normal of the intersection point in the geometry
+	PhongMaterial *material;
+	glm::dvec4	   normal;
 	
 	// Construct an intersection point.
 	Intersection(const Ray & ray,
@@ -34,6 +38,8 @@ struct Intersection {
 				 bool hit);
 	
 	Intersection(const Ray & ray, double t);
+	
+	Intersection();
 	
 };
 

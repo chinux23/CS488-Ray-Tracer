@@ -16,6 +16,7 @@ using namespace glm;
 // Static class variable
 unsigned int SceneNode::nodeInstanceCount = 0;
 
+const Intersection NOHIT(Ray(glm::dvec4(), glm::dvec4()), 0, false);
 
 //---------------------------------------------------------------------------------------
 SceneNode::SceneNode(const std::string& name)
@@ -133,4 +134,10 @@ std::ostream & operator << (std::ostream & os, const SceneNode & node) {
 
 	os << "]\n";
 	return os;
+}
+
+Intersection SceneNode::intersect(const Ray & ray)
+{
+	// Should not happen.
+	return NOHIT;
 }
