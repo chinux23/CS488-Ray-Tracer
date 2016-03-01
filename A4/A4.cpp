@@ -80,21 +80,25 @@ void A4_Render(
     auto x = 256, y = 256;
     auto p_world = calculate_p_in_world(x, y, device_to_world_trans);
     std::cout << "[ " << x << ", " << y << " ]" << " become (in world):" << glm::to_string(p_world) << std::endl;
-	
+
 
 #pragma mark - rendering starts
 
+	double color_max = 1.0;
+	double color_min = 0;
+	
 	for (uint y = 0; y < ny; ++y) {
 		for (uint x = 0; x < nx; ++x) {
             auto p_world = calculate_p_in_world(x, y, device_to_world_trans);
             Ray r = createRay(glm::dvec4(eye, 1), p_world);
 			glm::dvec3 color(0, 0, 0);
+			
 			HitColor hc = rayColor(r, 0, lights);
 			
 			if (hc.hit) {
-				image(x, y, 0) = hc.color.r;
-				image(x, y, 1) = hc.color.g;
-				image(x, y, 2) = hc.color.b;
+				image(x, y, 0) = glm::clamp(hc.color.r, color_min, color_max);
+				image(x, y, 1) = glm::clamp(hc.color.g, color_min, color_max);
+				image(x, y, 2) = glm::clamp(hc.color.b, color_min, color_max);
 			} else {
 				glm::dvec3 color = backgroundColor(x, y);
 				image(x, y, 0) = color.r;
@@ -103,6 +107,8 @@ void A4_Render(
 			}
 		}
 	}
+	
+	std::cout << "Done" << std::endl;
 
 }
 
@@ -239,6 +245,7 @@ HitColor rayColor(const Ray & r, int counter, const std::list<Light*> & lights)
 		glm::dvec4 hitPoint = r.origin + primary_intersect.t * r.direction;
 		glm::dvec3 kd = primary_intersect.material->m_kd;
 		color += kd * directLight(hitPoint, lights);
+		
 	}
 
 	return {primary_intersect.hit, color};

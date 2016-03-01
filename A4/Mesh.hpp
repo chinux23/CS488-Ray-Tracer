@@ -31,4 +31,6 @@ private:
 	std::vector<Triangle> m_faces;
 
     friend std::ostream& operator<<(std::ostream& out, const Mesh& mesh);
+	
+	Intersection intersect(const Ray & r);
 };

@@ -130,6 +130,14 @@
 		0CC118E51BB9999000C87A4F /* IndexExample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0CC118E31BB9999000C87A4F /* IndexExample.cpp */; };
 		7444582B1C826D7900D7C652 /* Ray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 744458291C826D7900D7C652 /* Ray.cpp */; };
 		7444582E1C834AD800D7C652 /* Intersection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7444582C1C834AD800D7C652 /* Intersection.cpp */; };
+		744458331C853BD900D7C652 /* smstdodeca.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 746353171C7FA5BC009E0DC9 /* smstdodeca.obj */; };
+		744458341C853BE000D7C652 /* buckyball.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 746353101C7FA5BC009E0DC9 /* buckyball.obj */; };
+		744458351C853BE000D7C652 /* cube.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 746353111C7FA5BC009E0DC9 /* cube.obj */; };
+		744458361C853BE000D7C652 /* cylinder.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 746353121C7FA5BC009E0DC9 /* cylinder.obj */; };
+		744458371C853BE000D7C652 /* dodeca.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 746353131C7FA5BC009E0DC9 /* dodeca.obj */; };
+		744458381C853BE000D7C652 /* icosa.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 746353141C7FA5BC009E0DC9 /* icosa.obj */; };
+		744458391C853BE000D7C652 /* mickey.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 746353151C7FA5BC009E0DC9 /* mickey.obj */; };
+		7444583A1C853BE000D7C652 /* plane.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 746353161C7FA5BC009E0DC9 /* plane.obj */; };
 		7446459B1C84BEF300E45ED6 /* simple2.lua in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7446459A1C84BEEC00E45ED6 /* simple2.lua */; };
 /* End PBXBuildFile section */
 
@@ -141,7 +149,12 @@
 			dstSubfolderSpec = 16;
 			files = (
 				7446459B1C84BEF300E45ED6 /* simple2.lua in CopyFiles */,
-				0C021B471BDEF17E00B28537 /* cow.obj in CopyFiles */,
+				744458341C853BE000D7C652 /* buckyball.obj in CopyFiles */,
+				744458351C853BE000D7C652 /* cube.obj in CopyFiles */,
+				744458361C853BE000D7C652 /* cylinder.obj in CopyFiles */,
+				744458371C853BE000D7C652 /* dodeca.obj in CopyFiles */,
+				744458381C853BE000D7C652 /* icosa.obj in CopyFiles */,
+				744458391C853BE000D7C652 /* mickey.obj in CopyFiles */,
 				0C021B4A1BDEF17E00B28537 /* hier.lua in CopyFiles */,
 				0C021B4C1BDEF17E00B28537 /* instance.lua in CopyFiles */,
 				0C021B4D1BDEF17E00B28537 /* macho-cows.lua in CopyFiles */,
@@ -149,6 +162,9 @@
 				0C021B501BDEF17E00B28537 /* nonhier2.lua in CopyFiles */,
 				0C021B521BDEF17E00B28537 /* simple-cows.lua in CopyFiles */,
 				0C021B531BDEF17E00B28537 /* simple.lua in CopyFiles */,
+				7444583A1C853BE000D7C652 /* plane.obj in CopyFiles */,
+				744458331C853BD900D7C652 /* smstdodeca.obj in CopyFiles */,
+				0C021B471BDEF17E00B28537 /* cow.obj in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
