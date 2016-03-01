@@ -8,7 +8,7 @@ static double IMAGEHEIGHT;
 #define DISTANCE 800.0
 
 static SceneNode *Scene;
-
+static glm::vec3 AmbientColor;
 
 void A4_Render(
 		// What to render
@@ -55,6 +55,7 @@ void A4_Render(
     double h = 2 * DISTANCE * glm::tan(glm::radians(fovy/2));
 	
 	Scene = root;
+    AmbientColor = ambient;
     
     std::cout << "w : " << w << std::endl;
     std::cout << "h : " << h << std::endl;
@@ -222,9 +223,9 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
 		} else {
 			//						std::cout << "Calculating diffused color " << std::endl;
 			
-            auto eye_ray = glm::normalize(primary_intersect.incoming_ray.direction);
+            auto light_ray = glm::normalize(shadow_ray_direction);
             auto normal = glm::normalize(primary_intersect.normal);
-            auto cosineTheta = std::abs(glm::dot(glm::dvec3(eye_ray), glm::dvec3(normal)));
+            auto cosineTheta = std::max(glm::dot(glm::dvec3(normal), glm::dvec3(light_ray)), 0.0);
 //            std::cout << "cosine theta: " << cosineTheta << std::endl;
             
             auto kd = primary_intersect.material->m_kd;
@@ -234,6 +235,18 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
 									  light->falloff[1] * shadow_ray_length +
 								      light->falloff[2] * shadow_ray_length * shadow_ray_length);
             
+            
+            glm::dvec4 point = primary_intersect.incoming_ray.origin + primary_intersect.incoming_ray.direction * primary_intersect.t;
+            glm::dvec4 light_direction = glm::dvec4(light->position, 1) - point;
+            
+            glm::dvec3 Ri = glm::normalize(glm::dvec3(primary_intersect.incoming_ray.direction));
+            glm::dvec3 N = glm::normalize(glm::dvec3(primary_intersect.normal));
+            glm::dvec3 Rr = Ri - 2.0 * N * (glm::dot(Ri, N));
+            
+            cosineTheta = std::max(glm::dot(Rr, glm::normalize(glm::dvec3(light_direction))), 0.0);
+            double phongCoeff = std::pow(cosineTheta, primary_intersect.material->m_shininess);
+            
+            color += phongCoeff * primary_intersect.material->m_ks * light->colour;
 		}
 		
 	}
@@ -247,14 +260,16 @@ glm::dvec3 specularHighlight(const std::list<Light *> & lights,
     
     for (auto light : lights) {
         glm::dvec4 point = primary_intersect.incoming_ray.origin + primary_intersect.incoming_ray.direction * primary_intersect.t;
-        glm::dvec3 lightDir = glm::normalize(light->position - glm::vec3(point));
-        double cosineTheta = glm::dot(lightDir, glm::dvec3(primary_intersect.normal));
-        glm::dvec3 phongDir = lightDir - 2.0 * cosineTheta * glm::dvec3(primary_intersect.normal);
-        double phongCoeff = std::max(glm::dot(phongDir, glm::dvec3(primary_intersect.incoming_ray.direction)), 0.0);
-        phongCoeff = std::pow(phongCoeff, primary_intersect.material->m_shininess);
+        glm::dvec4 light_direction = glm::dvec4(light->position, 1) - point;
+        
+        glm::dvec3 Ri = glm::normalize(glm::dvec3(primary_intersect.incoming_ray.direction));
+        glm::dvec3 N = glm::normalize(glm::dvec3(primary_intersect.normal));
+        glm::dvec3 Rr = Ri - 2.0 * N * (glm::dot(Ri, N));
+        
+        double cosineTheta = std::abs(glm::dot(Rr, glm::normalize(glm::dvec3(light_direction))));
+        double phongCoeff = std::pow(cosineTheta, primary_intersect.material->m_shininess);
         
         color += phongCoeff * primary_intersect.material->m_ks * light->colour;
-//        color += primary_intersect.material->m_ks * light->colour;
 
     };
     return color;
@@ -270,6 +285,9 @@ HitColor rayColor(const Ray & r, int counter, const std::list<Light*> & lights)
 	Intersection primary_intersect = hit(r, Scene);
 	
 	if (primary_intersect.hit) {
+        // ambient color
+        color += primary_intersect.material->m_kd * AmbientColor;
+        
         // diffused color
         color += directLight(lights, primary_intersect);
     

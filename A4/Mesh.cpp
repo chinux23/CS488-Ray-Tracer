@@ -65,14 +65,14 @@ Intersection Mesh::intersect(const Ray &r)
 			if (!result.hit) {
 				result.t = baryPosition.z;
 				result.hit = true;
-				auto normal = glm::normalize(
+				auto normal = -glm::normalize(
 									glm::cross(
 									  m_vertices[triangle.v3] - m_vertices[triangle.v1],
 									  m_vertices[triangle.v2] - m_vertices[triangle.v1]));
 				result.normal = glm::dvec4(normal, 0);
 			} else if (baryPosition.z < result.t) {
 				result.t = baryPosition.z;
-				auto normal = glm::normalize(
+				auto normal = -glm::normalize(
 											 glm::cross(
 														m_vertices[triangle.v3] - m_vertices[triangle.v1],
 														m_vertices[triangle.v2] - m_vertices[triangle.v1]));
