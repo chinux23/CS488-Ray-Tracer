@@ -1,6 +1,7 @@
 #include "Primitive.hpp"
 #include "polyroots.hpp"
 
+
 Primitive::~Primitive()
 {
 }
@@ -41,7 +42,7 @@ Intersection NonhierBox::intersect(const Ray &r)
 {
 	Intersection result(r, 0);
 	glm::dvec3 bounds[2] = {m_pos, m_pos + m_size * glm::vec3(1, 1, 1)};
-	float tmin, tmax, tymin, tymax, tzmin, tzmax;
+	double tmin, tmax, tymin, tymax, tzmin, tzmax;
 	
 	if (r.direction.x >= 0) {
 		tmin = (bounds[0].x - r.origin.x) / r.direction.x;
@@ -87,6 +88,31 @@ Intersection NonhierBox::intersect(const Ray &r)
 		result.hit = true;
 		result.t = tmin;
 	}
+    
+    glm::dvec4 hitPoint = r.origin + r.direction * result.t;
+    
+    // Figure out which face it's hitting.
+    if (isEqual(hitPoint.x, m_pos.x)) {
+        result.normal = {-1, 0, 0, 0};
+        
+    } else if (isEqual(hitPoint.x, m_pos.x + m_size)) {
+        result.normal = {1, 0, 0, 0};
+        
+    } else if (isEqual(hitPoint.y, m_pos.y)) {
+        result.normal = {0, -1, 0, 0};
+        
+    } else if (isEqual(hitPoint.y, m_pos.y + m_size)) {
+        result.normal = {0, 1, 0, 0};
+        
+    } else if (isEqual(hitPoint.z, m_pos.z)) {
+        result.normal = {0, 0, -1, 0};
+        
+    } else if (isEqual(hitPoint.z, m_pos.z + m_size)) {
+        result.normal = {0, 0, 1, 0};
+    } else {
+        // We should not be here.
+        assert(false);
+    }
 	
 	return result;
 }

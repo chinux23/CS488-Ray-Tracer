@@ -4,6 +4,17 @@
 #include "Ray.hpp"
 #include "Intersection.hpp"
 
+#define EPSILON 1
+
+template<typename T1, typename T2>
+bool isEqual(const T1 & t1, const T2 & t2) {
+    if (std::abs(t1 - t2) < EPSILON) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 class Primitive {
 public:
 	virtual ~Primitive();

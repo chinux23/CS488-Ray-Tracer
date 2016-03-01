@@ -51,7 +51,11 @@ Intersection hit(const Ray & r, SceneNode * root);
 HitColor rayColor(const Ray & r, int counter, const std::list<Light*> & lights);
 
 // Cast shadow ray and get the color for the shadow ray.
-glm::dvec3 directLight(const glm::dvec4 & point, std::list<Light*> lights);
+glm::dvec3 directLight(const std::list<Light*> & lights,
+                       const Intersection & primary_intersect);
+
+glm::dvec3 specularHighlight(const std::list<Light *> & lights,
+                             const Intersection & primary_intersect);
 
 glm::dvec3 backgroundColor(int x, int y);
 
