@@ -255,12 +255,11 @@ glm::dvec3 backgroundColor(int x, int y)
 {	
 	glm::dvec3 color(0, 0, 0);
 	// Red: increasing from top to bottom
-	color.r += (double)y / IMAGEHEIGHT;
+	color.r += 0;
 	// Green: increasing from left to right
-	color.g += (double)x / IMAGEWIDTH;
+	color.g += 0;
 	// Blue: in lower-left and upper-right corners
-	color.b += ((y < IMAGEHEIGHT/2 && x < IMAGEWIDTH/2)
-				|| (y >= IMAGEHEIGHT/2 && x >= IMAGEWIDTH/2)) ? 1.0 : 0.0;
+	color.b += (double)y / IMAGEHEIGHT;
 	
 	return color;
 }
