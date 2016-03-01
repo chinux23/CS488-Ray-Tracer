@@ -7,6 +7,8 @@ static double IMAGEHEIGHT;
 
 #define DISTANCE 800.0
 
+static SceneNode *Scene;
+
 
 void A4_Render(
 		// What to render
@@ -51,6 +53,8 @@ void A4_Render(
 	
     double w = 2 * DISTANCE * glm::tan(glm::radians(fovy/2));
     double h = 2 * DISTANCE * glm::tan(glm::radians(fovy/2));
+	
+	Scene = root;
     
     std::cout << "w : " << w << std::endl;
     std::cout << "h : " << h << std::endl;
@@ -79,85 +83,24 @@ void A4_Render(
 	
 
 #pragma mark - rendering starts
-	
+
 	for (uint y = 0; y < ny; ++y) {
 		for (uint x = 0; x < nx; ++x) {
-			
             auto p_world = calculate_p_in_world(x, y, device_to_world_trans);
-            
             Ray r = createRay(glm::dvec4(eye, 1), p_world);
-			
 			glm::dvec3 color(0, 0, 0);
+			HitColor hc = rayColor(r, 0, lights);
 			
-			Intersection primary_intersect = hit(r, root);
-			
-			if (primary_intersect.hit) {
-				std::cout << "[ " << x << " " << y << " ]" << " hit " << primary_intersect.node->m_name << std::endl;
-				
-				// Calculate ambient
-				color = ambient;		// TO-DO get the K_e and multiply it with ambient.
-
-				// Calculate diffusion first
-				glm::dvec4 hitPoint = r.origin + primary_intersect.t * r.direction;
-				
-//				std::cout << "primary ray hitPoint: " << glm::to_string(hitPoint) << std::endl;
-				
-				// Test with all lights
-				for (auto light : lights) {
-					glm::dvec4 shadow_ray_direction = glm::dvec4(light->position, 1) - hitPoint;
-					
-//					std::cout << "Shadow Ray direction " << glm::to_string(shadow_ray_direction) << std::endl;
-					Ray shadow_ray = Ray(hitPoint + glm::normalize(shadow_ray_direction), shadow_ray_direction);
-					
-					double shadow_ray_length = glm::length(shadow_ray_direction);
-//					std::cout << "shadow_ray_length: " << shadow_ray_length << std::endl;
-					
-					Intersection shadow_intersect = hit(shadow_ray, root);
-					
-					if (shadow_intersect.hit)
-						assert(shadow_intersect.t > 0);
-					
-					// if no object or hitpoint is longer than the light
-					if (shadow_intersect.hit) // &&
-//						glm::length(shadow_intersect.t * shadow_ray.direction) < shadow_ray_length)
-					{
-						glm::dvec4 s_hitPoint = shadow_ray.origin + shadow_intersect.t * shadow_ray.direction;
-//						std::cout << "Shadow ray hitPoint: " << glm::to_string(s_hitPoint) << std::endl;
-						// Blocked
-//						std::cout << "Shadow ray hit " << shadow_intersect.node->m_name << std::endl;
-//						std::cout << "ShadowRay hit t " << shadow_intersect.t << std::endl;
-						
-					} else {
-						std::cout << "Calculating diffused color " << std::endl;
-						
-						// Get the diffused color
-						glm::vec3 kd = primary_intersect.material->m_kd;
-						color += kd * light->colour / (light->falloff[0] +
-										 light->falloff[1] * shadow_ray_length +
-										 light->falloff[2] * shadow_ray_length * shadow_ray_length);
-						
-					}
-					
-				}
-				
-				// Get reflected color
-				
-				
-				// Set color for the pixel.
+			if (hc.hit) {
+				image(x, y, 0) = hc.color.r;
+				image(x, y, 1) = hc.color.g;
+				image(x, y, 2) = hc.color.b;
+			} else {
+				glm::dvec3 color = backgroundColor(x, y);
 				image(x, y, 0) = color.r;
 				image(x, y, 1) = color.g;
 				image(x, y, 2) = color.b;
-				
-			} else {
-				// Red: increasing from top to bottom
-				image(x, y, 0) = (double)y / ny;
-				// Green: increasing from left to right
-				image(x, y, 1) = (double)x / nx;
-				// Blue: in lower-left and upper-right corners
-				image(x, y, 2) = ((y < ny/2 && x < nx/2)
-								  || (y >= ny/2 && x >= nx/2)) ? 1.0 : 0.0;
 			}
-
 		}
 	}
 
@@ -242,6 +185,78 @@ glm::dvec4 calculate_p_in_world(double x, double y, const glm::dmat4 & trans)
     return p_in_world;
 }
 
+glm::dvec3 directLight(const glm::dvec4 & point, std::list<Light*> lights)
+{
+	glm::vec3 color(0, 0, 0);
+	
+	for (auto light : lights) {
+		glm::dvec4 shadow_ray_direction = glm::dvec4(light->position, 1) - point;
+		
+		Ray shadow_ray = Ray(point + glm::normalize(shadow_ray_direction), shadow_ray_direction);
+		
+		double shadow_ray_length = glm::length(shadow_ray_direction);
+		//					std::cout << "shadow_ray_length: " << shadow_ray_length << std::endl;
+		
+		Intersection shadow_intersect = hit(shadow_ray, Scene);
+		
+		if (shadow_intersect.hit)
+			assert(shadow_intersect.t > 0);
+		
+		// if no object or hitpoint is longer than the light
+		if (shadow_intersect.hit &&
+			glm::length(shadow_intersect.t * shadow_ray.direction) < shadow_ray_length)
+		{
+			//						glm::dvec4 s_hitPoint = shadow_ray.origin + shadow_intersect.t * shadow_ray.direction;
+			//						std::cout << "Shadow ray hitPoint: " << glm::to_string(s_hitPoint) << std::endl;
+			// Blocked
+			//						std::cout << "Shadow ray hit " << shadow_intersect.node->m_name << std::endl;
+			//						std::cout << "ShadowRay hit t " << shadow_intersect.t << std::endl;
+			
+		} else {
+			//						std::cout << "Calculating diffused color " << std::endl;
+			
+			// Get the diffused color
+			color += light->colour / (light->falloff[0] +
+									  light->falloff[1] * shadow_ray_length +
+								      light->falloff[2] * shadow_ray_length * shadow_ray_length);
+			
+		}
+		
+	}
+	return color;
+}
+
+HitColor rayColor(const Ray & r, int counter, const std::list<Light*> & lights)
+{
+	glm::dvec3 color(0, 0, 0);
+	if (counter > 5) {
+		return {false, color};
+	}
+	
+	Intersection primary_intersect = hit(r, Scene);
+	
+	if (primary_intersect.hit) {
+		glm::dvec4 hitPoint = r.origin + primary_intersect.t * r.direction;
+		glm::dvec3 kd = primary_intersect.material->m_kd;
+		color += kd * directLight(hitPoint, lights);
+	}
+
+	return {primary_intersect.hit, color};
+}
+
+glm::dvec3 backgroundColor(int x, int y)
+{	
+	glm::dvec3 color(0, 0, 0);
+	// Red: increasing from top to bottom
+	color.r += (double)y / IMAGEHEIGHT;
+	// Green: increasing from left to right
+	color.g += (double)x / IMAGEWIDTH;
+	// Blue: in lower-left and upper-right corners
+	color.b += ((y < IMAGEHEIGHT/2 && x < IMAGEWIDTH/2)
+				|| (y >= IMAGEHEIGHT/2 && x >= IMAGEWIDTH/2)) ? 1.0 : 0.0;
+	
+	return color;
+}
 
 
 

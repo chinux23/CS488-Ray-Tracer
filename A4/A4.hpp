@@ -8,6 +8,11 @@
 #include "Ray.hpp"
 #include "Intersection.hpp"
 
+struct HitColor {
+	bool hit;
+	glm::dvec3 color;
+};
+
 
 void A4_Render(
 		// What to render
@@ -41,4 +46,13 @@ Ray createRay(glm::dvec4 p1, glm::dvec4 p2);
 
 // Test to see if r hit anything.
 Intersection hit(const Ray & r, SceneNode * root);
+
+// Return the color given
+HitColor rayColor(const Ray & r, int counter, const std::list<Light*> & lights);
+
+// Cast shadow ray and get the color for the shadow ray.
+glm::dvec3 directLight(const glm::dvec4 & point, std::list<Light*> lights);
+
+glm::dvec3 backgroundColor(int x, int y);
+
 

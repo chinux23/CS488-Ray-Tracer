@@ -62,8 +62,10 @@ Intersection NonhierSphere::intersect(const Ray &ray)
 		result.hit = roots[0] > 0;
 		result.t = roots[0];
 	} else if (num_of_roots == 2) {
+//        auto hitpoint = ray.origin + ray.direction * roots[0];
+        
 		// Return the smallest positive number
-		result.t = std::max(roots[0], roots[1]);
+		result.t = std::min(roots[0], roots[1]);
 		result.hit = result.t > 0;
 	} else {
 		// Should never happen here.
