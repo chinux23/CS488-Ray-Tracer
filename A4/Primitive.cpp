@@ -1,5 +1,6 @@
 #include "Primitive.hpp"
 #include "polyroots.hpp"
+#include "Mesh.hpp"
 
 
 Primitive::~Primitive()
@@ -41,80 +42,38 @@ Intersection Cube::intersect(const Ray &ray)
 Intersection NonhierBox::intersect(const Ray &r)
 {
 	Intersection result(r, 0);
-	glm::dvec3 bounds[2] = {m_pos, m_pos + m_size * glm::vec3(1, 1, 1)};
-	double tmin, tmax, tymin, tymax, tzmin, tzmax;
-	
-	if (r.direction.x >= 0) {
-		tmin = (bounds[0].x - r.origin.x) / r.direction.x;
-		tmax = (bounds[1].x - r.origin.x) / r.direction.x;
-	} else {
-		tmin = (bounds[1].x - r.origin.x) / r.direction.x;
-		tmax = (bounds[0].x - r.origin.x) / r.direction.x;
-	}
-	if (r.direction.y >= 0) {
-		tymin = (bounds[0].y - r.origin.y) / r.direction.y;
-		tymax = (bounds[1].y - r.origin.y) / r.direction.y;
-	} else {
-		tymin = (bounds[1].y - r.origin.y) / r.direction.y;
-		tymax = (bounds[0].y - r.origin.y) / r.direction.y;
-	}
-	if ( (tmin > tymax) || (tymin > tmax) ) {
-		result.hit = false;
-		return result;
-	}
-	
-	if (tymin > tmin)
-		tmin = tymin;
-	if (tymax < tmax)
-		tmax = tymax;
-	if (r.direction.z >= 0) {
-		tzmin = (bounds[0].z - r.origin.z) / r.direction.z;
-		tzmax = (bounds[1].z - r.origin.z) / r.direction.z;
-	} else {
-		tzmin = (bounds[1].z - r.origin.z) / r.direction.z;
-		tzmax = (bounds[0].z - r.origin.z) / r.direction.z;
-	}
-	if ( (tmin > tzmax) || (tzmin > tmax) ) {
-		result.hit = false;
-		return result;
-	}
-	
-	if (tzmin > tmin)
-		tmin = tzmin;
-	if (tzmax < tmax)
-		tmax = tzmax;
-	
-	if ( (tmin < 1 ) && (tmax > 0) && tmin > 0) {
-		result.hit = true;
-		result.t = tmin;
-	}
+    std::vector<glm::vec3> vertices = {
+        m_pos + glm::vec3(0, 0, m_size),
+        m_pos + glm::vec3(m_size, 0, m_size),
+        m_pos + glm::vec3(m_size, m_size, m_size),
+        m_pos + glm::vec3(0, m_size, m_size),
+        
+        m_pos + glm::vec3(0, 0, 0),
+        m_pos + glm::vec3(m_size, 0, 0),
+        m_pos + glm::vec3(m_size, m_size, 0),
+        m_pos + glm::vec3(0, m_size, 0)
+    };
     
-    glm::dvec4 hitPoint = r.origin + r.direction * result.t;
+    std::vector<Triangle> faces = {
+        Triangle(2, 3, 0),
+        Triangle(0, 1, 2),
+        Triangle(2, 1, 5),
+        Triangle(5, 6, 2),
+        Triangle(3, 7, 4),
+        Triangle(4, 0, 3),
+        Triangle(7, 6, 5),
+        Triangle(5, 4, 7),
+        
+        Triangle(1, 0, 4),
+        Triangle(4, 5, 1),
+        Triangle(2, 6, 7),
+        Triangle(7, 3, 2)
+    };
     
-    // Figure out which face it's hitting.
-    if (isEqual(hitPoint.x, m_pos.x)) {
-        result.normal = {-1, 0, 0, 0};
-        
-    } else if (isEqual(hitPoint.x, m_pos.x + m_size)) {
-        result.normal = {1, 0, 0, 0};
-        
-    } else if (isEqual(hitPoint.y, m_pos.y)) {
-        result.normal = {0, -1, 0, 0};
-        
-    } else if (isEqual(hitPoint.y, m_pos.y + m_size)) {
-        result.normal = {0, 1, 0, 0};
-        
-    } else if (isEqual(hitPoint.z, m_pos.z)) {
-        result.normal = {0, 0, -1, 0};
-        
-    } else if (isEqual(hitPoint.z, m_pos.z + m_size)) {
-        result.normal = {0, 0, 1, 0};
-    } else {
-        // We should not be here.
-        assert(false);
-    }
-	
-	return result;
+    Mesh cube = Mesh(vertices, faces);
+
+
+	return cube.intersect(r);
 }
 
 Intersection NonhierSphere::intersect(const Ray &ray)

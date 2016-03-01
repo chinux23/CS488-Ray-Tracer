@@ -5,7 +5,7 @@
 static double IMAGEWIDTH;
 static double IMAGEHEIGHT;
 
-#define DISTANCE 800.0
+#define DISTANCE 10.0
 
 static SceneNode *Scene;
 static glm::vec3 AmbientColor;
@@ -78,7 +78,7 @@ void A4_Render(
 //	std::cout << glm::to_string(point_in_world) << std::endl;
     
     glm::dmat4 device_to_world_trans = t4 * r3 * s2 * t1;
-    auto x = 256, y = 256;
+    auto x = 128, y = 128;
     auto p_world = calculate_p_in_world(x, y, device_to_world_trans);
     std::cout << "[ " << x << ", " << y << " ]" << " become (in world):" << glm::to_string(p_world) << std::endl;
 
@@ -90,6 +90,11 @@ void A4_Render(
 	
 	for (uint y = 0; y < ny; ++y) {
 		for (uint x = 0; x < nx; ++x) {
+            
+//            if (x == 128 && y == 128) {
+//                std::cout << "Testing middle point" << std::endl;
+//            }
+            
             auto p_world = calculate_p_in_world(x, y, device_to_world_trans);
             Ray r = createRay(glm::dvec4(eye, 1), p_world);
 			glm::dvec3 color(0, 0, 0);

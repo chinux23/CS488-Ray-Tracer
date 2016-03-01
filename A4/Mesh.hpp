@@ -25,10 +25,10 @@ struct Triangle
 class Mesh : public Primitive {
 public:
   Mesh( const std::string& fname );
+    Mesh(std::vector<glm::vec3> vertices, std::vector<Triangle> faces);
   
-private:
-	std::vector<glm::vec3> m_vertices;
-	std::vector<Triangle> m_faces;
+  std::vector<glm::vec3> m_vertices;
+  std::vector<Triangle> m_faces;
 
     friend std::ostream& operator<<(std::ostream& out, const Mesh& mesh);
 	

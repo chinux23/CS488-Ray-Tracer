@@ -26,6 +26,12 @@ Mesh::Mesh( const std::string& fname )
 	}
 }
 
+Mesh::Mesh(std::vector<glm::vec3> vertices, std::vector<Triangle> faces)
+:m_faces(faces), m_vertices(vertices)
+{
+    
+}
+
 std::ostream& operator<<(std::ostream& out, const Mesh& mesh)
 {
   out << "mesh {";
