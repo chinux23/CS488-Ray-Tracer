@@ -161,7 +161,7 @@ Intersection SceneNode::intersect(const Ray & ray, std::list<glm::mat4> transfor
 	
 	if (result.hit) {
 		// Once hit, transform normal and incoming ray back to the world coordinates.
-		result.normal = trans * result.normal;
+		result.normal = glm::transpose(invtrans) * result.normal;
 	}
 	
 	return result;
