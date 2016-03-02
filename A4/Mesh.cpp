@@ -67,6 +67,7 @@ Intersection Mesh::intersect(const Ray &r)
 											 m_vertices[triangle.v2],
 											 m_vertices[triangle.v3],
 											 baryPosition);
+		
 		if (hit && baryPosition.z > 0) {
 			if (!result.hit) {
 				result.t = baryPosition.z;
@@ -83,6 +84,10 @@ Intersection Mesh::intersect(const Ray &r)
 														m_vertices[triangle.v3] - m_vertices[triangle.v1],
 														m_vertices[triangle.v2] - m_vertices[triangle.v1]));
 				result.normal = glm::dvec4(normal, 0);
+			}
+		} else {
+			if (hit && baryPosition.z < 0) {
+				std::cout << "Got normal problem? " << std::endl;
 			}
 		}
 	}
