@@ -14,6 +14,11 @@ arc = gr.node('arc')
 scene:add_child(arc)
 arc:translate(0,0,-10)
 arc:rotate('Y', 60)
+
+s1 = gr.nh_sphere('s1', {0, 0, -10}, 2)
+arc:add_child(s1)
+s1:set_material(gold)
+
 p1 = gr.cube('p1')
 arc:add_child(p1)
 p1:set_material(gold)
@@ -49,5 +54,5 @@ l1 = gr.light({200,200,400}, {0.8, 0.8, 0.8}, {1, 0, 0})
 l2 = gr.light({0, 5, -20}, {0.4, 0.4, 0.8}, {1, 0, 0})
 
 gr.render(scene, 'hier.png', 1024, 1024,
-	  {0, 0, 40}, {0, 0, -1}, {0, 1, 0}, 50,
+	  {0, 0, 0}, {0, 0, -1}, {0, 1, 0}, 50,
 	  {0.4, 0.4, 0.4}, {l1, l2})

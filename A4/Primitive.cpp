@@ -13,12 +13,31 @@ Intersection Primitive::intersect(const Ray &ray)
 	return result;
 }
 
+Intersection Primitive::intersect(const Ray & ray, std::list<glm::mat4> transformations)
+{
+	assert(m_primitive);
+	auto result = m_primitive->intersect(ray, transformations);
+	return result;
+}
+
+Sphere::Sphere()
+{
+	m_primitive = new NonhierSphere({0, 0, 0}, 1.0);
+}
+
 Sphere::~Sphere()
 {
+	delete m_primitive;
+}
+
+Cube::Cube()
+{
+	m_primitive = new NonhierBox({0, 0, 0}, 1.0);
 }
 
 Cube::~Cube()
 {
+	delete m_primitive;
 }
 
 NonhierSphere::~NonhierSphere()
@@ -27,16 +46,15 @@ NonhierSphere::~NonhierSphere()
 
 Intersection Sphere::intersect(const Ray & ray)
 {
-	Intersection result(ray, 0);
+	Intersection result = m_primitive->intersect(ray);
 	return result;
 }
 
 Intersection Cube::intersect(const Ray &ray)
 {
-	Intersection result(ray, 0);
+	Intersection result = m_primitive->intersect(ray);
 	return result;
 }
-
 
 // Reference: http://www.cs.utah.edu/~awilliam/box/box.pdf
 Intersection NonhierBox::intersect(const Ray &r)
@@ -74,6 +92,58 @@ Intersection NonhierBox::intersect(const Ray &r)
 
 
 	return cube.intersect(r);
+}
+
+Intersection NonhierBox::intersect(const Ray & ray, std::list<glm::mat4> transformations)
+{
+	glm::mat4 total_trans;
+	
+	for (auto tranform : transformations) {
+		total_trans = tranform * total_trans;
+	}
+	
+	// Do inverse transform of the ray, then test intersection.
+	glm::mat4 inv_total_trans = glm::inverse(total_trans);
+	
+	auto origin = inv_total_trans * ray.origin;
+	auto dir	= inv_total_trans * ray.direction;
+	
+	Ray new_ray(origin, dir);
+	
+	auto i = intersect(new_ray);
+	
+	if (i.hit) {
+		// Once hit, transform normal and incoming ray back to the world coordinates.
+		i.normal = total_trans * i.normal;
+		i.incoming_ray = ray;
+	}
+	return i;
+}
+
+Intersection NonhierSphere::intersect(const Ray & ray, std::list<glm::mat4> transformations)
+{
+	glm::mat4 total_trans;
+	
+	for (auto tranform : transformations) {
+		total_trans = tranform * total_trans;
+	}
+	
+	// Do inverse transform of the ray, then test intersection.
+	glm::mat4 inv_total_trans = glm::inverse(total_trans);
+	
+	auto origin = inv_total_trans * ray.origin;
+	auto dir	= inv_total_trans * ray.direction;
+	
+	Ray new_ray(origin, dir);
+	
+	auto i = intersect(new_ray);
+	
+	if (i.hit) {
+		// Once hit, transform normal and incoming ray back to the world coordinates.
+		i.normal = total_trans * i.normal;
+		i.incoming_ray = ray;
+	}
+	return i;
 }
 
 Intersection NonhierSphere::intersect(const Ray &ray)
@@ -117,6 +187,8 @@ Intersection NonhierSphere::intersect(const Ray &ray)
 	
 	return result;
 }
+
+
 
 NonhierBox::~NonhierBox()
 {

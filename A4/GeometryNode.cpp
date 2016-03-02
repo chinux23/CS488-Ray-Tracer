@@ -37,3 +37,47 @@ Intersection GeometryNode::intersect(const Ray & ray)
 	return i;
 }
 
+Intersection GeometryNode::intersect(const Ray & ray, std::list<glm::mat4> transformations)
+{
+	transformations.push_back(trans);
+	
+	glm::mat4 total_trans;
+	
+	for (auto tranform : transformations) {
+		total_trans = tranform * total_trans;
+	}
+	
+	// Do inverse transform of the ray, then test intersection.
+	glm::mat4 inv_total_trans = glm::inverse(total_trans);
+	
+	auto origin = inv_total_trans * ray.origin;
+	auto dir	= inv_total_trans * ray.direction;
+	
+	Ray new_ray(origin, dir);
+	
+	Intersection i = m_primitive->intersect(new_ray);
+	
+	if (i.hit) {
+		// Once hit, transform normal and incoming ray back to the world coordinates.
+		i.normal = total_trans * i.normal;
+		i.incoming_ray = ray;
+		
+		// get the materials as usual
+		i.material = (PhongMaterial *)m_material;
+		i.node = this;
+	}
+	
+	// Test with all remaning child, and return the closet intersection point.
+	for (auto child : children) {
+		Intersection child_i = child->intersect(ray, transformations);
+		
+		if (child_i.hit) {
+			if (!i.hit || child_i.t < i.t) {
+				i = child_i;
+			}
+		}
+	}
+	
+	return i;
+}
+

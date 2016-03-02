@@ -173,19 +173,22 @@ Intersection hit(const Ray & r, SceneNode * root) {
 	// Brute force approach to test all SceneNodes.
 	// Return the hit which is closest to the ray's origin.
 	
-	Intersection result(r, 0);
+	std::list<glm::mat4> transformations;
+
+	Intersection result = root->intersect(r, transformations);
 	
-	for (auto node : root->children) {
-		if (node->m_nodeType == NodeType::GeometryNode) {
-			Intersection intersection = node->intersect(r);
-			if (intersection.hit && !result.hit) {
-				result = intersection;
-			} else if (intersection.hit && result.hit && intersection.t < result.t) {
-				assert(intersection.t > 0);
-				result = intersection;
-			}
-		}
-	}
+	// The following is for non-hier
+//	for (auto node : root->children) {
+//		if (node->m_nodeType == NodeType::GeometryNode) {
+//			Intersection intersection = node->intersect(r);
+//			if (intersection.hit && !result.hit) {
+//				result = intersection;
+//			} else if (intersection.hit && result.hit && intersection.t < result.t) {
+//				assert(intersection.t > 0);
+//				result = intersection;
+//			}
+//		}
+//	}
 	
 	return result;
 }
@@ -205,7 +208,7 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
 	for (auto light : lights) {
 		glm::dvec4 shadow_ray_direction = glm::dvec4(light->position, 1) - point;
 		
-		Ray shadow_ray = Ray(point + glm::normalize(shadow_ray_direction), shadow_ray_direction);
+		Ray shadow_ray = Ray(point + 0.0001 * glm::normalize(shadow_ray_direction), shadow_ray_direction);
 		
 		double shadow_ray_length = glm::length(shadow_ray_direction);
 		//					std::cout << "shadow_ray_length: " << shadow_ray_length << std::endl;

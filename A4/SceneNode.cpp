@@ -141,3 +141,19 @@ Intersection SceneNode::intersect(const Ray & ray)
 	// Should not happen.
 	return NOHIT;
 }
+
+Intersection SceneNode::intersect(const Ray & ray, std::list<glm::mat4> transformations)
+{
+	Intersection result(ray, 0);
+	transformations.push_back(trans);
+	
+	for (auto child : children) {
+		Intersection intersect = child->intersect(ray, transformations);
+		if (intersect.hit) {
+			if (!result.hit || intersect.t < result.t) {
+				result = intersect;
+			}
+		}
+	}
+	return result;
+}

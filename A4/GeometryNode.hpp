@@ -15,6 +15,8 @@ public:
 	Primitive *m_primitive;
 	
 	virtual Intersection intersect(const Ray & ray);
+	
+	virtual Intersection intersect(const Ray & ray, std::list<glm::mat4> transformations);
 };
 
 

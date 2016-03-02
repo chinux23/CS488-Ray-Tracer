@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 #include "Ray.hpp"
 #include "Intersection.hpp"
+#include <list>
+#include <glm/glm.hpp>
 
 #define EPSILON 1
 
@@ -15,24 +17,36 @@ bool isEqual(const T1 & t1, const T2 & t2) {
     }
 }
 
+class NonhierSphere;
+class NonhierBox;
+
+
 class Primitive {
 public:
 	virtual ~Primitive();
 	virtual Intersection intersect(const Ray & ray);
+	virtual Intersection intersect(const Ray & ray, std::list<glm::mat4> transformations);
+protected:
+	Primitive *m_primitive;
 };
 
 
 class Sphere : public Primitive {
 public:
+	Sphere();
 	virtual ~Sphere();
 	virtual Intersection intersect(const Ray & ray);
+//	virtual Intersection intersect(const Ray & ray, std::list<glm::mat4> transformations);
+
 };
 
 
 class Cube : public Primitive {
 public:
+	Cube();
 	virtual ~Cube();
 	virtual Intersection intersect(const Ray & ray);
+//	virtual Intersection intersect(const Ray & ray, std::list<glm::mat4> transformations);
 };
 
 
@@ -44,6 +58,7 @@ public:
 	}
 	virtual ~NonhierSphere();
 	virtual Intersection intersect(const Ray & ray);
+	virtual Intersection intersect(const Ray & ray, std::list<glm::mat4> transformations);
 
 private:
 	glm::vec3 m_pos;
@@ -60,6 +75,7 @@ public:
   
 	virtual ~NonhierBox();
 	virtual Intersection intersect(const Ray & ray);
+	virtual Intersection intersect(const Ray & ray, std::list<glm::mat4> transformations);
 
 private:
 	glm::vec3 m_pos;

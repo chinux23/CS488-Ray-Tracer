@@ -3,6 +3,7 @@
 #include <vector>
 #include <iosfwd>
 #include <string>
+#include <list>
 
 #include <glm/glm.hpp>
 
@@ -33,4 +34,6 @@ public:
     friend std::ostream& operator<<(std::ostream& out, const Mesh& mesh);
 	
 	Intersection intersect(const Ray & r);
+	
+	virtual Intersection intersect(const Ray & ray, std::list<glm::mat4> transformations);
 };
