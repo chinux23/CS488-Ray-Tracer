@@ -28,6 +28,11 @@ void GeometryNode::setMaterial( Material *mat )
 
 Intersection GeometryNode::intersect(const Ray & ray)
 {
+	auto origin = invtrans * ray.origin;
+	auto dir	= invtrans * ray.direction;
+	
+	Ray new_ray(origin, dir);
+	
 	Intersection i = m_primitive->intersect(ray);
 	if (i.hit) {
 		// update material at the point of the hit
@@ -39,29 +44,14 @@ Intersection GeometryNode::intersect(const Ray & ray)
 
 Intersection GeometryNode::intersect(const Ray & ray, std::list<glm::mat4> transformations)
 {
-	transformations.push_back(trans);
-	
-	glm::mat4 total_trans;
-	
-	for (auto tranform : transformations) {
-		total_trans = tranform * total_trans;
-	}
-	
-	// Do inverse transform of the ray, then test intersection.
-	glm::mat4 inv_total_trans = glm::inverse(total_trans);
-	
-	auto origin = inv_total_trans * ray.origin;
-	auto dir	= inv_total_trans * ray.direction;
+	auto origin = invtrans * ray.origin;
+	auto dir	= invtrans * ray.direction;
 	
 	Ray new_ray(origin, dir);
 	
 	Intersection i = m_primitive->intersect(new_ray);
 	
 	if (i.hit) {
-		// Once hit, transform normal and incoming ray back to the world coordinates.
-		i.normal = total_trans * i.normal;
-		i.incoming_ray = ray;
-		
 		// get the materials as usual
 		i.material = (PhongMaterial *)m_material;
 		i.node = this;
@@ -69,7 +59,7 @@ Intersection GeometryNode::intersect(const Ray & ray, std::list<glm::mat4> trans
 	
 	// Test with all remaning child, and return the closet intersection point.
 	for (auto child : children) {
-		Intersection child_i = child->intersect(ray, transformations);
+		Intersection child_i = child->intersect(new_ray, transformations);
 		
 		if (child_i.hit) {
 			if (!i.hit || child_i.t < i.t) {
@@ -78,6 +68,11 @@ Intersection GeometryNode::intersect(const Ray & ray, std::list<glm::mat4> trans
 		}
 	}
 	
+	if (i.hit) {
+		// Once hit, transform normal and incoming ray back to the world coordinates.
+		i.normal = trans * i.normal;
+		i.incoming_ray = ray;
+	}
 	return i;
 }
 

@@ -9,15 +9,28 @@ scene = gr.node('scene')
 scene:rotate('X', 23)
 scene:translate(6, -2, -15)
 
+-- s0 = gr.nh_sphere('s0', {0, 0, -10}, 2)
+-- scene:add_child(s0)
+-- s0:set_material(blue)
+-- s0:translate(-1, 0, -10)
+-- s0:scale(0.5, 0.5, 0.5)
+
+-- s1 = gr.nh_sphere('s1', {5, 0, -5}, 2)
+-- s0:add_child(s1)
+-- s1:set_material(gold)
+-- s0:translate(1, 0, -10)
+
 -- the arc
 arc = gr.node('arc')
 scene:add_child(arc)
 arc:translate(0,0,-10)
 arc:rotate('Y', 60)
 
-s1 = gr.nh_sphere('s1', {0, 0, -10}, 2)
-arc:add_child(s1)
-s1:set_material(gold)
+-- s = gr.sphere('s')
+-- arc:add_child(s)
+-- s:set_material(gold)
+-- s:scale(1, 1, 2)
+-- s:translate(0, 0, -10)
 
 p1 = gr.cube('p1')
 arc:add_child(p1)

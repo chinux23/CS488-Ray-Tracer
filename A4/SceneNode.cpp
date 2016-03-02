@@ -144,16 +144,25 @@ Intersection SceneNode::intersect(const Ray & ray)
 
 Intersection SceneNode::intersect(const Ray & ray, std::list<glm::mat4> transformations)
 {
+	auto origin = invtrans * ray.origin;
+	auto dir	= invtrans * ray.direction;
+	
 	Intersection result(ray, 0);
-	transformations.push_back(trans);
+	Ray new_ray(origin, dir);
 	
 	for (auto child : children) {
-		Intersection intersect = child->intersect(ray, transformations);
+		Intersection intersect = child->intersect(new_ray, transformations);
 		if (intersect.hit) {
 			if (!result.hit || intersect.t < result.t) {
 				result = intersect;
 			}
 		}
 	}
+	
+	if (result.hit) {
+		// Once hit, transform normal and incoming ray back to the world coordinates.
+		result.normal = trans * result.normal;
+	}
+	
 	return result;
 }

@@ -91,26 +91,5 @@ Intersection Mesh::intersect(const Ray &r)
 
 Intersection Mesh::intersect(const Ray & ray, std::list<glm::mat4> transformations)
 {
-	glm::mat4 total_trans;
-	
-	for (auto tranform : transformations) {
-		total_trans = tranform * total_trans;
-	}
-	
-	// Do inverse transform of the ray, then test intersection.
-	glm::mat4 inv_total_trans = glm::inverse(total_trans);
-	
-	auto origin = inv_total_trans * ray.origin;
-	auto dir	= inv_total_trans * ray.direction;
-	
-	Ray new_ray(origin, dir);
-	
-	auto i = intersect(new_ray);
-	
-	if (i.hit) {
-		// Once hit, transform normal and incoming ray back to the world coordinates.
-		i.normal = total_trans * i.normal;
-		i.incoming_ray = ray;
-	}
-	return i;
+	return intersect(ray);
 }
