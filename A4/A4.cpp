@@ -6,6 +6,7 @@ static double IMAGEWIDTH;
 static double IMAGEHEIGHT;
 
 #define DISTANCE 10.0
+#define ANTIALIASING 0
 
 static SceneNode *Scene;
 static glm::vec3 AmbientColor;
@@ -94,22 +95,88 @@ void A4_Render(
 //            if (x == 128 && y == 128) {
 //                std::cout << "Testing middle point" << std::endl;
 //            }
-            
-            auto p_world = calculate_p_in_world(x, y, device_to_world_trans);
-            Ray r = createRay(glm::dvec4(eye, 1), p_world);
-			glm::dvec3 color(0, 0, 0);
-			
-			HitColor hc = rayColor(r, 0, lights);
-			
-			if (hc.hit) {
-				image(x, y, 0) = glm::clamp(hc.color.r, color_min, color_max);
-				image(x, y, 1) = glm::clamp(hc.color.g, color_min, color_max);
-				image(x, y, 2) = glm::clamp(hc.color.b, color_min, color_max);
-			} else {
-				glm::dvec3 color = backgroundColor(x, y);
+			if (ANTIALIASING) {
+				auto p_world = calculate_p_in_world(x, y, device_to_world_trans);
+				auto p_world1 = calculate_p_in_world(x+1, y, device_to_world_trans);
+				auto p_world2 = calculate_p_in_world(x-1, y, device_to_world_trans);
+				auto p_world3 = calculate_p_in_world(x, y+1, device_to_world_trans);
+				auto p_world4 = calculate_p_in_world(x, y-1, device_to_world_trans);
+
+				p_world1 = 0.5 * p_world + 0.5 *p_world1;
+				p_world2 = 0.5 * p_world + 0.5 *p_world2;
+				p_world3 = 0.5 * p_world + 0.5 *p_world3;
+				p_world4 = 0.5 * p_world + 0.5 *p_world4;
+				
+				Ray r = createRay(glm::dvec4(eye, 1), p_world);
+				Ray r1 = createRay(glm::dvec4(eye, 1), p_world1);
+				Ray r2 = createRay(glm::dvec4(eye, 1), p_world2);
+				Ray r3 = createRay(glm::dvec4(eye, 1), p_world3);
+				Ray r4 = createRay(glm::dvec4(eye, 1), p_world4);
+
+				glm::dvec3 color(0, 0, 0);
+				glm::dvec3 color1(0, 0, 0);
+				glm::dvec3 color2(0, 0, 0);
+				glm::dvec3 color3(0, 0, 0);
+				glm::dvec3 color4(0, 0, 0);
+				
+				HitColor hc = rayColor(r, 0, lights);
+				HitColor hc1 = rayColor(r1, 0, lights);
+				HitColor hc2 = rayColor(r2, 0, lights);
+				HitColor hc3 = rayColor(r3, 0, lights);
+				HitColor hc4 = rayColor(r4, 0, lights);
+				
+				// averge all of them
+				if (hc.hit) {
+					color += glm::clamp(hc.color, color_min, color_max);
+				} else {
+					color += backgroundColor(x, y);
+				}
+				
+				if (hc1.hit) {
+					color += glm::clamp(hc1.color, color_min, color_max);
+				} else {
+					color += backgroundColor(x, y);
+				}
+				
+				if (hc2.hit) {
+					color += glm::clamp(hc2.color, color_min, color_max);
+				} else {
+					color += backgroundColor(x, y);
+				}
+				if (hc3.hit) {
+					color += glm::clamp(hc3.color, color_min, color_max);
+				} else {
+					color += backgroundColor(x, y);
+				}
+				if (hc4.hit) {
+					color += glm::clamp(hc4.color, color_min, color_max);
+				} else {
+					color += backgroundColor(x, y);
+				}
+				
+				color = color / 5.0;	// average the color.
+				
 				image(x, y, 0) = color.r;
 				image(x, y, 1) = color.g;
 				image(x, y, 2) = color.b;
+				
+			} else {
+				auto p_world = calculate_p_in_world(x, y, device_to_world_trans);
+				Ray r = createRay(glm::dvec4(eye, 1), p_world);
+				glm::dvec3 color(0, 0, 0);
+				
+				HitColor hc = rayColor(r, 0, lights);
+				
+				if (hc.hit) {
+					image(x, y, 0) = glm::clamp(hc.color.r, color_min, color_max);
+					image(x, y, 1) = glm::clamp(hc.color.g, color_min, color_max);
+					image(x, y, 2) = glm::clamp(hc.color.b, color_min, color_max);
+				} else {
+					glm::dvec3 color = backgroundColor(x, y);
+					image(x, y, 0) = color.r;
+					image(x, y, 1) = color.g;
+					image(x, y, 2) = color.b;
+				}
 			}
 		}
 	}
