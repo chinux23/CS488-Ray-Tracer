@@ -36,4 +36,6 @@ public:
 	Intersection intersect(const Ray & r);
 	
 	virtual Intersection intersect(const Ray & ray, std::list<glm::mat4> transformations);
+	
+	Primitive *m_boundingVolume;
 };

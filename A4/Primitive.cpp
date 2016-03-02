@@ -87,11 +87,42 @@ Intersection NonhierBox::intersect(const Ray &r)
         Triangle(2, 6, 7),
         Triangle(7, 3, 2)
     };
-    
-    Mesh cube = Mesh(vertices, faces);
-
-
-	return cube.intersect(r);
+	
+	glm::vec3 baryPosition;
+	for (auto triangle : faces) {
+		auto o = glm::vec3(r.origin);
+		auto d = glm::vec3(r.direction);
+		
+		bool hit = glm::intersectRayTriangle(o, d,
+											 vertices[triangle.v1],
+											 vertices[triangle.v2],
+											 vertices[triangle.v3],
+											 baryPosition);
+		
+		if (hit && baryPosition.z > 0) {
+			if (!result.hit) {
+				result.t = baryPosition.z;
+				result.hit = true;
+				auto normal = -glm::normalize(
+											  glm::cross(
+														 vertices[triangle.v3] - vertices[triangle.v1],
+														 vertices[triangle.v2] - vertices[triangle.v1]));
+				result.normal = glm::dvec4(normal, 0);
+			} else if (baryPosition.z < result.t) {
+				result.t = baryPosition.z;
+				auto normal = -glm::normalize(
+											  glm::cross(
+														 vertices[triangle.v3] - vertices[triangle.v1],
+														 vertices[triangle.v2] - vertices[triangle.v1]));
+				result.normal = glm::dvec4(normal, 0);
+			}
+		} else {
+			if (hit && baryPosition.z < 0) {
+				assert("Got normal problem?");
+			}
+		}
+	}
+	return result;
 }
 
 Intersection NonhierBox::intersect(const Ray & ray, std::list<glm::mat4> transformations)

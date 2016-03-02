@@ -13,17 +13,46 @@ Mesh::Mesh( const std::string& fname )
 	std::string code;
 	double vx, vy, vz;
 	size_t s1, s2, s3;
+	
+	bool set = false;
+	double max_x, max_y, max_z;
+	double min_x, min_y, min_z;
 
 	std::ifstream ifs( fname.c_str() );
 	while( ifs >> code ) {
 		if( code == "v" ) {
 			ifs >> vx >> vy >> vz;
+			if (!set) {
+				max_x = vx;
+				max_y = vy;
+				max_z = vz;
+				
+				min_x = vx;
+				min_y = vy;
+				min_z = vz;
+				
+				set = true;
+			} else {
+				max_x = std::max(vx, max_x);
+				max_y = std::max(vy, max_y);
+				max_z = std::max(vz, max_z);
+				
+				min_x = std::min(vx, min_x);
+				min_y = std::min(vy, min_y);
+				min_z = std::min(vz, min_z);
+			}
 			m_vertices.push_back( glm::vec3( vx, vy, vz ) );
 		} else if( code == "f" ) {
 			ifs >> s1 >> s2 >> s3;
 			m_faces.push_back( Triangle( s1 - 1, s2 - 1, s3 - 1 ) );
 		}
 	}
+	
+	double min_v = std::min(std::min(min_y, min_z), min_x);
+	double max_v = std::max(std::max(max_y, max_z), max_x);
+	
+	// Create a bounding volume
+	m_boundingVolume = new NonhierBox(glm::vec3(min_v, min_v, min_v), max_v - min_v);
 }
 
 Mesh::Mesh(std::vector<glm::vec3> vertices, std::vector<Triangle> faces)

@@ -69,7 +69,7 @@ private:
 class NonhierBox : public Primitive {
 public:
 	NonhierBox(const glm::vec3& pos, double size)
-		: m_pos(pos), m_size(size)
+	: m_pos(pos), m_size(size), m_pos2(size * glm::vec3(1,1,1))
 	{
 	}
   
@@ -80,4 +80,5 @@ public:
 private:
 	glm::vec3 m_pos;
 	double m_size;
+	glm::vec3 m_pos2;
 };
