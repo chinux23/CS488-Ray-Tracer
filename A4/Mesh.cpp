@@ -52,7 +52,10 @@ Mesh::Mesh( const std::string& fname )
 	double max_v = std::max(std::max(max_y, max_z), max_x);
 	
 	// Create a bounding volume
-	m_boundingVolume = new NonhierBox(glm::vec3(min_v, min_v, min_v), max_v - min_v);
+	if (fname == "plane.obj" || fname == "Assets/plane.obj") {
+		m_boundingVolume = NULL;
+	} else
+		m_boundingVolume = new NonhierBox(glm::vec3(min_v, min_v, min_v), max_v - min_v);
 }
 
 Mesh::Mesh(std::vector<glm::vec3> vertices, std::vector<Triangle> faces)
@@ -84,41 +87,50 @@ std::ostream& operator<<(std::ostream& out, const Mesh& mesh)
 
 Intersection Mesh::intersect(const Ray &r)
 {
+	Intersection boundingVolumeHit(r, 0);
+	if (m_boundingVolume) {
+		boundingVolumeHit = m_boundingVolume->intersect(r);
+	}
+
 	Intersection result(r, 0);
 	
-	glm::vec3 baryPosition;
-	for (auto triangle : m_faces) {
-		auto o = glm::vec3(r.origin);
-		auto d = glm::vec3(r.direction);
-		
-		bool hit = glm::intersectRayTriangle(o, d,
-											 m_vertices[triangle.v1],
-											 m_vertices[triangle.v2],
-											 m_vertices[triangle.v3],
-											 baryPosition);
-		
-		if (hit && baryPosition.z > 0) {
-			if (!result.hit) {
-				result.t = baryPosition.z;
-				result.hit = true;
-				auto normal = -glm::normalize(
-									glm::cross(
-									  m_vertices[triangle.v3] - m_vertices[triangle.v1],
-									  m_vertices[triangle.v2] - m_vertices[triangle.v1]));
-				result.normal = glm::dvec4(normal, 0);
-			} else if (baryPosition.z < result.t) {
-				result.t = baryPosition.z;
-				auto normal = -glm::normalize(
-											 glm::cross(
-														m_vertices[triangle.v3] - m_vertices[triangle.v1],
-														m_vertices[triangle.v2] - m_vertices[triangle.v1]));
-				result.normal = glm::dvec4(normal, 0);
-			}
-		} else {
-			if (hit && baryPosition.z < 0) {
-				std::cout << "Got normal problem? " << std::endl;
+	if (!m_boundingVolume || boundingVolumeHit.hit) {
+	
+		glm::vec3 baryPosition;
+		for (auto triangle : m_faces) {
+			auto o = glm::vec3(r.origin);
+			auto d = glm::vec3(r.direction);
+			
+			bool hit = glm::intersectRayTriangle(o, d,
+												 m_vertices[triangle.v1],
+												 m_vertices[triangle.v2],
+												 m_vertices[triangle.v3],
+												 baryPosition);
+			
+			if (hit && baryPosition.z > 0) {
+				if (!result.hit) {
+					result.t = baryPosition.z;
+					result.hit = true;
+					auto normal = -glm::normalize(
+										glm::cross(
+										  m_vertices[triangle.v3] - m_vertices[triangle.v1],
+										  m_vertices[triangle.v2] - m_vertices[triangle.v1]));
+					result.normal = glm::dvec4(normal, 0);
+				} else if (baryPosition.z < result.t) {
+					result.t = baryPosition.z;
+					auto normal = -glm::normalize(
+												 glm::cross(
+															m_vertices[triangle.v3] - m_vertices[triangle.v1],
+															m_vertices[triangle.v2] - m_vertices[triangle.v1]));
+					result.normal = glm::dvec4(normal, 0);
+				}
+			} else {
+				if (hit && baryPosition.z < 0) {
+					std::cout << "Got normal problem? " << std::endl;
+				}
 			}
 		}
+		
 	}
 	return result;
 }
