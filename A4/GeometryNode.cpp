@@ -46,14 +46,6 @@ Intersection GeometryNode::intersect(const Ray & ray, std::list<glm::mat4> trans
 {
 	auto origin = invtrans * ray.origin;
 	auto dir	= invtrans * ray.direction;
-	
-//	if (m_name == "plane") {
-////		std::cout << "plane" << std::endl;
-//		// Add additional rotation around X for 180 degree
-//		glm::mat4 rotation = glm::rotate(glm::radians(180.0f), glm::vec3(0.0,0.0,1.0));
-//		origin = glm::inverse(rotation) * origin;
-//		dir = glm::inverse(rotation) * dir;
-//	}
 
 	Ray new_ray(origin, dir);
 	
@@ -78,14 +70,10 @@ Intersection GeometryNode::intersect(const Ray & ray, std::list<glm::mat4> trans
 	
 	if (i.hit) {
 		// Once hit, transform normal and incoming ray back to the world coordinates.
-//		if (m_name == "plane") {
-////			std::cout << "hit plane " << i.hit << std::endl;
-//			glm::mat4 rotation = glm::rotate(glm::radians(180.0f), glm::vec3(0.0,0.0,1.0));
-//			i.normal = glm::transpose(glm::inverse(rotation) * invtrans) * i.normal;
-//		} else {
-			i.normal = glm::transpose(invtrans) * i.normal;
-//		}
-		i.incoming_ray = ray;
+		i.normal = glm::transpose(invtrans) * i.normal;
+		
+		i.incoming_ray.origin = trans * i.incoming_ray.origin;
+		i.incoming_ray.direction = trans * i.incoming_ray.direction;
 	}
 	return i;
 }

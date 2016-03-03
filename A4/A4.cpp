@@ -92,9 +92,10 @@ void A4_Render(
 	for (uint y = 0; y < ny; ++y) {
 		for (uint x = 0; x < nx; ++x) {
             
-//            if (x == 128 && y == 128) {
-//                std::cout << "Testing middle point" << std::endl;
-//            }
+            if (x == 256 && y == 256) {
+                std::cout << "Testing middle point" << std::endl;
+            }
+			
 			if (ANTIALIASING) {
 				auto p_world = calculate_p_in_world(x, y, device_to_world_trans);
 				auto p_world1 = calculate_p_in_world(x+1, y, device_to_world_trans);
