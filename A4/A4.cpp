@@ -6,7 +6,7 @@ static double IMAGEWIDTH;
 static double IMAGEHEIGHT;
 
 #define DISTANCE 10.0
-#define ANTIALIASING 0
+#define ANTIALIASING 1
 
 static SceneNode *Scene;
 static glm::vec3 AmbientColor;
@@ -92,7 +92,7 @@ void A4_Render(
 	for (uint y = 0; y < ny; ++y) {
 		for (uint x = 0; x < nx; ++x) {
             
-            if (x == 256 && y == 256) {
+            if (x == 300 && y == 256) {
                 std::cout << "Testing middle point" << std::endl;
             }
 			
