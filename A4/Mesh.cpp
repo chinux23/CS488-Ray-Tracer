@@ -6,6 +6,8 @@
 // #include "cs488-framework/ObjFileDecoder.hpp"
 #include "Mesh.hpp"
 
+#define BoundingVolume 0
+
 Mesh::Mesh( const std::string& fname )
 	: m_vertices()
 	, m_faces()
@@ -48,14 +50,17 @@ Mesh::Mesh( const std::string& fname )
 		}
 	}
 	
-	double min_v = std::min(std::min(min_y, min_z), min_x);
-	double max_v = std::max(std::max(max_y, max_z), max_x);
+	glm::dvec3 min_point = glm::dvec3(min_x, min_y, min_z);
+	glm::dvec3 max_point = glm::dvec3(max_x, max_y, max_z);
+	
+	auto center = (min_point + max_point) / 2.0;
+	auto radius = glm::length(max_point - center);
 	
 	// Create a bounding volume
 	if (fname == "plane.obj" || fname == "Assets/plane.obj") {
 		m_boundingVolume = NULL;
 	} else
-		m_boundingVolume = new NonhierBox(glm::vec3(min_v, min_v, min_v), max_v - min_v);
+		m_boundingVolume = new NonhierSphere(center, radius);
 }
 
 Mesh::Mesh(std::vector<glm::vec3> vertices, std::vector<Triangle> faces)
@@ -90,6 +95,10 @@ Intersection Mesh::intersect(const Ray &r)
 	Intersection boundingVolumeHit(r, 0);
 	if (m_boundingVolume) {
 		boundingVolumeHit = m_boundingVolume->intersect(r);
+	}
+	
+	if (BoundingVolume && m_boundingVolume) {
+		return boundingVolumeHit;
 	}
 
 	Intersection result(r, 0);
