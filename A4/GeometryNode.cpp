@@ -70,7 +70,13 @@ Intersection GeometryNode::intersect(const Ray & ray, std::list<glm::mat4> trans
 	
 	if (i.hit) {
 		// Once hit, transform normal and incoming ray back to the world coordinates.
-		i.normal = glm::transpose(invtrans) * i.normal;
+		auto normal = glm::dvec3(i.normal);
+		auto invtrans3 = glm::dmat3(invtrans);
+		
+		i.normal = glm::dvec4(glm::transpose(invtrans3) * normal, 0);
+		
+//		i.normal = glm::transpose(invtrans) * i.normal;
+		i.normal = glm::normalize(i.normal);
 		
 		i.incoming_ray.origin = trans * i.incoming_ray.origin;
 		i.incoming_ray.direction = trans * i.incoming_ray.direction;

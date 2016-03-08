@@ -92,18 +92,18 @@ std::ostream& operator<<(std::ostream& out, const Mesh& mesh)
 
 Intersection Mesh::intersect(const Ray &r)
 {
-	Intersection boundingVolumeHit(r, 0);
-	if (m_boundingVolume) {
-		boundingVolumeHit = m_boundingVolume->intersect(r);
-	}
-	
-	if (BoundingVolume && m_boundingVolume) {
-		return boundingVolumeHit;
-	}
+//	Intersection boundingVolumeHit(r, 0);
+//	if (m_boundingVolume) {
+//		boundingVolumeHit = m_boundingVolume->intersect(r);
+//	}
+//	
+//	if (BoundingVolume && m_boundingVolume) {
+//		return boundingVolumeHit;
+//	}
 
 	Intersection result(r, 0);
 	
-	if (!m_boundingVolume || boundingVolumeHit.hit) {
+//	if (!m_boundingVolume || boundingVolumeHit.hit) {
 	
 		glm::vec3 baryPosition;
 		for (auto triangle : m_faces) {
@@ -140,7 +140,7 @@ Intersection Mesh::intersect(const Ray &r)
 			}
 		}
 		
-	}
+//	}
 	return result;
 }
 
