@@ -181,4 +181,141 @@ Intersection NonhierSphere::intersect(const Ray &ray)
 
 NonhierBox::~NonhierBox()
 {
+
 }
+
+Cone::Cone()
+{
+    
+}
+
+Cone::~Cone()
+{
+    
+}
+
+Intersection Cone::intersect(const Ray &ray)
+{
+    // TODO
+    Intersection result(ray, 0);
+    return result;
+}
+
+Cylinder::Cylinder()
+{
+    
+}
+
+Cylinder::~Cylinder()
+{
+    
+}
+
+
+Intersection Cylinder::intersect(const Ray &ray)
+{
+    Intersection result(ray, 0);
+
+    // X^2 + Z^2 = 1    (r == 1)
+    // y_max = 1, y_min = -1
+    
+    double A = ray.direction.x * ray.direction.x + ray.direction.z * ray.direction.z;
+    double B = 2 * ray.origin.x * ray.direction.x + 2 * ray.origin.z * ray.direction.z;
+    double C = ray.origin.x * ray.origin.x + ray.origin.z * ray.origin.z - 1;
+    
+    double roots[2];
+    size_t num_of_roots = quadraticRoots(A, B, C, roots);
+
+    if (num_of_roots == 0) {
+        // No roots, miss.
+        result.hit = false;
+        
+    } else if (num_of_roots == 1) {
+        double t = roots[0];
+        double z = ray.origin.z + ray.direction.z * t;
+        if (z <= 1 && z >= -1) {
+            result.t = roots[0];
+            result.hit = true;
+        } else {
+            result.hit = false;
+        }
+        
+    } else if (num_of_roots == 2) {
+        // If both are > 1, miss
+        // if both are < -1, miss
+        // If one is > 1, one is < 1, hit the top cap and side,
+        // if one is < -1, one is > -1, hit the bottom cap, and side
+        
+        double t1 = roots[0];
+        double t2 = roots[1];
+        
+        double y1 = ray.origin.y + ray.direction.y * t1;
+        double y2 = ray.origin.y + ray.direction.y * t2;
+        
+        if (t1 > t2) {
+            // Make sure z1 is smaller than z2.
+            std::swap(t1, t2);
+            std::swap(y1, y2);
+        }
+		
+		if (y1 < -1) {
+			
+			if (y2 < -1) {
+				result.hit = false;
+			} else {
+				// hit the bottom cap
+				float th = t1 + (t2 - t1) * (y1 + 1) / (y1 - y2);
+				if (th <= 0)
+					result.hit = false;
+				else
+					result.hit = true;
+				result.t = th;
+				result.normal = glm::dvec4(0, -1, 0, 0);
+			}
+			
+		} else if (y1 >= -1 && y1 <= 1) {
+			// Hit the cylinder bit.
+			if (t1 <= 0) {
+				result.hit = false;
+			} else {
+				result.hit = true;
+				result.t = t1;
+				
+				auto hitpoint = ray.origin + ray.direction * t1;
+				result.normal = glm::normalize(glm::dvec4(hitpoint.x, 0, hitpoint.z, 0));
+			}
+			
+		} else if (y1 > 1) {
+			if (y2 > 1) {
+				result.hit = false;
+			} else {
+				// hit the top cap
+				float th = t1 + (t2 - t1) * (y1 - 1) / (y1 - y2);
+				if (th <= 0)
+					result.hit = false;
+				else
+					result.hit = true;
+				
+				result.t = th;
+				result.normal = glm::dvec4(0, 1, 0, 0);
+			}
+		}
+	}
+	
+    
+    return result;
+}
+
+bool Cylinder::isValidRoot(const Ray &ray, double t)
+{
+    // calculate Z
+    double z = ray.origin.z + ray.direction.z * t;
+    
+    if ( z <= 1 && z >= -1 ) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+

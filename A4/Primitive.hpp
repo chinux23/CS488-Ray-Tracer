@@ -49,6 +49,22 @@ public:
 //	virtual Intersection intersect(const Ray & ray, std::list<glm::mat4> transformations);
 };
 
+// Create standard cone with Centered at Origin, H = 2 (spanning from -1 to 1), R = 1
+class Cone : public Primitive {
+public:
+	Cone();
+    virtual ~Cone();
+    virtual Intersection intersect(const Ray & ray);
+};
+
+class Cylinder : public Primitive {
+public:
+    Cylinder();
+    virtual ~Cylinder();
+    virtual Intersection intersect(const Ray & ray);
+    bool    isValidRoot(const Ray &ray, double t);
+};
+
 
 class NonhierSphere : public Primitive {
 public:

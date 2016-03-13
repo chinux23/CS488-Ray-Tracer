@@ -62,6 +62,15 @@ scene:add_child(poly)
 poly:translate(-2, 1.618034, 0)
 poly:set_material(blue)
 
+-- cylinder
+cylinder = gr.cylinder('cylinder')
+scene:add_child(cylinder)
+cylinder:set_material(blue)
+cylinder:scale(0.5, 2, 0.5)
+cylinder:translate(-5, 5, 3)
+-- cylinder:rotate('X', -30)
+-- cylinder:rotate('Z', 90)
+
 -- The lights
 l1 = gr.light({200,200,400}, {0.8, 0.8, 0.8}, {1, 0, 0})
 l2 = gr.light({0, 5, -20}, {0.4, 0.4, 0.8}, {1, 0, 0})
