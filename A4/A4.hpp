@@ -48,7 +48,7 @@ Ray createRay(glm::dvec4 p1, glm::dvec4 p2);
 Intersection hit(const Ray & r, SceneNode * root);
 
 // Return the color given
-HitColor rayColor(const Ray & r, int counter, const std::list<Light*> & lights);
+HitColor rayColor(const Ray & r, const std::list<Light*> & lights, int counter = 0);
 
 // Cast shadow ray and get the color for the shadow ray.
 glm::dvec3 directLight(const std::list<Light*> & lights,

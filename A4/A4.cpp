@@ -11,6 +11,10 @@ static double IMAGEHEIGHT;
 
 #define DISTANCE 10.0
 #define ANTIALIASING 1
+#define MAXRECURSIVE 5
+#define EPSILON 0.0001
+#define REFLECTION_COEFF 0.2
+
 
 static SceneNode *Scene;
 static glm::vec3 AmbientColor;
@@ -127,11 +131,11 @@ void A4_Render(
 					glm::dvec3 color3(0, 0, 0);
 					glm::dvec3 color4(0, 0, 0);
 					
-					HitColor hc = rayColor(r, 0, lights);
-					HitColor hc1 = rayColor(r1, 0, lights);
-					HitColor hc2 = rayColor(r2, 0, lights);
-					HitColor hc3 = rayColor(r3, 0, lights);
-					HitColor hc4 = rayColor(r4, 0, lights);
+					HitColor hc = rayColor(r,   lights, 0);
+					HitColor hc1 = rayColor(r1, lights, 0);
+					HitColor hc2 = rayColor(r2, lights, 0);
+					HitColor hc3 = rayColor(r3, lights, 0);
+					HitColor hc4 = rayColor(r4, lights, 0);
 					
 					// averge all of them
 					if (hc.hit) {
@@ -173,7 +177,7 @@ void A4_Render(
 					Ray r = createRay(glm::dvec4(eye, 1), p_world);
 					glm::dvec3 color(0, 0, 0);
 					
-					HitColor hc = rayColor(r, 0, lights);
+					HitColor hc = rayColor(r, lights, 0);
 					
 //					dispatch_async(image_queue, ^{
 						if (hc.hit) {
@@ -287,15 +291,20 @@ glm::dvec4 calculate_p_in_world(double x, double y, const glm::dmat4 & trans)
     return p_in_world;
 }
 
-glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & primary_intersect)
+glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & primary_intersect, int counter)
 {
 	glm::vec3 color(0, 0, 0);
-    glm::dvec4 point = primary_intersect.incoming_ray.origin + primary_intersect.incoming_ray.direction * primary_intersect.t;
+ 
+	if (counter > MAXRECURSIVE) {
+		return color;		// Maximum recursive number reached.
+	}
+	
+	glm::dvec4 point = primary_intersect.incoming_ray.origin + primary_intersect.incoming_ray.direction * primary_intersect.t;
     
 	for (auto light : lights) {
 		glm::dvec4 shadow_ray_direction = glm::dvec4(light->position, 1) - point;
 		
-		Ray shadow_ray = Ray(point + 0.0001 * glm::normalize(shadow_ray_direction), shadow_ray_direction);
+		Ray shadow_ray = Ray(point + EPSILON * glm::normalize(shadow_ray_direction), shadow_ray_direction);
 		
 		double shadow_ray_length = glm::length(shadow_ray_direction);
 		//					std::cout << "shadow_ray_length: " << shadow_ray_length << std::endl;
@@ -342,6 +351,17 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
             double phongCoeff = std::pow(cosineTheta, primary_intersect.material->m_shininess);
             
             color += phongCoeff * primary_intersect.material->m_ks * light->colour;
+			
+			
+			// Calculate Reflected ray.
+			glm::dvec4 Rr_dir = glm::dvec4(glm::normalize(Rr), 0);
+			Ray reflected(point + EPSILON * Rr_dir, Rr_dir);
+			HitColor hc = rayColor(reflected, lights, counter+1);
+			
+			if (hc.hit) {
+				// Hit some object, let's do reflection
+				color += REFLECTION_COEFF * primary_intersect.material->m_ks * glm::vec3(hc.color);
+			}
 		}
 		
 	}
@@ -365,15 +385,16 @@ glm::dvec3 specularHighlight(const std::list<Light *> & lights,
         double phongCoeff = std::pow(cosineTheta, primary_intersect.material->m_shininess);
         
         color += phongCoeff * primary_intersect.material->m_ks * light->colour;
+		
 
     };
     return color;
 }
 
-HitColor rayColor(const Ray & r, int counter, const std::list<Light*> & lights)
+HitColor rayColor(const Ray & r, const std::list<Light*> & lights, int counter)
 {
 	glm::dvec3 color(0, 0, 0);
-	if (counter > 5) {
+	if (counter > MAXRECURSIVE) {
 		return {false, color};
 	}
 	
@@ -382,12 +403,10 @@ HitColor rayColor(const Ray & r, int counter, const std::list<Light*> & lights)
 	if (primary_intersect.hit) {
         // ambient color
         color += primary_intersect.material->m_kd * AmbientColor;
-        
-        // diffused color
-        color += directLight(lights, primary_intersect);
-    
-        // specular highlight
-//        color += specularHighlight(lights, primary_intersect);
+		
+		// calculate the ray color
+		color += directLight(lights, primary_intersect, counter);
+	
 	}
 
 	return {primary_intersect.hit, color};
