@@ -196,19 +196,135 @@ Cone::~Cone()
 
 Intersection Cone::intersect(const Ray &ray)
 {
-    // TODO
     Intersection result(ray, 0);
+	double A = ray.direction.x * ray.direction.x + ray.direction.z * ray.direction.z - ray.direction.y * ray.direction.y;
+	double B = 2 * (ray.origin.x * ray.direction.x + ray.origin.z * ray.direction.z - ray.origin.y * ray.direction.y);
+	double C = ray.origin.x * ray.origin.x + ray.origin.z * ray.origin.z - ray.origin.y * ray.origin.y;
+	
+	double roots[2];
+	size_t num_of_roots = quadraticRoots(A, B, C, roots);
+	
+	if (num_of_roots == 0) {
+		// No roots, miss.
+		result.hit = false;
+		
+	} else if (num_of_roots == 1) {
+		double t = roots[0];
+		double y = ray.origin.y + ray.direction.y * t;
+		if (y <= 1 && y >= 0) {
+			result.t = roots[0];
+			result.hit = true;
+			
+			// calculate normal
+			glm::dvec4 hitpoint = ray.origin + ray.direction * t;
+			double x2_z2_sqrt = sqrt( hitpoint.x * hitpoint.x + hitpoint.z * hitpoint.z );
+			glm::dvec3 p_x {1.0, hitpoint.x / x2_z2_sqrt, 0.0};
+			glm::dvec3 p_z {0.0, hitpoint.z / x2_z2_sqrt, 1.0};
+			glm::dvec3 normal = glm::cross(p_x, p_z);
+			result.normal = glm::dvec4(glm::normalize(normal), 0);
+			
+		} else {
+			result.hit = false;
+		}
+		
+	} else if (num_of_roots == 2) {
+		double t1 = roots[0];
+		double t2 = roots[1];
+		
+		glm::dvec4 p1 = ray.origin + ray.direction * t1;
+		glm::dvec4 p2 = ray.origin + ray.direction * t2;
+		
+		if (t1 > t2) {
+			// Make sure z1 is smaller than z2.
+			std::swap(t1, t2);
+			std::swap(p1, p2);
+		}
+		
+		if (p1.y < 0) {
+			if (p2.y < 0) {
+				// Missed
+				result.hit = false;
+			} else {
+				// if p2.y is above 0, we need to see if p2 is a valid hitpoint or not.
+				if (p2.y <= 1 && p2.y >= 0) {
+					if (t2 > 0) {
+						result.hit = true;
+						result.t = t2;
+						
+						glm::dvec4 hitpoint = ray.origin + ray.direction * t2;
+						double x2_z2_sqrt = sqrt( hitpoint.x * hitpoint.x + hitpoint.z * hitpoint.z );
+						glm::dvec3 p_x {1.0, hitpoint.x / x2_z2_sqrt, 0.0};
+						glm::dvec3 p_z {0.0, hitpoint.z / x2_z2_sqrt, 1.0};
+						glm::dvec3 normal = glm::cross(p_x, p_z);
+						result.normal = glm::dvec4(glm::normalize(normal), 0);
+						
+					} else {
+						result.hit = false;
+					}
+				} else {
+					result.hit = false;
+				}
+				
+			}
+			
+		} else if (p1.y >= 0 && p1.y <= 1) {
+			// Hit the cone.
+			if (t1 <= 0) {
+				result.hit = false;
+			} else {
+				result.hit = true;
+				result.t = t1;
+				
+				auto hitpoint = ray.origin + ray.direction * t1;
+				double x2_z2_sqrt = sqrt( hitpoint.x * hitpoint.x + hitpoint.z * hitpoint.z );
+				glm::dvec3 p_x {1.0, hitpoint.x / x2_z2_sqrt, 0.0};
+				glm::dvec3 p_z {0.0, hitpoint.z / x2_z2_sqrt, 1.0};
+				glm::dvec3 normal = glm::cross(p_x, p_z);
+				result.normal = glm::dvec4(glm::normalize(normal), 0);
+			}
+			
+		} else if (p1.y > 1) {
+			if (p2.y > 1) {
+				result.hit = false;
+			} else {
+				if (p2.y <= 1 && p2.y >= 0) {
+					if (t2 > 0) {
+						// Hit the top cap
+						double th = ( 1 - ray.origin.y ) / ray.direction.y;
+						auto hitpoint = ray.origin + ray.direction * th;
+						
+						if (th >= 0 && (hitpoint.x <= 1 && hitpoint.x >= -1) && (hitpoint.z <= 1 && hitpoint.z >= -1)) {
+							result.hit = true;
+							result.t = th;
+							result.normal = glm::dvec4(0, 1, 0, 0);
+						} else {
+							result.hit = false;
+						}
+						
+					} else {
+						result.hit = false;
+					}
+					
+				} else {
+					result.hit = false;
+				}
+				
+			}
+		}
+		
+	}
+	
     return result;
 }
 
 Cylinder::Cylinder()
 {
-    
+	
 }
 
 Cylinder::~Cylinder()
 {
-    
+	
 }
 
 
@@ -232,10 +348,14 @@ Intersection Cylinder::intersect(const Ray &ray)
         
     } else if (num_of_roots == 1) {
         double t = roots[0];
-        double z = ray.origin.z + ray.direction.z * t;
-        if (z <= 1 && z >= -1) {
+        double y = ray.origin.y + ray.direction.y * t;
+        if (y <= 1 && y >= -1) {
             result.t = roots[0];
             result.hit = true;
+			
+			auto hitpoint = ray.origin + ray.direction * t;
+			result.normal = glm::normalize(glm::dvec4(hitpoint.x, 0, hitpoint.z, 0));
+			
         } else {
             result.hit = false;
         }
