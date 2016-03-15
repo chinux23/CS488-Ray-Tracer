@@ -11,11 +11,14 @@
 
 #include <stdio.h>
 #include <glm/ext.hpp>
+#include "PhongMaterial.hpp"
+
 
 class Ray {
 public:
-	glm::dvec4 origin;
-	glm::dvec4 direction;
+	glm::dvec4	origin;
+	glm::dvec4	direction;
+	PhongMaterial *material;	// material the ray is currently in.
 	
 	Ray(glm::dvec4 o, glm::dvec4 d);
 	Ray(glm::dvec3 o, glm::dvec3 d);

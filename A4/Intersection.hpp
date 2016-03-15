@@ -35,6 +35,8 @@ struct Intersection {
 	glm::dvec4	   normal;
 	SceneNode	  *node;
 	
+	PhongMaterial *fromMaterial;
+	
 	// Construct an intersection point.
 	Intersection(const Ray & ray,
 				 double t,

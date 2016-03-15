@@ -10,7 +10,7 @@ static double IMAGEWIDTH;
 static double IMAGEHEIGHT;
 
 #define DISTANCE 10.0
-#define ANTIALIASING 1
+#define ANTIALIASING 0
 #define MAXRECURSIVE 5
 #define EPSILON 0.0001
 #define REFLECTION_COEFF 0.2
@@ -401,6 +401,10 @@ HitColor rayColor(const Ray & r, const std::list<Light*> & lights, int counter)
 	Intersection primary_intersect = hit(r, Scene);
 	
 	if (primary_intersect.hit) {
+		// Test material
+//		assert(primary_intersect.material == PhongMaterial::AirMaterial);
+		assert(primary_intersect.fromMaterial == PhongMaterial::AirMaterial);
+		
         // ambient color
         color += primary_intersect.material->m_kd * AmbientColor;
 		

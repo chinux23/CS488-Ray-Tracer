@@ -80,6 +80,8 @@ Intersection GeometryNode::intersect(const Ray & ray, std::list<glm::mat4> trans
 		
 		i.incoming_ray.origin = trans * i.incoming_ray.origin;
 		i.incoming_ray.direction = trans * i.incoming_ray.direction;
+		
+		i.fromMaterial = ray.material;
 	}
 	return i;
 }
