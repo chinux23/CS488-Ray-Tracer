@@ -23,6 +23,11 @@ public:
 	Ray(glm::dvec4 o, glm::dvec4 d);
 	Ray(glm::dvec3 o, glm::dvec3 d);
 	Ray(const Ray & ray);
+	
+	bool isValid() {
+		assert(direction.w == 0);
+		return glm::length(direction) != 0;
+	}
 };
 
 #endif /* Ray_hpp */

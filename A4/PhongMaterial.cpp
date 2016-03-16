@@ -1,8 +1,13 @@
 #include "PhongMaterial.hpp"
 
-static PhongMaterial air = PhongMaterial({0, 0, 0}, {0, 0, 0}, 0, 1.0);
+static PhongMaterial air = PhongMaterial({0, 0, 0}, {0, 0, 0}, 0, 1.0, 0);
+static PhongMaterial glass = PhongMaterial({0, 0, 0}, {0, 0, 0}, 0, 1.5075, 9.9359e-9);
+static PhongMaterial water = PhongMaterial({0, 0, 0}, {0, 0, 0}, 0, 1.327, 0.00000289);
 
-PhongMaterial * PhongMaterial::AirMaterial = &air;
+
+PhongMaterial * PhongMaterial::Air = &air;
+PhongMaterial * PhongMaterial::Glass = &glass;
+PhongMaterial * PhongMaterial::Water = &water;
 
 PhongMaterial::PhongMaterial(
 	const glm::vec3& kd, const glm::vec3& ks, double shininess )
@@ -13,7 +18,16 @@ PhongMaterial::PhongMaterial(
 PhongMaterial::PhongMaterial(const glm::vec3& kd, const glm::vec3& ks, double shininess, double reflective_index)
 : m_kd(kd), m_ks(ks), m_shininess(shininess), m_refractive_index(reflective_index)
 
-{}
+{
+	m_extinction_coefficient = 0.0;
+
+}
+
+PhongMaterial::PhongMaterial(const glm::vec3& kd, const glm::vec3& ks, double shininess, double reflective_index, double extinct_coeff)
+: m_kd(kd), m_ks(ks), m_shininess(shininess), m_refractive_index(reflective_index), m_extinction_coefficient(extinct_coeff)
+{
+	
+}
 
 PhongMaterial::~PhongMaterial()
 {}

@@ -60,3 +60,12 @@ glm::dvec3 specularHighlight(const std::list<Light *> & lights,
 glm::dvec3 backgroundColor(int x, int y);
 
 
+// Calculate the probability of reflectance.
+double reflectance(const glm::dvec4 & normal, const glm::dvec4 & IncomingVector, double fromReflectiveIndex, double toReflectiveIndex);
+Ray refractedRay(const Ray & ray, const Intersection & intersection);
+
+double simplifiedFresnelModel(const glm::dvec4 & normal,
+							  const glm::dvec4 & IncomingVector,
+							  double fromReflectiveIndex,
+							  double toReflectiveIndex);
+

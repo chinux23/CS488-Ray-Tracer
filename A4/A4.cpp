@@ -352,7 +352,6 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
             
             color += phongCoeff * primary_intersect.material->m_ks * light->colour;
 			
-			
 			// Calculate Reflected ray.
 			glm::dvec4 Rr_dir = glm::dvec4(glm::normalize(Rr), 0);
 			Ray reflected(point + EPSILON * Rr_dir, Rr_dir);
@@ -403,7 +402,7 @@ HitColor rayColor(const Ray & r, const std::list<Light*> & lights, int counter)
 	if (primary_intersect.hit) {
 		// Test material
 //		assert(primary_intersect.material == PhongMaterial::AirMaterial);
-		assert(primary_intersect.fromMaterial == PhongMaterial::AirMaterial);
+		assert(primary_intersect.fromMaterial == PhongMaterial::Air);
 		
         // ambient color
         color += primary_intersect.material->m_kd * AmbientColor;
@@ -430,10 +429,50 @@ glm::dvec3 backgroundColor(int x, int y)
 }
 
 
+Ray refractedRay(const Ray & ray, const Intersection & intersection)
+{
+    double n1 = intersection.fromMaterial->m_refractive_index;
+    double n2 = intersection.material->m_refractive_index;
+    double nr = n1 / n2;
 
+    double cosineTheta_i = glm::dot(intersection.normal, ray.direction);
+    double sineTheta_i_t2 = 1 - cosineTheta_i * cosineTheta_i;
+    double sineTheta_t_t2 = nr * nr * sineTheta_i_t2;
+    
+    if (sineTheta_t_t2 > 1) {
+        // Total internal reflection.
+		return Ray({0,0,0,1}, {0,0,0,0});
+    }
+    
+    Ray normalizedRay(ray.origin, glm::normalize(ray.direction));
+    auto direction = (nr * cosineTheta_i - sqrt(1 - sineTheta_t_t2)) * intersection.normal - nr * ray.direction;
 
+    Ray refractedRay(ray.origin, direction);
+    return refractedRay;
+}
 
-
-
-
-
+double simplifiedFresnelModel(const glm::dvec4 & normal,
+							  const glm::dvec4 & IncomingVector,
+							  double fromReflectiveIndex,
+							  double toReflectiveIndex)
+{
+	// Test for TIR.
+	double n = fromReflectiveIndex / toReflectiveIndex;
+	double cosI = -glm::dot(IncomingVector, normal);
+	double sinT_2 = n * n * (1 - cosI * cosI);
+	
+	if (sinT_2 > 1) {
+		// TIR
+		return 1.0;
+	}
+	
+	double cosT = sqrt(1.0 - sinT_2);
+	
+	double Rs = (toReflectiveIndex * cosI - fromReflectiveIndex * cosT) / (toReflectiveIndex * cosI + fromReflectiveIndex * cosT);
+	Rs = Rs * Rs;
+	
+	double Rp = (toReflectiveIndex * cosT - fromReflectiveIndex * cosI) / (fromReflectiveIndex * cosI + toReflectiveIndex * cosT);
+	Rp = Rp * Rp;
+	
+	return (Rs + Rp) / 2.0;
+}
