@@ -438,4 +438,25 @@ bool Cylinder::isValidRoot(const Ray &ray, double t)
     }
 }
 
-
+Intersection Plane::intersect(const Ray &ray)
+{
+	double t = - ray.origin.y / ray.direction.y;
+	auto hitPoint = ray.origin + ray.direction * t;
+	
+	Intersection intersect(ray, 0);
+	
+	if (hitPoint.x <= 1 && hitPoint.x >= -1 && hitPoint.z <= 1 && hitPoint.z >= -1 && t > 0) {
+		intersect.t = t;
+		intersect.hit = true;
+		if (ray.origin.y < 0) {
+			intersect.normal = glm::dvec4(0, -1, 0, 0);
+		} else {
+			intersect.normal = glm::dvec4(0, 1, 0, 0);
+		}
+		
+	} else {
+		intersect.hit = false;
+	}
+	
+	return intersect;
+}

@@ -86,3 +86,8 @@ Intersection GeometryNode::intersect(const Ray & ray, std::list<glm::mat4> trans
 	return i;
 }
 
+bool GeometryNode::isOpticsEnabled()
+{
+	return m_primitive->isOpticsEnabled();
+}
+

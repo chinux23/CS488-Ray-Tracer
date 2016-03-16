@@ -4,7 +4,7 @@
 gold = gr.material(	 {0.9, 0.8, 0.4}, 	{0.8, 0.8, 0.4}, 	25, 1.0)
 grass = gr.material( {0.1, 0.7, 0.1}, 	{0.0, 0.0, 0.0}, 	0,  1.0)
 blue = gr.material(  {0.7, 0.6, 1}, 	{0.5, 0.4, 0.8}, 	25, 1.0)
-glass = gr.material({0, 0, 0}, 		{1, 1, 1}, 			25, 1.5);
+glass = gr.material( {0, 0, 0}, 		{1, 1, 1}, 			25, 1.5);
 
 scene = gr.node('scene')
 scene:rotate('X', 23)
@@ -52,7 +52,8 @@ s:scale(4, 0.6, 0.6)
 s:translate(0, 4, 0)
 
 -- the floor
-plane = gr.mesh( 'plane', 'Assets/plane.obj' )
+-- plane = gr.mesh( 'plane', 'Assets/plane.obj' )
+plane = gr.plane('plane')
 scene:add_child(plane)
 plane:set_material(grass)
 plane:scale(30, 30, 30)

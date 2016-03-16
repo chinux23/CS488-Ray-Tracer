@@ -56,6 +56,8 @@ public:
 	virtual Intersection intersect(const Ray & ray);
 	
 	virtual Intersection intersect(const Ray & ray, std::list<glm::mat4> trans);
+	
+	virtual bool isOpticsEnabled() {return false;};
 
 private:
 	// The number of SceneNode instances.

@@ -17,6 +17,9 @@ public:
 	virtual Intersection intersect(const Ray & ray);
 	
 	virtual Intersection intersect(const Ray & ray, std::list<glm::mat4> transformations);
+	
+	virtual bool isOpticsEnabled();
+	
 };
 
 

@@ -26,6 +26,7 @@ public:
 	virtual ~Primitive();
 	virtual Intersection intersect(const Ray & ray);
 	virtual Intersection intersect(const Ray & ray, std::list<glm::mat4> transformations);
+	virtual bool isOpticsEnabled() {return false;};
 protected:
 	Primitive *m_primitive;
 };
@@ -37,6 +38,7 @@ public:
 	virtual ~Sphere();
 	virtual Intersection intersect(const Ray & ray);
 //	virtual Intersection intersect(const Ray & ray, std::list<glm::mat4> transformations);
+	virtual bool isOpticsEnabled() {return true;};
 
 };
 
@@ -97,4 +99,10 @@ private:
 	glm::vec3 m_pos;
 	double m_size;
 	glm::vec3 m_pos2;
+};
+
+// Create a x from -1 to 1, z from -1 to 1, y = 0 plane
+class Plane : public Primitive {
+	virtual Intersection intersect(const Ray & ray);
+	virtual bool isOpticsEnabled() {return true;};
 };

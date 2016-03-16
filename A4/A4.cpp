@@ -357,7 +357,13 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
 			Ray reflected(point + EPSILON * Rr_dir, Rr_dir);
 			HitColor hc = rayColor(reflected, lights, counter+1);
 			
+			// If the material is not a glass.
 			if (hc.hit) {
+				
+				// if it's optical nodes, such as plane or sphere. we'll do optics
+				
+				
+				
 				// Hit some object, let's do reflection
 				color += REFLECTION_COEFF * primary_intersect.material->m_ks * glm::vec3(hc.color);
 			}
