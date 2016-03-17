@@ -38,7 +38,7 @@ public:
 	virtual ~Sphere();
 	virtual Intersection intersect(const Ray & ray);
 //	virtual Intersection intersect(const Ray & ray, std::list<glm::mat4> transformations);
-	virtual bool isOpticsEnabled() {return true;};
+	virtual bool isOpticsEnabled() {return false;};
 
 };
 

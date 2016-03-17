@@ -300,7 +300,45 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
 	}
 	
 	glm::dvec4 point = primary_intersect.incoming_ray.origin + primary_intersect.incoming_ray.direction * primary_intersect.t;
-    
+	
+	
+	if (primary_intersect.node->isOpticsEnabled()) {
+		// If the material is like glass, which generates a refracted ray or reflected ray.
+		
+		// calculate reflectance.
+		double reflectance = simplifiedFresnelModel(primary_intersect.normal,
+													glm::normalize(primary_intersect.incoming_ray.direction),
+													primary_intersect.fromMaterial->m_refractive_index,
+													primary_intersect.material->m_refractive_index);
+		
+		
+		glm::dvec3 Ri = glm::normalize(glm::dvec3(primary_intersect.incoming_ray.direction));
+		glm::dvec3 N = glm::normalize(glm::dvec3(primary_intersect.normal));
+		glm::dvec3 Rr = Ri - 2.0 * N * (glm::dot(Ri, N));
+		
+		glm::dvec4 Rr_dir = glm::dvec4(glm::normalize(Rr), 0);
+		Ray reflected(point + EPSILON * Rr_dir, Rr_dir);
+		HitColor hc = rayColor(reflected, lights, counter+1);
+		
+		if (reflectance == 1.0) {
+			// reflection only.
+			color += reflectance * hc.color;
+			
+		} else {
+			// reflection
+			color += reflectance * hc.color;
+			
+			// refraction
+			Ray t = refractedRay(primary_intersect.incoming_ray, primary_intersect);
+			HitColor refractedColor = rayColor(t, lights, counter+1);	// get refracted ray color.
+			
+			color += (1 - reflectance) * refractedColor.color;
+		}
+		return color;
+	}
+	
+	// calculate diffused color.
+	
 	for (auto light : lights) {
 		glm::dvec4 shadow_ray_direction = glm::dvec4(light->position, 1) - point;
 		
@@ -352,21 +390,17 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
             
             color += phongCoeff * primary_intersect.material->m_ks * light->colour;
 			
+			// ----------- for diffused objecto reflect.
 			// Calculate Reflected ray.
-			glm::dvec4 Rr_dir = glm::dvec4(glm::normalize(Rr), 0);
-			Ray reflected(point + EPSILON * Rr_dir, Rr_dir);
-			HitColor hc = rayColor(reflected, lights, counter+1);
-			
-			// If the material is not a glass.
-			if (hc.hit) {
-				
-				// if it's optical nodes, such as plane or sphere. we'll do optics
-				
-				
-				
-				// Hit some object, let's do reflection
-				color += REFLECTION_COEFF * primary_intersect.material->m_ks * glm::vec3(hc.color);
-			}
+//			glm::dvec4 Rr_dir = glm::dvec4(glm::normalize(Rr), 0);
+//			Ray reflected(point + EPSILON * Rr_dir, Rr_dir);
+//			HitColor hc = rayColor(reflected, lights, counter+1);
+//			
+//			// If the material is not a glass.
+//			if (hc.hit) {
+//				// for general object, the reflection is controlled by reflection coeff.
+//				color += REFLECTION_COEFF * primary_intersect.material->m_ks * glm::vec3(hc.color);
+//			}
 		}
 		
 	}
@@ -452,8 +486,12 @@ Ray refractedRay(const Ray & ray, const Intersection & intersection)
     
     Ray normalizedRay(ray.origin, glm::normalize(ray.direction));
     auto direction = (nr * cosineTheta_i - sqrt(1 - sineTheta_t_t2)) * intersection.normal - nr * ray.direction;
+	direction = glm::normalize(direction);
+	assert(std::abs(direction.w) < EPSILON);
+	assert(intersection.t > 0);
+	glm::dvec4 hitpoint = ray.origin + ray.direction * intersection.t;
 
-    Ray refractedRay(ray.origin, direction);
+    Ray refractedRay(hitpoint + EPSILON * direction, direction);
     return refractedRay;
 }
 

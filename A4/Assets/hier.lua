@@ -52,8 +52,8 @@ s:scale(4, 0.6, 0.6)
 s:translate(0, 4, 0)
 
 -- the floor
--- plane = gr.mesh( 'plane', 'Assets/plane.obj' )
-plane = gr.plane('plane')
+plane = gr.mesh( 'plane', 'Assets/plane.obj' )
+-- plane = gr.plane('plane')
 scene:add_child(plane)
 plane:set_material(grass)
 plane:scale(30, 30, 30)
@@ -71,6 +71,13 @@ scene:add_child(reflectiveSphere)
 reflectiveSphere:set_material(glass)
 reflectiveSphere:scale(1, 1, 1)
 reflectiveSphere:translate(-7, 2, 0)
+
+glasspanel = gr.plane('glasspanel')
+scene:add_child(glasspanel)
+glasspanel:set_material(glass)
+glasspanel:rotate('X', 90)
+glasspanel:scale(2, 2, 2)
+glasspanel:translate(-5, 2, 3)
 
 -- cylinder
 -- cylinder = gr.cylinder('cylinder')
