@@ -397,15 +397,15 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
 			
 			// ----------- for diffused objecto reflect.
 			// Calculate Reflected ray.
-//			glm::dvec4 Rr_dir = glm::dvec4(glm::normalize(Rr), 0);
-//			Ray reflected(point + EPSILON * Rr_dir, Rr_dir);
-//			HitColor hc = rayColor(reflected, lights, counter+1);
-//			
-//			// If the material is not a glass.
-//			if (hc.hit) {
-//				// for general object, the reflection is controlled by reflection coeff.
-//				color += REFLECTION_COEFF * primary_intersect.material->m_ks * glm::vec3(hc.color);
-//			}
+			glm::dvec4 Rr_dir = glm::dvec4(glm::normalize(Rr), 0);
+			Ray reflected(point + EPSILON * Rr_dir, Rr_dir);
+			HitColor hc = rayColor(reflected, lights, counter+1);
+			
+			// If the material is not a glass.
+			if (hc.hit) {
+				// for general object, the reflection is controlled by reflection coeff.
+				color += REFLECTION_COEFF * primary_intersect.material->m_ks * glm::vec3(hc.color);
+			}
 		}
 		
 	}

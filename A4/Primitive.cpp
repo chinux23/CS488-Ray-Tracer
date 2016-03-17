@@ -175,7 +175,7 @@ Intersection NonhierSphere::intersect(const Ray &ray)
 	result.normal = normal;
 	
     // are we inside the sphere? if we are, the normal will be the negative of the normal computed above.
-    if (glm::length(glm::dvec3(ray.origin)) < m_radius * m_radius) {
+    if ( glm::distance(glm::vec3(ray.origin), m_pos) < m_radius) {
         // we are inside.
         result.normal = -result.normal;
     }
