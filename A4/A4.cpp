@@ -14,6 +14,9 @@ static double IMAGEHEIGHT;
 #define MAXRECURSIVE 5
 #define EPSILON 0.0001
 #define REFLECTION_COEFF 0.2
+#define DEBUG 0
+#define REFLECTIONDEBUG 0
+#define ABSORBANCE 0.1
 
 
 static SceneNode *Scene;
@@ -302,7 +305,7 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
 	glm::dvec4 point = primary_intersect.incoming_ray.origin + primary_intersect.incoming_ray.direction * primary_intersect.t;
 	
 	
-	if (primary_intersect.node->isOpticsEnabled()) {
+	if (primary_intersect.node->isOpticsEnabled() && primary_intersect.material->m_refractive_index != 0.0) {
 		// If the material is like glass, which generates a refracted ray or reflected ray.
 		
 		// calculate reflectance.
@@ -320,20 +323,22 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
 		Ray reflected(point + EPSILON * Rr_dir, Rr_dir);
 		HitColor hc = rayColor(reflected, lights, counter+1);
 		
-		if (reflectance == 1.0) {
-			// reflection only.
-			color += reflectance * hc.color;
+#if REFLECTIONDEBUG
+        reflectance = 0.5;
+#endif
+        
+		if (reflectance != 1.0) {
+            // refraction
+            Ray t = refractedRay(primary_intersect.incoming_ray, primary_intersect);
+            HitColor refractedColor = rayColor(t, lights, counter+1);	// get refracted ray color.
+            if (refractedColor.hit) {
+                color += (1 - reflectance) * refractedColor.color;
+            }
 			
-		} else {
-			// reflection
-			color += reflectance * hc.color;
-			
-			// refraction
-			Ray t = refractedRay(primary_intersect.incoming_ray, primary_intersect);
-			HitColor refractedColor = rayColor(t, lights, counter+1);	// get refracted ray color.
-			
-			color += (1 - reflectance) * refractedColor.color;
 		}
+        // reflection
+        color += reflectance * primary_intersect.material->m_ks * glm::vec3(hc.color);
+
 		return color;
 	}
 	
@@ -471,28 +476,45 @@ glm::dvec3 backgroundColor(int x, int y)
 
 Ray refractedRay(const Ray & ray, const Intersection & intersection)
 {
+	Ray normalizedRay(ray.origin, glm::normalize(ray.direction));
+	
     double n1 = intersection.fromMaterial->m_refractive_index;
     double n2 = intersection.material->m_refractive_index;
     double nr = n1 / n2;
 
-    double cosineTheta_i = glm::dot(intersection.normal, ray.direction);
+    double cosineTheta_i = -glm::dot(intersection.normal, normalizedRay.direction);
     double sineTheta_i_t2 = 1 - cosineTheta_i * cosineTheta_i;
     double sineTheta_t_t2 = nr * nr * sineTheta_i_t2;
-    
+
+#if DEBUG
+	std::cout << "---------------------------" << std::endl;
+	std::cout << "Incoming refractive index: " << intersection.fromMaterial->m_refractive_index << std::endl;
+	std::cout << "Incoming angle: " << glm::degrees(glm::acos(cosineTheta_i)) << std::endl;
+	std::cout << "To refractive index: " << intersection.material->m_refractive_index << std::endl;
+	std::cout << "Refracted angle: " << glm::degrees(glm::asin(sqrt(sineTheta_t_t2))) << std::endl;
+#endif
+	
     if (sineTheta_t_t2 > 1) {
         // Total internal reflection.
+#if DEBUG
+		std::cout << "TIR" << std::endl;
+#endif
 		return Ray({0,0,0,1}, {0,0,0,0});
     }
-    
-    Ray normalizedRay(ray.origin, glm::normalize(ray.direction));
-    auto direction = (nr * cosineTheta_i - sqrt(1 - sineTheta_t_t2)) * intersection.normal - nr * ray.direction;
+	
+//    auto direction = (nr * cosineTheta_i - sqrt(1 - sineTheta_t_t2)) * intersection.normal - nr * normalizedRay.direction;
+    auto direction = nr * normalizedRay.direction + (nr * cosineTheta_i - sqrt(1 - sineTheta_t_t2)) * intersection.normal;
 	direction = glm::normalize(direction);
 	assert(std::abs(direction.w) < EPSILON);
 	assert(intersection.t > 0);
 	glm::dvec4 hitpoint = ray.origin + ray.direction * intersection.t;
 
-    Ray refractedRay(hitpoint + EPSILON * direction, direction);
-    return refractedRay;
+    Ray r(hitpoint + EPSILON * direction, direction);
+#if DEBUG
+	std::cout << "Real refracted angle: " << glm::degrees( glm::acos(glm::dot(r.direction, -intersection.normal)) ) << std::endl;
+#endif
+	
+    return r;
 }
 
 double simplifiedFresnelModel(const glm::dvec4 & normal,

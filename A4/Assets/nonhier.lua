@@ -1,9 +1,11 @@
 -- A simple scene with some miscellaneous geometry.
 
-mat1 = gr.material({0.7, 1.0, 0.7}, {0.5, 0.7, 0.5}, 25, 1.0)
-mat2 = gr.material({0.5, 0.5, 0.5}, {0.5, 0.7, 0.5}, 25, 1.0)
-mat3 = gr.material({1.0, 0.6, 0.1}, {0.5, 0.7, 0.5}, 25, 1.0)
-mat4 = gr.material({0.7, 0.6, 1.0}, {0.5, 0.4, 0.8}, 25, 1.0)
+mat1 = gr.material({0.7, 1.0, 0.7}, {0.5, 0.7, 0.5}, 25, 0.0)  		--disable optics
+mat2 = gr.material({0.5, 0.5, 0.5}, {0.5, 0.7, 0.5}, 25, 0.0)  		--disable optics
+mat3 = gr.material({1.0, 0.6, 0.1}, {0.5, 0.7, 0.5}, 25, 0.0)		--disable optics
+mat4 = gr.material({0.7, 0.6, 1.0}, {0.5, 0.4, 0.8}, 25, 0.0)		--disable optics
+glass = gr.material({0.5, 0.5, 0.5}, {0.5, 0.5, 0.5}, 25, 1.5)
+
 
 scene_root = gr.node('root')
 
@@ -30,6 +32,10 @@ s4:set_material(mat3)
 s5 = gr.nh_sphere('s5', {0, 100, -250}, 25)
 scene_root:add_child(s5)
 s5:set_material(mat1)
+
+opticGlass = gr.nh_sphere('opticGlass', {0, 0, -600}, 100)
+scene_root:add_child(opticGlass)
+opticGlass:set_material(glass)
 
 -- A small stellated dodecahedron.
 

@@ -139,6 +139,7 @@ std::ostream & operator << (std::ostream & os, const SceneNode & node) {
 Intersection SceneNode::intersect(const Ray & ray)
 {
 	// Should not happen.
+	assert(false);
 	return NOHIT;
 }
 
@@ -154,6 +155,12 @@ Intersection SceneNode::intersect(const Ray & ray, std::list<glm::mat4> transfor
 		Intersection intersect = child->intersect(new_ray, transformations);
 		if (intersect.hit) {
 			if (!result.hit || intersect.t < result.t) {
+#if DEBUG
+				assert(intersect.t > 0);
+				if (result.hit) {
+					// debug here
+				}
+#endif
 				result = intersect;
 			}
 		}
