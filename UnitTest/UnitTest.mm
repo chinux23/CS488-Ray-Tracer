@@ -152,5 +152,21 @@
 	assert(std::abs(r - 0.056818273527026959) < Epsilon);
 }
 
+- (void)testSphericalLight
+{
+	glm::dvec3 pos {10, 30, 40};
+	
+	auto light = SphericalLight(pos, glm::vec3(1, 1, 1), 100);
+	
+	for (int i = 0; i < 10; i++) {
+		glm::dvec3 point = light.randomPoint();
+		
+		XCTAssert(glm::length(point - pos) - 100 < Epsilon);
+		std::cout << glm::to_string(point) << std::endl;
+		std::cout << "length: " << glm::length(point - pos) << std::endl;
+	}
+	
+}
+
 
 @end

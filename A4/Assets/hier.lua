@@ -1,10 +1,10 @@
 -- test for hierarchical ray-tracers.
 -- Thomas Pflaum 1996
 
-gold = gr.material(	 {0.9, 0.8, 0.4}, 	{0.8, 0.8, 0.4}, 	25, 1.0)
-grass = gr.material( {0.1, 0.7, 0.1}, 	{0.0, 0.0, 0.0}, 	0,  1.0)
-blue = gr.material(  {0.7, 0.6, 1}, 	{0.5, 0.4, 0.8}, 	25, 1.0)
-glass = gr.material( {0, 0, 0}, 		{1, 1, 1}, 			25, 1.5);
+gold = gr.material(	 {0.9, 0.8, 0.4}, 	{0.8, 0.8, 0.4}, 	25, 0.0)
+grass = gr.material( {0.1, 0.7, 0.1}, 	{0.0, 0.0, 0.0}, 	0,  0.0)
+blue = gr.material(  {0.7, 0.6, 1}, 	{0.5, 0.4, 0.8}, 	25, 0.0)
+glass = gr.material( {0.1, 0.1, 0.1}, {0.9, 0.9, 0.9}, 25, 1.5)			--enable optics
 
 scene = gr.node('scene')
 scene:rotate('X', 23)
@@ -66,11 +66,11 @@ poly:set_material(blue)
 
 -- Mod
 -- -- reflective sphere
--- reflectiveSphere = gr.sphere("reflective")
--- scene:add_child(reflectiveSphere)
--- reflectiveSphere:set_material(glass)
--- reflectiveSphere:scale(1, 1, 1)
--- reflectiveSphere:translate(-7, 2, 0)
+reflectiveSphere = gr.sphere("reflective")
+scene:add_child(reflectiveSphere)
+reflectiveSphere:set_material(glass)
+reflectiveSphere:scale(1, 1, 1)
+reflectiveSphere:translate(-7, 2, 0)
 
 glasspanel = gr.plane('glasspanel')
 scene:add_child(glasspanel)

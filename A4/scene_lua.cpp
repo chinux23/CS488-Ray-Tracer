@@ -354,6 +354,32 @@ int gr_light_cmd(lua_State* L)
   return 1;
 }
 
+extern "C"
+int gr_spherical_light_cmd(lua_State* L)
+{
+	GRLUA_DEBUG_CALL;
+	
+	gr_light_ud* data = (gr_light_ud*)lua_newuserdata(L, sizeof(gr_light_ud));
+	data->light = 0;
+	
+	glm::vec3 position;
+	glm::vec3 color;
+	glm::vec3 falloff;
+	
+	get_tuple(L, 1, &position[0], 3);
+	get_tuple(L, 2, &color[0], 3);
+	get_tuple(L, 3, &falloff[0], 3);
+	
+	double radius = luaL_checknumber(L, 4);
+	
+	data->light = new SphericalLight(position, color, radius);
+	luaL_newmetatable(L, "gr.sphericallight");
+	
+	lua_setmetatable(L, -2);
+
+	return 1;
+}
+
 // Render a scene
 extern "C"
 int gr_render_cmd(lua_State* L)
@@ -581,6 +607,7 @@ static const luaL_Reg grlib_functions[] = {
   {"nh_box", gr_nh_box_cmd},
   {"mesh", gr_mesh_cmd},
   {"light", gr_light_cmd},
+  {"sphericallight", gr_spherical_light_cmd},
   {"render", gr_render_cmd},
   {0, 0}
 };

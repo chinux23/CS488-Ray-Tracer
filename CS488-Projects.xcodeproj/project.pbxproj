@@ -165,6 +165,7 @@
 		748BA7DD1C99C0940032F564 /* Primitive.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 0C021B241BDEF0F900B28537 /* Primitive.hpp */; };
 		748BA7DF1C99C0940032F564 /* SceneNode.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 0C021B281BDEF0F900B28537 /* SceneNode.hpp */; };
 		748BA7E01C99C0F80032F564 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0C021B0D1BDEF0F900B28537 /* Image.cpp */; };
+		748BA7EC1C9BA67E0032F564 /* room.lua in CopyFiles */ = {isa = PBXBuildFile; fileRef = 748BA7EB1C9BA6750032F564 /* room.lua */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -179,6 +180,7 @@
 				744458351C853BE000D7C652 /* cube.obj in CopyFiles */,
 				744458361C853BE000D7C652 /* cylinder.obj in CopyFiles */,
 				744458371C853BE000D7C652 /* dodeca.obj in CopyFiles */,
+				748BA7EC1C9BA67E0032F564 /* room.lua in CopyFiles */,
 				744458381C853BE000D7C652 /* icosa.obj in CopyFiles */,
 				744458391C853BE000D7C652 /* mickey.obj in CopyFiles */,
 				0C021B4A1BDEF17E00B28537 /* hier.lua in CopyFiles */,
@@ -502,6 +504,7 @@
 		748BA7BA1C99B2D20032F564 /* UnitTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		748BA7BC1C99B2D20032F564 /* UnitTest.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = UnitTest.mm; sourceTree = "<group>"; };
 		748BA7BE1C99B2D20032F564 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		748BA7EB1C9BA6750032F564 /* room.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = room.lua; sourceTree = "<group>"; };
 		EF66900674193A7C9A818BE1 /* lcorolib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lcorolib.c; sourceTree = "<group>"; };
 		EF669008CE107BFB53DEAD20 /* lopcodes.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lopcodes.o; sourceTree = "<group>"; };
 		EF66902FFAF6C0331E4A906B /* ldo.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ldo.o; sourceTree = "<group>"; };
@@ -781,6 +784,7 @@
 		0C021ADE1BDEF0F900B28537 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				748BA7EB1C9BA6750032F564 /* room.lua */,
 				7446459A1C84BEEC00E45ED6 /* simple2.lua */,
 				746353101C7FA5BC009E0DC9 /* buckyball.obj */,
 				746353111C7FA5BC009E0DC9 /* cube.obj */,
@@ -2462,6 +2466,7 @@
 				748BA7C01C99B2D20032F564 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

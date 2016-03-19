@@ -18,6 +18,8 @@ static double IMAGEHEIGHT;
 #define REFLECTIONDEBUG 0
 #define ABSORBANCE 0.1
 
+#define REFLECTION_REFRACTION_ONLY 0
+
 
 static SceneNode *Scene;
 static glm::vec3 AmbientColor;
@@ -324,7 +326,7 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
 		HitColor hc = rayColor(reflected, lights, counter+1);
 		
 #if REFLECTIONDEBUG
-        reflectance = 0.5;
+        reflectance = 0.2;
 #endif
         
 		if (reflectance != 1.0) {
@@ -338,8 +340,10 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
 		}
         // reflection
         color += reflectance * primary_intersect.material->m_ks * glm::vec3(hc.color);
-
-		return color;
+        
+#if REFLECTION_REFRACTION_ONLY
+        return color;
+#endif
 	}
 	
 	// calculate diffused color.
@@ -395,17 +399,17 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
             
             color += phongCoeff * primary_intersect.material->m_ks * light->colour;
 			
-			// ----------- for diffused objecto reflect.
-			// Calculate Reflected ray.
-			glm::dvec4 Rr_dir = glm::dvec4(glm::normalize(Rr), 0);
-			Ray reflected(point + EPSILON * Rr_dir, Rr_dir);
-			HitColor hc = rayColor(reflected, lights, counter+1);
-			
-			// If the material is not a glass.
-			if (hc.hit) {
-				// for general object, the reflection is controlled by reflection coeff.
-				color += REFLECTION_COEFF * primary_intersect.material->m_ks * glm::vec3(hc.color);
-			}
+//			// ----------- for diffused objecto reflect.
+//			// Calculate Reflected ray.
+//			glm::dvec4 Rr_dir = glm::dvec4(glm::normalize(Rr), 0);
+//			Ray reflected(point + EPSILON * Rr_dir, Rr_dir);
+//			HitColor hc = rayColor(reflected, lights, counter+1);
+//			
+//			// If the material is not a glass.
+//			if (hc.hit) {
+//				// for general object, the reflection is controlled by reflection coeff.
+//				color += REFLECTION_COEFF * primary_intersect.material->m_ks * glm::vec3(hc.color);
+//			}
 		}
 		
 	}

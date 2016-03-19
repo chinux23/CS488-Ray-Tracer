@@ -6,11 +6,11 @@
 #include <list>
 #include <glm/glm.hpp>
 
-#define EPSILON 1
+#define epsilon 1e-5
 
 template<typename T1, typename T2>
 bool isEqual(const T1 & t1, const T2 & t2) {
-    if (std::abs(t1 - t2) < EPSILON) {
+    if (std::abs(t1 - t2) < epsilon) {
         return true;
     } else {
         return false;
@@ -38,7 +38,7 @@ public:
 	virtual ~Sphere();
 	virtual Intersection intersect(const Ray & ray);
 //	virtual Intersection intersect(const Ray & ray, std::list<glm::mat4> transformations);
-	virtual bool isOpticsEnabled() {return false;};
+	virtual bool isOpticsEnabled() {return true;};
 
 };
 
@@ -77,7 +77,8 @@ public:
 	virtual ~NonhierSphere();
 	virtual Intersection intersect(const Ray & ray);
 	virtual Intersection intersect(const Ray & ray, std::list<glm::mat4> transformations);
-
+    
+    virtual bool isOpticsEnabled() {return true;};
 private:
 	glm::vec3 m_pos;
 	double m_radius;
