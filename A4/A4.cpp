@@ -17,8 +17,11 @@ static double IMAGEHEIGHT;
 #define DEBUG 0
 #define REFLECTIONDEBUG 0
 #define ABSORBANCE 0.1
+#define SOFTSHADOW 100		// How many shadow rays.
 
 #define REFLECTION_REFRACTION_ONLY 0
+
+#define MULTIPROCESSINGNUMBER 8
 
 
 static SceneNode *Scene;
@@ -104,14 +107,21 @@ void A4_Render(
 	double color_max = 1.0;
 	double color_min = 0;
 	
-//	dispatch_queue_t concurrent_queue = dispatch_queue_create("ca.uwaterloo.cs488.raytracer", DISPATCH_QUEUE_CONCURRENT);
-//	dispatch_queue_t image_queue = dispatch_queue_create("ca.uwaterloo.cs488.image_queue", 0);
+	dispatch_queue_t concurrent_queue = dispatch_queue_create("ca.uwaterloo.cs488.raytracer", DISPATCH_QUEUE_CONCURRENT);
+	dispatch_queue_t image_queue = dispatch_queue_create("ca.uwaterloo.cs488.image_queue", 0);
 	
 	std::chrono::system_clock::time_point start = std::chrono::system_clock::now();
 	
 	for (uint y = 0; y < ny; ++y) {
 		for (uint x = 0; x < nx; ++x) {
-//			dispatch_async(concurrent_queue, ^{
+			
+			if (x % MULTIPROCESSINGNUMBER == 0) {
+				dispatch_barrier_sync(concurrent_queue, ^{
+//					std::cout << "Done a patch" << std::endl;
+				});
+			}
+			
+			dispatch_async(concurrent_queue, ^{
 				if (ANTIALIASING) {
 					auto p_world = calculate_p_in_world(x, y, device_to_world_trans);
 					auto p_world1 = calculate_p_in_world(x+1, y, device_to_world_trans);
@@ -173,9 +183,11 @@ void A4_Render(
 					
 					color = color / 5.0;	// average the color.
 					
-					image(x, y, 0) = color.r;
-					image(x, y, 1) = color.g;
-					image(x, y, 2) = color.b;
+					dispatch_async(image_queue, ^{
+						image(x, y, 0) = color.r;
+						image(x, y, 1) = color.g;
+						image(x, y, 2) = color.b;
+					});
 					
 				} else {
 					auto p_world = calculate_p_in_world(x, y, device_to_world_trans);
@@ -184,7 +196,7 @@ void A4_Render(
 					
 					HitColor hc = rayColor(r, lights, 0);
 					
-//					dispatch_async(image_queue, ^{
+					dispatch_async(image_queue, ^{
 						if (hc.hit) {
 							image(x, y, 0) = glm::clamp(hc.color.r, color_min, color_max);
 							image(x, y, 1) = glm::clamp(hc.color.g, color_min, color_max);
@@ -195,21 +207,20 @@ void A4_Render(
 							image(x, y, 1) = color.g;
 							image(x, y, 2) = color.b;
 						}
-//					});
+					});
 					
 //					std::cout << "Done: " << x << " " << y << std::endl;
 				}
-//			});
+			});
 		}
 	}
 	
-//	dispatch_barrier_sync(concurrent_queue, ^{
-//		std::cout << "Done" << std::endl;
-//	});
+
 	
 	std::chrono::system_clock::time_point finish = std::chrono::system_clock::now();
 	
-	std::cout << "Time took to complete: " << std::chrono::duration_cast<std::chrono::milliseconds>(finish - start).count() << std::endl;
+	std::cout << "Time took to complete (seconds): " <<
+		std::chrono::duration_cast<std::chrono::milliseconds>(finish - start).count() / 1000.0 << std::endl;
 	
 	std::cout << "exit" << std::endl;
 }
@@ -349,55 +360,63 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
 	// calculate diffused color.
 	
 	for (auto light : lights) {
-		glm::dvec4 shadow_ray_direction = glm::dvec4(light->position, 1) - point;
 		
-		Ray shadow_ray = Ray(point + EPSILON * glm::normalize(shadow_ray_direction), shadow_ray_direction);
+		int iteration = light->isAreaLight() ? SOFTSHADOW : 1;
+		glm::dvec3 colorSum {0, 0, 0};
 		
-		double shadow_ray_length = glm::length(shadow_ray_direction);
-		//					std::cout << "shadow_ray_length: " << shadow_ray_length << std::endl;
-		
-		Intersection shadow_intersect = hit(shadow_ray, Scene);
-		
-		if (shadow_intersect.hit)
-			assert(shadow_intersect.t > 0);
-		
-		// if no object or hitpoint is longer than the light
-		if (shadow_intersect.hit &&
-			glm::length(shadow_intersect.t * shadow_ray.direction) < shadow_ray_length)
-		{
-			//						glm::dvec4 s_hitPoint = shadow_ray.origin + shadow_intersect.t * shadow_ray.direction;
-			//						std::cout << "Shadow ray hitPoint: " << glm::to_string(s_hitPoint) << std::endl;
-			// Blocked
-			//						std::cout << "Shadow ray hit " << shadow_intersect.node->m_name << std::endl;
-			//						std::cout << "ShadowRay hit t " << shadow_intersect.t << std::endl;
+		for (int i = 0; i < iteration; i++) {
+			auto lightPosition = light->isAreaLight() ? glm::vec3(light->randomPoint()) : light->position;
 			
-		} else {
-			//						std::cout << "Calculating diffused color " << std::endl;
+			glm::dvec4 shadow_ray_direction = glm::dvec4(lightPosition, 1) - point;
 			
-            auto light_ray = glm::normalize(shadow_ray_direction);
-            auto normal = glm::normalize(primary_intersect.normal);
-            auto cosineTheta = std::max(glm::dot(glm::dvec3(normal), glm::dvec3(light_ray)), 0.0);
-//            std::cout << "cosine theta: " << cosineTheta << std::endl;
-            
-            auto kd = primary_intersect.material->m_kd;
-            
-			// Get the diffused color
-			color += kd * cosineTheta * light->colour / (light->falloff[0] +
-									  light->falloff[1] * shadow_ray_length +
-								      light->falloff[2] * shadow_ray_length * shadow_ray_length);
-            
-            
-            glm::dvec4 point = primary_intersect.incoming_ray.origin + primary_intersect.incoming_ray.direction * primary_intersect.t;
-            glm::dvec4 light_direction = glm::dvec4(light->position, 1) - point;
-            
-            glm::dvec3 Ri = glm::normalize(glm::dvec3(primary_intersect.incoming_ray.direction));
-            glm::dvec3 N = glm::normalize(glm::dvec3(primary_intersect.normal));
-            glm::dvec3 Rr = Ri - 2.0 * N * (glm::dot(Ri, N));
-            
-            cosineTheta = std::max(glm::dot(Rr, glm::normalize(glm::dvec3(light_direction))), 0.0);
-            double phongCoeff = std::pow(cosineTheta, primary_intersect.material->m_shininess);
-            
-            color += phongCoeff * primary_intersect.material->m_ks * light->colour;
+			Ray shadow_ray = Ray(point + EPSILON * glm::normalize(shadow_ray_direction), shadow_ray_direction);
+			
+			double shadow_ray_length = glm::length(shadow_ray_direction);
+			//					std::cout << "shadow_ray_length: " << shadow_ray_length << std::endl;
+			
+			Intersection shadow_intersect = hit(shadow_ray, Scene);
+			
+			if (shadow_intersect.hit)
+				assert(shadow_intersect.t > 0);
+			
+			// if no object or hitpoint is longer than the light
+			if (shadow_intersect.hit &&
+				glm::length(shadow_intersect.t * shadow_ray.direction) < shadow_ray_length)
+			{
+				//						glm::dvec4 s_hitPoint = shadow_ray.origin + shadow_intersect.t * shadow_ray.direction;
+				//						std::cout << "Shadow ray hitPoint: " << glm::to_string(s_hitPoint) << std::endl;
+				// Blocked
+				//						std::cout << "Shadow ray hit " << shadow_intersect.node->m_name << std::endl;
+				//						std::cout << "ShadowRay hit t " << shadow_intersect.t << std::endl;
+				
+			} else {
+				//						std::cout << "Calculating diffused color " << std::endl;
+				
+				auto light_ray = glm::normalize(shadow_ray_direction);
+				auto normal = glm::normalize(primary_intersect.normal);
+				auto cosineTheta = std::max(glm::dot(glm::dvec3(normal), glm::dvec3(light_ray)), 0.0);
+				//            std::cout << "cosine theta: " << cosineTheta << std::endl;
+				
+				auto kd = primary_intersect.material->m_kd;
+				
+				// Get the diffused color
+				colorSum += kd * cosineTheta * light->colour / (light->falloff[0] +
+															 light->falloff[1] * shadow_ray_length +
+															 light->falloff[2] * shadow_ray_length * shadow_ray_length);
+				
+				
+				glm::dvec4 point = primary_intersect.incoming_ray.origin + primary_intersect.incoming_ray.direction * primary_intersect.t;
+				glm::dvec4 light_direction = glm::dvec4(light->position, 1) - point;
+				
+				glm::dvec3 Ri = glm::normalize(glm::dvec3(primary_intersect.incoming_ray.direction));
+				glm::dvec3 N = glm::normalize(glm::dvec3(primary_intersect.normal));
+				glm::dvec3 Rr = Ri - 2.0 * N * (glm::dot(Ri, N));
+				
+				cosineTheta = std::max(glm::dot(Rr, glm::normalize(glm::dvec3(light_direction))), 0.0);
+				double phongCoeff = std::pow(cosineTheta, primary_intersect.material->m_shininess);
+				
+				colorSum += phongCoeff * primary_intersect.material->m_ks * light->colour;
+			}
 			
 //			// ----------- for diffused objecto reflect.
 //			// Calculate Reflected ray.
@@ -412,6 +431,7 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
 //			}
 		}
 		
+		light->isAreaLight() ? color += colorSum / SOFTSHADOW : color += colorSum;
 	}
 	return color;
 }

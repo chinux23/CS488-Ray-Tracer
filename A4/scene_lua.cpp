@@ -373,7 +373,7 @@ int gr_spherical_light_cmd(lua_State* L)
 	double radius = luaL_checknumber(L, 4);
 	
 	data->light = new SphericalLight(position, color, radius);
-	luaL_newmetatable(L, "gr.sphericallight");
+	luaL_newmetatable(L, "gr.light");
 	
 	lua_setmetatable(L, -2);
 
