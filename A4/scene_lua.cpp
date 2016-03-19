@@ -368,11 +368,12 @@ int gr_spherical_light_cmd(lua_State* L)
 	
 	get_tuple(L, 1, &position[0], 3);
 	get_tuple(L, 2, &color[0], 3);
-	get_tuple(L, 3, &falloff[0], 3);
 	
 	double radius = luaL_checknumber(L, 4);
 	
 	data->light = new SphericalLight(position, color, radius);
+	get_tuple(L, 3, data->light->falloff, 3);
+	
 	luaL_newmetatable(L, "gr.light");
 	
 	lua_setmetatable(L, -2);

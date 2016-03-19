@@ -399,10 +399,13 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
 				
 				auto kd = primary_intersect.material->m_kd;
 				
+				// length of the light
+				double length = primary_intersect.t * glm::length(primary_intersect.incoming_ray.direction);
+//				std::cout << "length of the ray " << length << std::endl;
 				// Get the diffused color
 				colorSum += kd * cosineTheta * light->colour / (light->falloff[0] +
-															 light->falloff[1] * shadow_ray_length +
-															 light->falloff[2] * shadow_ray_length * shadow_ray_length);
+															 light->falloff[1] * length +
+															 light->falloff[2] * length * length);
 				
 				
 				glm::dvec4 point = primary_intersect.incoming_ray.origin + primary_intersect.incoming_ray.direction * primary_intersect.t;
