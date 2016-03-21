@@ -477,6 +477,22 @@ int gr_node_add_child_cmd(lua_State* L)
   return 0;
 }
 
+extern "C"
+int gr_node_set_glossy_cmd(lua_State* L)
+{
+	GRLUA_DEBUG_CALL;
+	
+	gr_node_ud* selfdata = (gr_node_ud*)luaL_checkudata(L, 1, "gr.node");
+	luaL_argcheck(L, selfdata != 0, 1, "Node expected");
+	GeometryNode* self = dynamic_cast<GeometryNode*>(selfdata->node);
+	luaL_argcheck(L, self != 0, 1, "Geometry node expected");
+	
+	PhongMaterial *material = dynamic_cast<PhongMaterial *>(self->m_material);
+	get_tuple(L, 2, &material->m_glossy_coefficients[0], 4);
+	
+	return 1;
+}
+
 // Set a node's material
 extern "C"
 int gr_node_set_material_cmd(lua_State* L)
@@ -629,6 +645,7 @@ static const luaL_Reg grlib_node_methods[] = {
   {"__gc", gr_node_gc_cmd},
   {"add_child", gr_node_add_child_cmd},
   {"set_material", gr_node_set_material_cmd},
+  {"set_glossy", gr_node_set_glossy_cmd},
   {"scale", gr_node_scale_cmd},
   {"rotate", gr_node_rotate_cmd},
   {"translate", gr_node_translate_cmd},

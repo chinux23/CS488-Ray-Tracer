@@ -4,20 +4,23 @@
 #include <dispatch/dispatch.h>
 #include <mutex>
 #include <chrono>
+#include <random>
 
 
 static double IMAGEWIDTH;
 static double IMAGEHEIGHT;
 
 #define DISTANCE 10.0
-#define ANTIALIASING 0
+#define ANTIALIASING 1
 #define MAXRECURSIVE 5
 #define EPSILON 0.0001
 #define REFLECTION_COEFF 0.2
 #define DEBUG 0
 #define REFLECTIONDEBUG 0
 #define ABSORBANCE 0.1
-#define SOFTSHADOW 100		// How many shadow rays.
+#define SOFTSHADOW 100					// How many shadow rays.
+#define GLOSSYREFLECTION 20				// How many reflection rays
+#define GLOSSYREFRACTION 50				// How many refraction rays.
 
 #define REFLECTION_REFRACTION_ONLY 0
 
@@ -117,7 +120,7 @@ void A4_Render(
 			
 			if (x % MULTIPROCESSINGNUMBER == 0) {
 				dispatch_barrier_sync(concurrent_queue, ^{
-//					std::cout << "Done a patch" << std::endl;
+					std::cout << "Working on Y: " << y << std::endl;
 				});
 			}
 			
@@ -317,6 +320,11 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
 	
 	glm::dvec4 point = primary_intersect.incoming_ray.origin + primary_intersect.incoming_ray.direction * primary_intersect.t;
 	
+//	
+//	if (primary_intersect.node->m_name == "reflective") {
+//		std::cout << "Reflective: " << std::endl;
+//		std::cout << "Stop here" << std::endl;
+//	}
 	
 	if (primary_intersect.node->isOpticsEnabled() && primary_intersect.material->m_refractive_index != 0.0) {
 		// If the material is like glass, which generates a refracted ray or reflected ray.
@@ -399,14 +407,14 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
 				
 				auto kd = primary_intersect.material->m_kd;
 				
-				// length of the light
-				double length = primary_intersect.t * glm::length(primary_intersect.incoming_ray.direction);
-//				std::cout << "length of the ray " << length << std::endl;
-				// Get the diffused color
-				colorSum += kd * cosineTheta * light->colour / (light->falloff[0] +
-															 light->falloff[1] * length +
-															 light->falloff[2] * length * length);
-				
+				if (glm::length(kd) != 0) {
+					// length of the light
+					double length = primary_intersect.t * glm::length(primary_intersect.incoming_ray.direction);
+					// Get the diffused color
+					colorSum += kd * cosineTheta * light->colour / (light->falloff[0] +
+																 light->falloff[1] * length +
+																 light->falloff[2] * length * length);
+				}
 				
 				glm::dvec4 point = primary_intersect.incoming_ray.origin + primary_intersect.incoming_ray.direction * primary_intersect.t;
 				glm::dvec4 light_direction = glm::dvec4(light->position, 1) - point;
@@ -415,23 +423,61 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
 				glm::dvec3 N = glm::normalize(glm::dvec3(primary_intersect.normal));
 				glm::dvec3 Rr = Ri - 2.0 * N * (glm::dot(Ri, N));
 				
-				cosineTheta = std::max(glm::dot(Rr, glm::normalize(glm::dvec3(light_direction))), 0.0);
-				double phongCoeff = std::pow(cosineTheta, primary_intersect.material->m_shininess);
+				if (glm::length(primary_intersect.material->m_ks) > 0) {
+					cosineTheta = std::max(glm::dot(Rr, glm::normalize(glm::dvec3(light_direction))), 0.0);
+					double phongCoeff = std::pow(cosineTheta, primary_intersect.material->m_shininess);
+					
+					colorSum += phongCoeff * primary_intersect.material->m_ks * light->colour;
+				}
 				
-				colorSum += phongCoeff * primary_intersect.material->m_ks * light->colour;
+				if (primary_intersect.material->m_glossy_coefficients.x > 0) {
+					__block glm::dvec3 reflected_color;
+					
+					// Add glossy reflection
+					if (GLOSSYREFLECTION > 0) {
+						std::vector<glm::dvec3> purtubed_reflected_rays
+							= purturbedRays(
+								Rr,
+								glm::dvec3(primary_intersect.normal),
+								primary_intersect.material->m_glossy_coefficients.y,
+								GLOSSYREFLECTION);
+						
+//						dispatch_queue_t distributed_ray_queue = dispatch_queue_create("ca.uwaterloo.cs488.raytracer.distributedray", DISPATCH_QUEUE_CONCURRENT);
+//						
+//						dispatch_queue_t serialized_queue = dispatch_queue_create("ca.uwaterloo.cs488.raytracer.distributedray.serializer", 0);
+						
+						for (auto dir : purtubed_reflected_rays) {
+							
+							Ray reflected_ray(point + EPSILON * glm::dvec4(dir, 0), glm::dvec4(dir, 0));
+							
+							HitColor hit_color = rayColor(reflected_ray, lights, counter + 1);
+							reflected_color += hit_color.color;
+						}
+						
+						reflected_color = reflected_color / double(GLOSSYREFLECTION);
+						colorSum +=
+							primary_intersect.material->m_glossy_coefficients.x * reflected_color * glm::dvec3(primary_intersect.material->m_ks);
+					}
+					
+				}
+				
+				if (primary_intersect.material->m_glossy_coefficients.z > 0) {
+					// Add glossy refraction
+					
+				}
+//				
+//				// ----------- for diffused objecto reflect.
+//				// Calculate Reflected ray.
+//				glm::dvec4 Rr_dir = glm::dvec4(glm::normalize(Rr), 0);
+//				Ray reflected(point + EPSILON * Rr_dir, Rr_dir);
+//				HitColor hc = rayColor(reflected, lights, counter+1);
+//				
+//				// If the material is not a glass.
+//				if (hc.hit) {
+//					// for general object, the reflection is controlled by reflection coeff.
+//					color += REFLECTION_COEFF * primary_intersect.material->m_ks * glm::vec3(hc.color);
+//				}
 			}
-			
-//			// ----------- for diffused objecto reflect.
-//			// Calculate Reflected ray.
-//			glm::dvec4 Rr_dir = glm::dvec4(glm::normalize(Rr), 0);
-//			Ray reflected(point + EPSILON * Rr_dir, Rr_dir);
-//			HitColor hc = rayColor(reflected, lights, counter+1);
-//			
-//			// If the material is not a glass.
-//			if (hc.hit) {
-//				// for general object, the reflection is controlled by reflection coeff.
-//				color += REFLECTION_COEFF * primary_intersect.material->m_ks * glm::vec3(hc.color);
-//			}
 		}
 		
 		light->isAreaLight() ? color += colorSum / SOFTSHADOW : color += colorSum;
@@ -568,4 +614,61 @@ double simplifiedFresnelModel(const glm::dvec4 & normal,
 	Rp = Rp * Rp;
 	
 	return (Rs + Rp) / 2.0;
+}
+
+double random_double()
+{
+	static std::random_device generator;
+	static std::uniform_real_distribution<double> distribution(0.0,1.0);
+	
+	return distribution(generator);
+}
+
+glm::dvec3 purturbe(glm::dvec3 R, double exponent){
+	
+	R = glm::normalize(R);
+	
+	assert(exponent >= 1);
+	
+	glm::dvec3 e0 {0, 1, 0};
+	glm::dvec3 e1 {0, 0, 1};
+	
+	glm::dvec3 W = R;
+	
+	glm::dvec3 U = glm::cross(W, e0);
+	if (glm::length(U) < 0.1) {
+		U = glm::cross(W, e1);
+	}
+	glm::dvec3 V = glm::cross(W, U);
+	
+	// generate random value
+	std::random_device generator;
+	std::uniform_real_distribution<double> distribution(0.0,1.0);
+	
+	double phi = distribution(generator) * 2 * glm::pi<double>();
+	double cosine_theta = glm::pow(distribution(generator), (double)1.0/(exponent+1));
+	double sine_theta = glm::sqrt(1 - cosine_theta * cosine_theta);
+	double cosine_phi = glm::cos(phi);
+	double sine_phi = glm::sin(phi);
+	
+	glm::dvec3 A = W * cosine_theta + U * cosine_phi * sine_theta + V * sine_phi * sine_theta;
+
+	return A;
+}
+
+std::vector<glm::dvec3> purturbedRays(glm::dvec3 R, glm::dvec3 normal, double exponent, int size)
+{
+	assert(size > 0);
+	std::vector<glm::dvec3> rays;
+	
+	while (rays.size() < size) {
+		glm::dvec3 R_prim = purturbe(R, exponent);
+		double product = glm::dot(normal, R_prim);
+		
+		if (product > 0) {
+			// Add it to the results. It's a valid purturbedRay.
+			rays.push_back(R_prim);
+		}
+	}
+	return rays;
 }

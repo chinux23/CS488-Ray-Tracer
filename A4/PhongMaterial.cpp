@@ -9,11 +9,24 @@ PhongMaterial * PhongMaterial::Air = &air;
 PhongMaterial * PhongMaterial::Glass = &glass;
 PhongMaterial * PhongMaterial::Water = &water;
 
+PhongMaterial::PhongMaterial(const glm::vec3& kd,
+			  const glm::vec3& ks,
+			  double shininess,
+			  double refractive_index,
+			  double extinct_coeff,
+			  const glm::vec4& glossy_coefficients	// (reflectance, reflectance exponent, transmission, transmission exponent)
+)
+{
+	m_glossy_coefficients = glossy_coefficients;
+}
+
 PhongMaterial::PhongMaterial(
 	const glm::vec3& kd, const glm::vec3& ks, double shininess )
 	: m_kd(kd), m_ks(ks), m_shininess(shininess), m_refractive_index(1.0)
 
-{}
+{
+
+}
 
 PhongMaterial::PhongMaterial(const glm::vec3& kd, const glm::vec3& ks, double shininess, double reflective_index)
 : m_kd(kd), m_ks(ks), m_shininess(shininess), m_refractive_index(reflective_index)

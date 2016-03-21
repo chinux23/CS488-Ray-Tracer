@@ -7,6 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
+#include <random>
 #import "A4.hpp"
 
 #define Epsilon 1.0e-10
@@ -166,6 +167,61 @@
 		std::cout << "length: " << glm::length(point - pos) << std::endl;
 	}
 	
+}
+
+- (void)testRandom
+{
+	std::random_device generator;
+	std::uniform_real_distribution<double> distribution(0.0,1.0);
+	
+	for (int i = 0; i < 100; i++) {
+		double num = distribution(generator);
+//		std::cout << num << std::endl;
+		XCTAssert(num < 1.0 && num > 0);
+	}
+	
+}
+
+- (void)testperturbe
+{
+	std::vector<glm::dvec3> Rs = {{0, 1, 0}, {0, 0, 1}, {0, 0, 1}, {1, 1, 1}, {1, 1, 0}, {0, 1, 1}, {2, 3, 4}};
+	// generate random value
+	std::random_device generator;
+	std::uniform_real_distribution<double> distribution(0.0,1.0);
+	
+	
+	for (auto R : Rs) {
+		for (int i = 0; i < 10; i++) {
+			R = glm::normalize(R);
+			
+			// Give a Vector R, pertube it with N
+			double N = 10;
+			
+			glm::dvec3 e0 {0, 1, 0};
+			glm::dvec3 e1 {0, 0, 1};
+			
+			glm::dvec3 W = R;
+			
+			glm::dvec3 U = glm::cross(W, e0);
+			if (glm::length(U) < 0.1) {
+				U = glm::cross(W, e1);
+			}
+			glm::dvec3 V = glm::cross(W, U);
+			
+			
+			
+			double phi = distribution(generator) * 2 * glm::pi<double>();
+			double cosine_theta = glm::pow(distribution(generator), (double)1.0/(N+1));
+			double sine_theta = glm::sqrt(1 - cosine_theta * cosine_theta);
+			double cosine_phi = glm::cos(phi);
+			double sine_phi = glm::sin(phi);
+			
+			glm::dvec3 A = W * cosine_theta + U * cosine_phi * sine_theta + V * sine_phi * sine_theta;
+			
+			std::cout << glm::degrees(glm::acos(glm::dot(R, A))) << std::endl;
+			std::cout << "Perturbed vector: " << glm::to_string(A) << std::endl;
+		}
+	}
 }
 
 

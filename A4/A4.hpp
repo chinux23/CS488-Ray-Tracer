@@ -69,3 +69,11 @@ double simplifiedFresnelModel(const glm::dvec4 & normal,
 							  double fromReflectiveIndex,
 							  double toReflectiveIndex);
 
+// Return a random double between 0 and 1
+double random_double();
+
+// Purturbe a vector
+glm::dvec3 purturbe(glm::dvec3 R, double exponent);
+
+// Create purturbed rays into a vector. It will eliminate rays that below the tangent plane where the normal is at.
+std::vector<glm::dvec3> purturbedRays(glm::dvec3 R, glm::dvec3 normal, double exponent, int size);

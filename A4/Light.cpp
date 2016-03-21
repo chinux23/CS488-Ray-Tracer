@@ -47,7 +47,7 @@ _radius(radius)
 
 glm::dvec3 SphericalLight::randomPoint()
 {
-	glm::dvec3 vector = glm::sphericalRand(_radius);
+	glm::dvec3 vector = glm::ballRand(_radius);
 	glm::dvec3 point = glm::dvec3(position) + vector;
 	return point;
 }
