@@ -19,7 +19,7 @@ static double IMAGEHEIGHT;
 #define REFLECTIONDEBUG 0
 #define ABSORBANCE 0.1
 #define SOFTSHADOW 100					// How many shadow rays.
-#define GLOSSYREFLECTION 20				// How many reflection rays
+#define GLOSSYREFLECTION 50				// How many reflection rays
 #define GLOSSYREFRACTION 50				// How many refraction rays.
 
 #define REFLECTION_REFRACTION_ONLY 0
@@ -116,11 +116,11 @@ void A4_Render(
 	std::chrono::system_clock::time_point start = std::chrono::system_clock::now();
 	
 	for (uint y = 0; y < ny; ++y) {
+		std::cout << "Working on Y: " << y << std::endl;
 		for (uint x = 0; x < nx; ++x) {
 			
 			if (x % MULTIPROCESSINGNUMBER == 0) {
 				dispatch_barrier_sync(concurrent_queue, ^{
-					std::cout << "Working on Y: " << y << std::endl;
 				});
 			}
 			
@@ -349,12 +349,43 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
 #endif
         
 		if (reflectance != 1.0) {
-            // refraction
-            Ray t = refractedRay(primary_intersect.incoming_ray, primary_intersect);
-            HitColor refractedColor = rayColor(t, lights, counter+1);	// get refracted ray color.
-            if (refractedColor.hit) {
-                color += (1 - reflectance) * refractedColor.color;
-            }
+
+			if (primary_intersect.material->m_glossy_coefficients.z > 0) {
+				// Glossy refraction
+				glm::dvec3 refracted_color;
+				
+				// Add glossy refraction
+				if (GLOSSYREFRACTION > 0) {
+					Ray t = refractedRay(primary_intersect.incoming_ray, primary_intersect);
+					std::vector<glm::dvec3> purtubed_rays
+						= purturbedRays(
+									glm::dvec3(t.direction),
+									glm::dvec3(-primary_intersect.normal),
+									primary_intersect.material->m_glossy_coefficients.w,
+									GLOSSYREFRACTION);
+					
+					for (auto dir : purtubed_rays) {
+						
+						Ray refracted_ray(point + EPSILON * glm::dvec4(dir, 0), glm::dvec4(dir, 0));
+						HitColor hit_color;
+						hit_color = rayColor(refracted_ray, lights, counter+1);
+						refracted_color += hit_color.color;
+					}
+					
+					refracted_color = refracted_color / double(GLOSSYREFRACTION);
+					color += (1 - reflectance) *
+						primary_intersect.material->m_glossy_coefficients.z * refracted_color;
+				}
+				
+			} else {
+			
+				// regular refraction
+				Ray t = refractedRay(primary_intersect.incoming_ray, primary_intersect);
+				HitColor refractedColor = rayColor(t, lights, counter+1);	// get refracted ray color.
+				if (refractedColor.hit) {
+					color += (1 - reflectance) * refractedColor.color;
+				}
+			}
 			
 		}
         // reflection
@@ -365,13 +396,22 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
 #endif
 	}
 	
-	// calculate diffused color.
+
 	
+	glm::dvec3 Ri = glm::normalize(glm::dvec3(primary_intersect.incoming_ray.direction));
+	glm::dvec3 N = glm::normalize(glm::dvec3(primary_intersect.normal));
+	glm::dvec3 Rr = Ri - 2.0 * N * (glm::dot(Ri, N));
+	
+	// calculate diffused color.
 	for (auto light : lights) {
 		
 		int iteration = light->isAreaLight() ? SOFTSHADOW : 1;
 		glm::dvec3 colorSum {0, 0, 0};
 		
+		glm::dvec4 point = primary_intersect.incoming_ray.origin + primary_intersect.incoming_ray.direction * primary_intersect.t;
+		glm::dvec4 light_direction = glm::dvec4(light->position, 1) - point;
+		
+		// Soft Shadow calculation.
 		for (int i = 0; i < iteration; i++) {
 			auto lightPosition = light->isAreaLight() ? glm::vec3(light->randomPoint()) : light->position;
 			
@@ -416,12 +456,7 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
 																 light->falloff[2] * length * length);
 				}
 				
-				glm::dvec4 point = primary_intersect.incoming_ray.origin + primary_intersect.incoming_ray.direction * primary_intersect.t;
-				glm::dvec4 light_direction = glm::dvec4(light->position, 1) - point;
-				
-				glm::dvec3 Ri = glm::normalize(glm::dvec3(primary_intersect.incoming_ray.direction));
-				glm::dvec3 N = glm::normalize(glm::dvec3(primary_intersect.normal));
-				glm::dvec3 Rr = Ri - 2.0 * N * (glm::dot(Ri, N));
+
 				
 				if (glm::length(primary_intersect.material->m_ks) > 0) {
 					cosineTheta = std::max(glm::dot(Rr, glm::normalize(glm::dvec3(light_direction))), 0.0);
@@ -429,59 +464,40 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
 					
 					colorSum += phongCoeff * primary_intersect.material->m_ks * light->colour;
 				}
-				
-				if (primary_intersect.material->m_glossy_coefficients.x > 0) {
-					__block glm::dvec3 reflected_color;
-					
-					// Add glossy reflection
-					if (GLOSSYREFLECTION > 0) {
-						std::vector<glm::dvec3> purtubed_reflected_rays
-							= purturbedRays(
-								Rr,
-								glm::dvec3(primary_intersect.normal),
-								primary_intersect.material->m_glossy_coefficients.y,
-								GLOSSYREFLECTION);
-						
-//						dispatch_queue_t distributed_ray_queue = dispatch_queue_create("ca.uwaterloo.cs488.raytracer.distributedray", DISPATCH_QUEUE_CONCURRENT);
-//						
-//						dispatch_queue_t serialized_queue = dispatch_queue_create("ca.uwaterloo.cs488.raytracer.distributedray.serializer", 0);
-						
-						for (auto dir : purtubed_reflected_rays) {
-							
-							Ray reflected_ray(point + EPSILON * glm::dvec4(dir, 0), glm::dvec4(dir, 0));
-							
-							HitColor hit_color = rayColor(reflected_ray, lights, counter + 1);
-							reflected_color += hit_color.color;
-						}
-						
-						reflected_color = reflected_color / double(GLOSSYREFLECTION);
-						colorSum +=
-							primary_intersect.material->m_glossy_coefficients.x * reflected_color * glm::dvec3(primary_intersect.material->m_ks);
-					}
-					
-				}
-				
-				if (primary_intersect.material->m_glossy_coefficients.z > 0) {
-					// Add glossy refraction
-					
-				}
-//				
-//				// ----------- for diffused objecto reflect.
-//				// Calculate Reflected ray.
-//				glm::dvec4 Rr_dir = glm::dvec4(glm::normalize(Rr), 0);
-//				Ray reflected(point + EPSILON * Rr_dir, Rr_dir);
-//				HitColor hc = rayColor(reflected, lights, counter+1);
-//				
-//				// If the material is not a glass.
-//				if (hc.hit) {
-//					// for general object, the reflection is controlled by reflection coeff.
-//					color += REFLECTION_COEFF * primary_intersect.material->m_ks * glm::vec3(hc.color);
-//				}
 			}
 		}
-		
 		light->isAreaLight() ? color += colorSum / SOFTSHADOW : color += colorSum;
 	}
+	
+#pragma mark - glossy reflection
+
+	if (primary_intersect.material->m_glossy_coefficients.x > 0) {
+		glm::dvec3 reflected_color;
+		
+		// Add glossy reflection
+		if (GLOSSYREFLECTION > 0) {
+			std::vector<glm::dvec3> purtubed_reflected_rays
+				= purturbedRays(
+					Rr,
+					glm::dvec3(primary_intersect.normal),
+					primary_intersect.material->m_glossy_coefficients.y,
+					GLOSSYREFLECTION);
+			
+			for (auto dir : purtubed_reflected_rays) {
+				
+				Ray reflected_ray(point + EPSILON * glm::dvec4(dir, 0), glm::dvec4(dir, 0));
+				HitColor hit_color;
+				hit_color = rayColor(reflected_ray, lights, counter+1);
+				reflected_color += hit_color.color;
+			}
+			
+			reflected_color = reflected_color / double(GLOSSYREFLECTION);
+			color +=
+				primary_intersect.material->m_glossy_coefficients.x * reflected_color * glm::dvec3(primary_intersect.material->m_ks);
+		}
+		
+	}
+	
 	return color;
 }
 

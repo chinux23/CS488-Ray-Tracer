@@ -21,18 +21,35 @@ mat3  = gr.material({1.0, 0.6, 0.1}, {0.5, 0.7, 0.5}, 25, 0.0)			--disable optic
 reflective = gr.material({0.0, 0.0, 0.0}, {0.7, 0.7, 0.7}, 25, 0.0)		--disable optics and disfusion
 glossy_reflective = {1.0, 10, 0.0, 100}					--glossy reflection
 glossy_refractive = {0.0, 1000, 1.0, 100}					--glossy refraction
-mirror = gr.material( {0.0, 0.0, 0.0},   {1.0, 1.0, 1.0},	25, 0.0)
+mirror1 = gr.material( {0.0, 0.0, 0.0},   {1.0, 1.0, 1.0},	25, 0.0)
+mirror2 = gr.material( {0.0, 0.0, 0.0},   {1.0, 1.0, 1.0},	25, 0.0)
 
 
 scene = gr.node('scene')
 
 -- -- reflective sphere
-reflectiveSphere = gr.sphere('reflective')
-scene:add_child(reflectiveSphere)
-reflectiveSphere:set_material(mirror)
-reflectiveSphere:set_glossy(glossy_reflective)
-reflectiveSphere:scale(2, 2, 2)
-reflectiveSphere:translate(-4, 5, -3)
+reflectiveSphere2 = gr.sphere('reflective2')
+scene:add_child(reflectiveSphere2)
+reflectiveSphere2:set_material(mirror1)
+reflectiveSphere2:set_glossy({1.0, 10, 0.0, 100})
+reflectiveSphere2:scale(2, 2, 2)
+reflectiveSphere2:translate(-6, 5, -3)
+
+-- reflectiveSphere = gr.sphere('reflective')
+-- scene:add_child(reflectiveSphere)
+-- reflectiveSphere:set_material(mirror)
+-- reflectiveSphere:set_glossy(glossy_reflective)
+-- reflectiveSphere:scale(2, 2, 2)
+-- reflectiveSphere:translate(-4, 5, -3)
+
+reflectiveSphere3 = gr.sphere('reflective3')
+scene:add_child(reflectiveSphere3)
+reflectiveSphere3:set_material(mirror2)
+reflectiveSphere3:set_glossy({1.0, 10000, 0.0, 100})
+reflectiveSphere3:scale(2, 2, 2)
+reflectiveSphere3:translate(6, 5, -3)
+
+
 
 transparentSphere = gr.sphere('transparentSphere')
 scene:add_child(transparentSphere)
