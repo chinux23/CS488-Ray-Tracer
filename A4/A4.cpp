@@ -18,9 +18,17 @@ static double IMAGEHEIGHT;
 #define DEBUG 0
 #define REFLECTIONDEBUG 0
 #define ABSORBANCE 0.1
-#define SOFTSHADOW 100					// How many shadow rays.
+
+
+#if ANTIALIASING
 #define GLOSSYREFLECTION 50				// How many reflection rays
 #define GLOSSYREFRACTION 50				// How many refraction rays.
+#define SOFTSHADOW 100					// How many shadow rays.
+#else
+#define GLOSSYREFLECTION 10				// How many reflection rays
+#define GLOSSYREFRACTION 10				// How many refraction rays.
+#define SOFTSHADOW 20					// How many shadow rays.
+#endif
 
 #define REFLECTION_REFRACTION_ONLY 0
 

@@ -112,6 +112,7 @@
 		0CC118E01BB997F000C87A4F /* VertexShader.vs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0CC118CB1BB9976F00C87A4F /* VertexShader.vs */; };
 		0CC118E21BB998CA00C87A4F /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0CC118D41BB9976F00C87A4F /* Main.cpp */; };
 		0CC118E51BB9999000C87A4F /* IndexExample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0CC118E31BB9999000C87A4F /* IndexExample.cpp */; };
+		74096BED1CA5A49E00EF4BD7 /* room.lua in CopyFiles */ = {isa = PBXBuildFile; fileRef = 74096BEC1CA5A49B00EF4BD7 /* room.lua */; };
 		7444582B1C826D7900D7C652 /* Ray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 744458291C826D7900D7C652 /* Ray.cpp */; };
 		7444582E1C834AD800D7C652 /* Intersection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7444582C1C834AD800D7C652 /* Intersection.cpp */; };
 		744458331C853BD900D7C652 /* smstdodeca.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 746353171C7FA5BC009E0DC9 /* smstdodeca.obj */; };
@@ -160,6 +161,7 @@
 			dstSubfolderSpec = 16;
 			files = (
 				7446459B1C84BEF300E45ED6 /* simple2.lua in CopyFiles */,
+				74096BED1CA5A49E00EF4BD7 /* room.lua in CopyFiles */,
 				744458341C853BE000D7C652 /* buckyball.obj in CopyFiles */,
 				744458351C853BE000D7C652 /* cube.obj in CopyFiles */,
 				744458361C853BE000D7C652 /* cylinder.obj in CopyFiles */,
@@ -447,6 +449,7 @@
 		0CFA619F1BA8C8E50041C6E5 /* Main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Main.cpp; sourceTree = "<group>"; };
 		0CFA61A01BA8C8E50041C6E5 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		0CFA61A11BA8C8E50041C6E5 /* premake4.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = premake4.lua; sourceTree = "<group>"; };
+		74096BEC1CA5A49B00EF4BD7 /* room.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = room.lua; sourceTree = "<group>"; };
 		744458291C826D7900D7C652 /* Ray.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Ray.cpp; sourceTree = "<group>"; };
 		7444582A1C826D7900D7C652 /* Ray.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Ray.hpp; sourceTree = "<group>"; };
 		7444582C1C834AD800D7C652 /* Intersection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Intersection.cpp; sourceTree = "<group>"; };
@@ -733,6 +736,7 @@
 		0C021ADE1BDEF0F900B28537 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				74096BEC1CA5A49B00EF4BD7 /* room.lua */,
 				7446459A1C84BEEC00E45ED6 /* simple2.lua */,
 				746353101C7FA5BC009E0DC9 /* buckyball.obj */,
 				746353111C7FA5BC009E0DC9 /* cube.obj */,

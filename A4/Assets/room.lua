@@ -28,27 +28,27 @@ glass2 = gr.material( {0.05, 0.05, 0.05}, {0.7, 0.7, 0.7},  25, 1.5)			--disable
 
 scene = gr.node('scene')
 
--- -- reflective sphere
--- reflectiveSphere2 = gr.sphere('reflective2')
--- scene:add_child(reflectiveSphere2)
--- reflectiveSphere2:set_material(mirror1)
--- reflectiveSphere2:set_glossy({1.0, 10, 0.0, 100})
--- reflectiveSphere2:scale(2, 2, 2)
--- reflectiveSphere2:translate(-6, 5, -3)
+-- reflective sphere
+reflectiveSphere2 = gr.sphere('reflective2')
+scene:add_child(reflectiveSphere2)
+reflectiveSphere2:set_material(mirror1)
+reflectiveSphere2:set_glossy({1.0, 10, 0.0, 100})
+reflectiveSphere2:scale(2, 2, 2)
+reflectiveSphere2:translate(-6, 5, -3)
 
 -- reflectiveSphere = gr.sphere('reflective')
 -- scene:add_child(reflectiveSphere)
--- reflectiveSphere:set_material(mirror)
+-- reflectiveSphere:set_material(mirror2)
 -- reflectiveSphere:set_glossy(glossy_reflective)
 -- reflectiveSphere:scale(2, 2, 2)
 -- reflectiveSphere:translate(-4, 5, -3)
 
--- reflectiveSphere3 = gr.sphere('reflective3')
--- scene:add_child(reflectiveSphere3)
--- reflectiveSphere3:set_material(mirror2)
--- reflectiveSphere3:set_glossy({1.0, 10000, 0.0, 100})
--- reflectiveSphere3:scale(2, 2, 2)
--- reflectiveSphere3:translate(6, 5, -3)
+reflectiveSphere3 = gr.sphere('reflective3')
+scene:add_child(reflectiveSphere3)
+reflectiveSphere3:set_material(mirror2)
+reflectiveSphere3:set_glossy({1.0, 10000, 0.0, 100})
+reflectiveSphere3:scale(2, 2, 2)
+reflectiveSphere3:translate(6, 5, -3)
 
 
 
@@ -112,6 +112,6 @@ green_white_light = gr.light({0.0, 0.0, 400.0}, {0.5, 0.5, 0.5}, {1, 0, 0})
 l2 = gr.light({0, 5, -20}, {0.4, 0.4, 0.8}, {1, 0, 0})
 white_spherical_light = gr.sphericallight({2, 2, 2}, {0.8, 0.8, 0.8}, {1, 0, 0}, 0.5)
 
-gr.render(scene, 'room.png', 1024, 1024,
+gr.render(scene, 'room.png', 256, 256,
 	  {0, 0, 30}, {0, 0, -1}, {0, 1, 0}, 50,
 	  {0.4, 0.4, 0.4}, {white_spherical_light})
