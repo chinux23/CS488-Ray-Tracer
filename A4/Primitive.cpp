@@ -116,6 +116,11 @@ Intersection NonhierBox::intersect(const Ray &r)
 														 vertices[triangle.v2] - vertices[triangle.v1]));
 				result.normal = glm::dvec4(normal, 0);
 			}
+            
+            if (result.hit) {
+                result.primitive_intersection_point = result.incoming_ray.origin + result.incoming_ray.direction * result.t;
+            }
+            
 		} else {
 			if (hit && baryPosition.z < 0) {
 				assert("Got normal problem?");
@@ -173,6 +178,7 @@ Intersection NonhierSphere::intersect(const Ray &ray)
 	glm::dvec4 point = ray.origin + ray.direction * result.t;
 	glm::dvec4 normal = glm::normalize(point - c);
 	result.normal = normal;
+    result.primitive_intersection_point = point;
 	
     // are we inside the sphere? if we are, the normal will be the negative of the normal computed above.
     if ( glm::distance(glm::vec3(ray.origin), m_pos) < m_radius) {
@@ -228,7 +234,7 @@ Intersection Cone::intersect(const Ray &ray)
 			glm::dvec3 p_z {0.0, hitpoint.z / x2_z2_sqrt, 1.0};
 			glm::dvec3 normal = glm::cross(p_x, p_z);
 			result.normal = glm::dvec4(glm::normalize(normal), 0);
-			
+			result.primitive_intersection_point = hitpoint;
 		} else {
 			result.hit = false;
 		}
@@ -263,7 +269,7 @@ Intersection Cone::intersect(const Ray &ray)
 						glm::dvec3 p_z {0.0, hitpoint.z / x2_z2_sqrt, 1.0};
 						glm::dvec3 normal = glm::cross(p_x, p_z);
 						result.normal = glm::dvec4(glm::normalize(normal), 0);
-						
+                        result.primitive_intersection_point = ray.origin + ray.direction * result.t;
 					} else {
 						result.hit = false;
 					}
@@ -287,6 +293,7 @@ Intersection Cone::intersect(const Ray &ray)
 				glm::dvec3 p_z {0.0, hitpoint.z / x2_z2_sqrt, 1.0};
 				glm::dvec3 normal = glm::cross(p_x, p_z);
 				result.normal = glm::dvec4(glm::normalize(normal), 0);
+                result.primitive_intersection_point = hitpoint;
 			}
 			
 		} else if (p1.y > 1) {
@@ -303,6 +310,7 @@ Intersection Cone::intersect(const Ray &ray)
 							result.hit = true;
 							result.t = th;
 							result.normal = glm::dvec4(0, 1, 0, 0);
+                            result.primitive_intersection_point = hitpoint;
 						} else {
 							result.hit = false;
 						}
@@ -361,7 +369,7 @@ Intersection Cylinder::intersect(const Ray &ray)
 			
 			auto hitpoint = ray.origin + ray.direction * t;
 			result.normal = glm::normalize(glm::dvec4(hitpoint.x, 0, hitpoint.z, 0));
-			
+            result.primitive_intersection_point = hitpoint;
         } else {
             result.hit = false;
         }
@@ -397,6 +405,7 @@ Intersection Cylinder::intersect(const Ray &ray)
 					result.hit = true;
 				result.t = th;
 				result.normal = glm::dvec4(0, -1, 0, 0);
+                result.primitive_intersection_point = ray.origin + ray.direction * (double)th;
 			}
 			
 		} else if (y1 >= -1 && y1 <= 1) {
@@ -409,6 +418,7 @@ Intersection Cylinder::intersect(const Ray &ray)
 				
 				auto hitpoint = ray.origin + ray.direction * t1;
 				result.normal = glm::normalize(glm::dvec4(hitpoint.x, 0, hitpoint.z, 0));
+                result.primitive_intersection_point = hitpoint;
 			}
 			
 		} else if (y1 > 1) {
@@ -424,6 +434,7 @@ Intersection Cylinder::intersect(const Ray &ray)
 				
 				result.t = th;
 				result.normal = glm::dvec4(0, 1, 0, 0);
+                result.primitive_intersection_point = ray.origin + ray.direction * (double)th;
 			}
 		}
 	}
@@ -459,7 +470,7 @@ Intersection Plane::intersect(const Ray &ray)
 		} else {
 			intersect.normal = glm::dvec4(0, 1, 0, 0);
 		}
-		
+        intersect.primitive_intersection_point = hitPoint;
 	} else {
 		intersect.hit = false;
 	}

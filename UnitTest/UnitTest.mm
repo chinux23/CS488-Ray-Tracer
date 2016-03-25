@@ -9,6 +9,8 @@
 #import <XCTest/XCTest.h>
 #include <random>
 #import "A4.hpp"
+#include <glm/gtc/noise.hpp>
+#include <glm.hpp>
 
 #define Epsilon 1.0e-10
 
@@ -222,6 +224,14 @@
 			std::cout << "Perturbed vector: " << glm::to_string(A) << std::endl;
 		}
 	}
+}
+
+- (void) testPerlinNoise
+{
+    for (int i = 0; i < 10; i++) {
+        float noise = glm::perlin(glm::dvec2(-0.5, -0.5));
+        std::cout << noise << std::endl;
+    }
 }
 
 

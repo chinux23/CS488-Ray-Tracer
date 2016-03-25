@@ -243,6 +243,23 @@ int gr_node_set_material_cmd(lua_State* L)
   return 0;
 }
 
+// set texture
+extern "C"
+int gr_node_set_texture_cmd(lua_State *L)
+{
+    GRLUA_DEBUG_CALL;
+    
+    gr_node_ud* selfdata = (gr_node_ud*)luaL_checkudata(L, 1, "gr.node");
+    luaL_argcheck(L, selfdata != 0, 1, "Node expected");
+    
+    GeometryNode* self = dynamic_cast<GeometryNode*>(selfdata->node);
+    
+    luaL_argcheck(L, self != 0, 1, "Geometry node expected");
+    
+    
+    
+}
+
 // Add a scaling transformation to a node.
 extern "C"
 int gr_node_scale_cmd(lua_State* L)

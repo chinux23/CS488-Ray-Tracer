@@ -45,6 +45,9 @@ struct Intersection {
 	Intersection(const Ray & ray, double t);
 	
 	Intersection();
+    
+    // Stores the intersection point in the primitive.
+    glm::dvec4 primitive_intersection_point;
 	
 };
 

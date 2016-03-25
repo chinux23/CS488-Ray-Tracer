@@ -66,22 +66,6 @@
 		0C1CAF501BC9E8C20033071E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CDFBEDE1BA1E8A500325567 /* Cocoa.framework */; };
 		0C1CAF511BC9E8C20033071E /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CDFBEDA1BA1E89B00325567 /* IOKit.framework */; };
 		0C1CAF521BC9E8C20033071E /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CDFBEDC1BA1E8A000325567 /* OpenGL.framework */; };
-		0C1CAF661BC9E9270033071E /* A3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0C1CAF5B1BC9E9270033071E /* A3.cpp */; };
-		0C1CAF681BC9E9270033071E /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0C1CAF631BC9E9270033071E /* Main.cpp */; };
-		0C1CAF811BCA065D0033071E /* SceneNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF669EB090D67DAAC6B1F827 /* SceneNode.cpp */; };
-		0C1CAF821BCA08AF0033071E /* scene_lua.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF6698F83430BAD63EF85536 /* scene_lua.cpp */; };
-		0C1CAF841BCAC7A20033071E /* GeometryNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF66943C1DDA85288CD90143 /* GeometryNode.cpp */; };
-		0C1CAF981BCC5CCD0033071E /* cube.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0C1CAF8C1BCC5CC10033071E /* cube.obj */; };
-		0C1CAF991BCC5CCD0033071E /* FragmentShader.fs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0C1CAF8D1BCC5CC10033071E /* FragmentShader.fs */; };
-		0C1CAFA11BCC5CCD0033071E /* sphere.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0C1CAF951BCC5CC10033071E /* sphere.obj */; };
-		0C1CAFA21BCC5CCD0033071E /* suzanne.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0C1CAF961BCC5CC10033071E /* suzanne.obj */; };
-		0C1CAFA31BCC5CCD0033071E /* VertexShader.vs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0C1CAF971BCC5CC10033071E /* VertexShader.vs */; };
-		0C1CAFA61BCE015B0033071E /* arc_FragmentShader.fs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0C1CAFA41BCE01530033071E /* arc_FragmentShader.fs */; };
-		0C1CAFA71BCE015B0033071E /* arc_VertexShader.vs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0C1CAFA51BCE01530033071E /* arc_VertexShader.vs */; };
-		0C1CAFA81BCE1A650033071E /* JointNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF66973CE97C29BA3F7B3493 /* JointNode.cpp */; };
-		0C1CAFA91BCE2C080033071E /* a3mark.lua in CopyFiles */ = {isa = PBXBuildFile; fileRef = EF669EE2DCC67E85927AD1C5 /* a3mark.lua */; };
-		0C1CAFAA1BCE2C080033071E /* puppet.lua in CopyFiles */ = {isa = PBXBuildFile; fileRef = EF66986C8C5C612013F63F96 /* puppet.lua */; };
-		0C1CAFAB1BCE2C080033071E /* simpleScene.lua in CopyFiles */ = {isa = PBXBuildFile; fileRef = EF66974A3134D2FDCA34072B /* simpleScene.lua */; };
 		0C602DA21BA23C9900CD438A /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0C602DA11BA23C9900CD438A /* Main.cpp */; };
 		0C602DB11BA3364400CD438A /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CDFBEDC1BA1E8A000325567 /* OpenGL.framework */; };
 		0C6927721BA5E37E0033976C /* FragmentShader.fs in CopyFiles */ = {isa = PBXBuildFile; fileRef = EF669FDF62C142A21A56C221 /* FragmentShader.fs */; };
@@ -165,7 +149,7 @@
 		748BA7DD1C99C0940032F564 /* Primitive.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 0C021B241BDEF0F900B28537 /* Primitive.hpp */; };
 		748BA7DF1C99C0940032F564 /* SceneNode.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 0C021B281BDEF0F900B28537 /* SceneNode.hpp */; };
 		748BA7E01C99C0F80032F564 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0C021B0D1BDEF0F900B28537 /* Image.cpp */; };
-		748BA7EC1C9BA67E0032F564 /* room.lua in CopyFiles */ = {isa = PBXBuildFile; fileRef = 748BA7EB1C9BA6750032F564 /* room.lua */; };
+		74F36BC51CA591B500AC9CE4 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 74F36BC31CA591B500AC9CE4 /* Texture.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -180,7 +164,6 @@
 				744458351C853BE000D7C652 /* cube.obj in CopyFiles */,
 				744458361C853BE000D7C652 /* cylinder.obj in CopyFiles */,
 				744458371C853BE000D7C652 /* dodeca.obj in CopyFiles */,
-				748BA7EC1C9BA67E0032F564 /* room.lua in CopyFiles */,
 				744458381C853BE000D7C652 /* icosa.obj in CopyFiles */,
 				744458391C853BE000D7C652 /* mickey.obj in CopyFiles */,
 				0C021B4A1BDEF17E00B28537 /* hier.lua in CopyFiles */,
@@ -213,16 +196,6 @@
 			dstPath = Assets;
 			dstSubfolderSpec = 16;
 			files = (
-				0C1CAFA91BCE2C080033071E /* a3mark.lua in CopyFiles */,
-				0C1CAFAA1BCE2C080033071E /* puppet.lua in CopyFiles */,
-				0C1CAFAB1BCE2C080033071E /* simpleScene.lua in CopyFiles */,
-				0C1CAFA61BCE015B0033071E /* arc_FragmentShader.fs in CopyFiles */,
-				0C1CAFA71BCE015B0033071E /* arc_VertexShader.vs in CopyFiles */,
-				0C1CAF981BCC5CCD0033071E /* cube.obj in CopyFiles */,
-				0C1CAF991BCC5CCD0033071E /* FragmentShader.fs in CopyFiles */,
-				0C1CAFA11BCC5CCD0033071E /* sphere.obj in CopyFiles */,
-				0C1CAFA21BCC5CCD0033071E /* suzanne.obj in CopyFiles */,
-				0C1CAFA31BCC5CCD0033071E /* VertexShader.vs in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -375,20 +348,6 @@
 		0C021B7A1BDFEDF400B28537 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0C10FBC41BAC72D4005AEADD /* A1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = A1; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C1CAF591BC9E8C20033071E /* A3 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = A3; sourceTree = BUILT_PRODUCTS_DIR; };
-		0C1CAF5B1BC9E9270033071E /* A3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = A3.cpp; sourceTree = "<group>"; };
-		0C1CAF5C1BC9E9270033071E /* A3.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = A3.hpp; sourceTree = "<group>"; };
-		0C1CAF611BC9E9270033071E /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		0C1CAF621BC9E9270033071E /* imgui.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = imgui.ini; sourceTree = "<group>"; };
-		0C1CAF631BC9E9270033071E /* Main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Main.cpp; sourceTree = "<group>"; };
-		0C1CAF641BC9E9270033071E /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		0C1CAF651BC9E9270033071E /* premake4.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = premake4.lua; sourceTree = "<group>"; };
-		0C1CAF8C1BCC5CC10033071E /* cube.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cube.obj; sourceTree = "<group>"; };
-		0C1CAF8D1BCC5CC10033071E /* FragmentShader.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = FragmentShader.fs; sourceTree = "<group>"; };
-		0C1CAF951BCC5CC10033071E /* sphere.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.obj; path = sphere.obj; sourceTree = "<group>"; };
-		0C1CAF961BCC5CC10033071E /* suzanne.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = suzanne.obj; sourceTree = "<group>"; };
-		0C1CAF971BCC5CC10033071E /* VertexShader.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = VertexShader.vs; sourceTree = "<group>"; };
-		0C1CAFA41BCE01530033071E /* arc_FragmentShader.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = arc_FragmentShader.fs; sourceTree = "<group>"; };
-		0C1CAFA51BCE01530033071E /* arc_VertexShader.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = arc_VertexShader.vs; sourceTree = "<group>"; };
 		0C260AB31BA10BC2009DAF93 /* A0 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = A0; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C602D9D1BA23C4A00CD438A /* A0.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = A0.cpp; path = A0/A0.cpp; sourceTree = "<group>"; };
 		0C602D9E1BA23C4A00CD438A /* A0.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = A0.hpp; path = A0/A0.hpp; sourceTree = "<group>"; };
@@ -504,7 +463,8 @@
 		748BA7BA1C99B2D20032F564 /* UnitTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		748BA7BC1C99B2D20032F564 /* UnitTest.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = UnitTest.mm; sourceTree = "<group>"; };
 		748BA7BE1C99B2D20032F564 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		748BA7EB1C9BA6750032F564 /* room.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = room.lua; sourceTree = "<group>"; };
+		74F36BC31CA591B500AC9CE4 /* Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Texture.cpp; sourceTree = "<group>"; };
+		74F36BC41CA591B500AC9CE4 /* Texture.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Texture.hpp; sourceTree = "<group>"; };
 		EF66900674193A7C9A818BE1 /* lcorolib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lcorolib.c; sourceTree = "<group>"; };
 		EF669008CE107BFB53DEAD20 /* lopcodes.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lopcodes.o; sourceTree = "<group>"; };
 		EF66902FFAF6C0331E4A906B /* ldo.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ldo.o; sourceTree = "<group>"; };
@@ -527,7 +487,6 @@
 		EF66923B6B0CA80754AFAACF /* lzio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lzio.h; sourceTree = "<group>"; };
 		EF6692671B1B80E2BDDC395D /* lstrlib.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lstrlib.o; sourceTree = "<group>"; };
 		EF66926D97788E8F24C5BDE1 /* lutf8lib.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lutf8lib.o; sourceTree = "<group>"; };
-		EF6692CBB0589775F29CC4C8 /* Material.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Material.hpp; sourceTree = "<group>"; };
 		EF6692CD1F969B2BC5300DBF /* lobject.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lobject.c; sourceTree = "<group>"; };
 		EF66930099F0DE9D6EA31495 /* lcode.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lcode.o; sourceTree = "<group>"; };
 		EF669312CBB98CB38977C5D8 /* lcode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lcode.h; sourceTree = "<group>"; };
@@ -546,8 +505,6 @@
 		EF6693D5E8FA18443647583B /* lmathlib.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lmathlib.o; sourceTree = "<group>"; };
 		EF66940F0203218BF6593F3A /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = liblua.a; sourceTree = "<group>"; };
 		EF66943941F4490B07A17F26 /* lcorolib.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lcorolib.o; sourceTree = "<group>"; };
-		EF66943C1DDA85288CD90143 /* GeometryNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GeometryNode.cpp; sourceTree = "<group>"; };
-		EF6694414AB2921240E885EB /* SceneNode.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SceneNode.hpp; sourceTree = "<group>"; };
 		EF669443380281A1599E38D9 /* lstring.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lstring.c; sourceTree = "<group>"; };
 		EF6694499D3D1A30E44719C5 /* ltm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ltm.h; sourceTree = "<group>"; };
 		EF669488A9C5AA707E900D2F /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
@@ -556,7 +513,6 @@
 		EF6694B08E842DA7281A9E1B /* lparser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lparser.h; sourceTree = "<group>"; };
 		EF6694BD6AF1BAB92A28907A /* ltable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ltable.c; sourceTree = "<group>"; };
 		EF6694D5BA3AFED0AEA48F09 /* lvm.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lvm.o; sourceTree = "<group>"; };
-		EF6694FB697D3C6E0F17979D /* lua488.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = lua488.hpp; sourceTree = "<group>"; };
 		EF66956FE6E11A8FCD884D4E /* logo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = logo.gif; sourceTree = "<group>"; };
 		EF66957CAA147048B6CF4B1D /* lua.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lua.c; sourceTree = "<group>"; };
 		EF6695A6A2689E7050689A25 /* luac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = luac; sourceTree = "<group>"; };
@@ -572,19 +528,15 @@
 		EF6696FC97407EFAB48CE9BD /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		EF669707AA9F03F28FB4A337 /* ldblib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ldblib.c; sourceTree = "<group>"; };
 		EF66972CD9E1FEA9CE540453 /* readme.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = readme.html; sourceTree = "<group>"; };
-		EF66973CE97C29BA3F7B3493 /* JointNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JointNode.cpp; sourceTree = "<group>"; };
-		EF66974A3134D2FDCA34072B /* simpleScene.lua */ = {isa = PBXFileReference; lastKnownFileType = file.lua; path = simpleScene.lua; sourceTree = "<group>"; };
 		EF669759B0A715775AC01BC3 /* ldump.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ldump.o; sourceTree = "<group>"; };
 		EF6697AD8F903A87D276EADA /* llex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = llex.h; sourceTree = "<group>"; };
 		EF6697B2A9A78E1663B40F83 /* lbitlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lbitlib.c; sourceTree = "<group>"; };
 		EF6697F8758C1502B13BCD2C /* MathUtils.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MathUtils.hpp; sourceTree = "<group>"; };
 		EF66982DD22577238C4BEBDD /* .luaconf.h.swp */ = {isa = PBXFileReference; lastKnownFileType = file.swp; path = .luaconf.h.swp; sourceTree = "<group>"; };
-		EF66986C8C5C612013F63F96 /* puppet.lua */ = {isa = PBXFileReference; lastKnownFileType = file.lua; path = puppet.lua; sourceTree = "<group>"; };
 		EF66988A13EC6C4BF6B0B119 /* linit.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = linit.o; sourceTree = "<group>"; };
 		EF66988F588C0D009EA75603 /* ltablib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ltablib.c; sourceTree = "<group>"; };
 		EF66989D18C76BE2AEF5DDA7 /* lua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua.h; sourceTree = "<group>"; };
 		EF6698DF143C0BCD628F9143 /* lprefix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lprefix.h; sourceTree = "<group>"; };
-		EF6698F83430BAD63EF85536 /* scene_lua.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scene_lua.cpp; sourceTree = "<group>"; };
 		EF66991E982E8A1D33A94ECF /* llex.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = llex.o; sourceTree = "<group>"; };
 		EF66994E9305DF47E846357A /* lcode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lcode.c; sourceTree = "<group>"; };
 		EF66995F5023907D87E6ABE1 /* lmem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lmem.c; sourceTree = "<group>"; };
@@ -596,7 +548,6 @@
 		EF669A0D05F2C031FEC47C32 /* lauxlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lauxlib.h; sourceTree = "<group>"; };
 		EF669A287DBCCE0179B988B2 /* lopcodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lopcodes.h; sourceTree = "<group>"; };
 		EF669A3075A5C1071E9A149A /* lstring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lstring.h; sourceTree = "<group>"; };
-		EF669A3C7F94B919028FE506 /* GeometryNode.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GeometryNode.hpp; sourceTree = "<group>"; };
 		EF669A7B2087B05BE6079333 /* lmem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lmem.h; sourceTree = "<group>"; };
 		EF669AFE91E7D5C24597AFC0 /* lgc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lgc.h; sourceTree = "<group>"; };
 		EF669B4AD965E4BE60E06AAA /* lmem.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lmem.o; sourceTree = "<group>"; };
@@ -621,19 +572,15 @@
 		EF669DF025DF6EC961D21F29 /* lobject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lobject.h; sourceTree = "<group>"; };
 		EF669DF807362482C465F57B /* lbaselib.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lbaselib.o; sourceTree = "<group>"; };
 		EF669E2A9440827F45AB1DA0 /* lfunc.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lfunc.o; sourceTree = "<group>"; };
-		EF669E3B3A294CB61A3F0D19 /* scene_lua.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = scene_lua.hpp; sourceTree = "<group>"; };
 		EF669E846924C297B113DA3D /* .lauxlib.c.swp */ = {isa = PBXFileReference; lastKnownFileType = file.swp; path = .lauxlib.c.swp; sourceTree = "<group>"; };
 		EF669E8611520617EF8E88E3 /* lgc.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lgc.o; sourceTree = "<group>"; };
 		EF669E8B8914B89D0FC07222 /* lua.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = lua.1; sourceTree = "<group>"; };
 		EF669E9825FAA3681D93BA3E /* ldebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ldebug.h; sourceTree = "<group>"; };
 		EF669EAD9371823BA1FD30E6 /* lapi.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lapi.o; sourceTree = "<group>"; };
-		EF669EB090D67DAAC6B1F827 /* SceneNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneNode.cpp; sourceTree = "<group>"; };
 		EF669EC96D9CA697C43D91FC /* lstate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lstate.h; sourceTree = "<group>"; };
 		EF669ED0B495CC14D21CD361 /* ltable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ltable.h; sourceTree = "<group>"; };
 		EF669ED523B241CF0632B90E /* ObjFileDecoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ObjFileDecoder.cpp; sourceTree = "<group>"; };
-		EF669EE2DCC67E85927AD1C5 /* a3mark.lua */ = {isa = PBXFileReference; lastKnownFileType = file.lua; path = a3mark.lua; sourceTree = "<group>"; };
 		EF669EFF6FABFBD2E3EB03E2 /* lctype.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lctype.c; sourceTree = "<group>"; };
-		EF669F0A394BFC26D7D6A1BB /* JointNode.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = JointNode.hpp; sourceTree = "<group>"; };
 		EF669F32D55497C5162A52BF /* ObjFileDecoder.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ObjFileDecoder.hpp; sourceTree = "<group>"; };
 		EF669F3BFEAE69B9B1DF679F /* lundump.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = lundump.o; sourceTree = "<group>"; };
 		EF669F8D7C72A03F60A97B7A /* luac.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = luac.1; sourceTree = "<group>"; };
@@ -764,6 +711,8 @@
 				0C021B141BDEF0F900B28537 /* Main.cpp */,
 				0C021B161BDEF0F900B28537 /* Material.cpp */,
 				0C021B171BDEF0F900B28537 /* Material.hpp */,
+				74F36BC31CA591B500AC9CE4 /* Texture.cpp */,
+				74F36BC41CA591B500AC9CE4 /* Texture.hpp */,
 				0C021B181BDEF0F900B28537 /* Mesh.cpp */,
 				0C021B191BDEF0F900B28537 /* Mesh.hpp */,
 				0C021B1E1BDEF0F900B28537 /* PhongMaterial.cpp */,
@@ -784,7 +733,6 @@
 		0C021ADE1BDEF0F900B28537 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				748BA7EB1C9BA6750032F564 /* room.lua */,
 				7446459A1C84BEEC00E45ED6 /* simple2.lua */,
 				746353101C7FA5BC009E0DC9 /* buckyball.obj */,
 				746353111C7FA5BC009E0DC9 /* cube.obj */,
@@ -887,56 +835,6 @@
 			path = examples;
 			sourceTree = "<group>";
 		};
-		0C1CAF5A1BC9E9270033071E /* A3 */ = {
-			isa = PBXGroup;
-			children = (
-				0C1CAF8B1BCC5CC10033071E /* Assets */,
-				0C1CAF601BC9E9270033071E /* build */,
-				0C1CAF5B1BC9E9270033071E /* A3.cpp */,
-				0C1CAF5C1BC9E9270033071E /* A3.hpp */,
-				0C1CAF621BC9E9270033071E /* imgui.ini */,
-				0C1CAF631BC9E9270033071E /* Main.cpp */,
-				0C1CAF641BC9E9270033071E /* Makefile */,
-				0C1CAF651BC9E9270033071E /* premake4.lua */,
-				EF6698F83430BAD63EF85536 /* scene_lua.cpp */,
-				EF669E3B3A294CB61A3F0D19 /* scene_lua.hpp */,
-				EF6694FB697D3C6E0F17979D /* lua488.hpp */,
-				EF66943C1DDA85288CD90143 /* GeometryNode.cpp */,
-				EF669A3C7F94B919028FE506 /* GeometryNode.hpp */,
-				EF66973CE97C29BA3F7B3493 /* JointNode.cpp */,
-				EF669F0A394BFC26D7D6A1BB /* JointNode.hpp */,
-				EF6692CBB0589775F29CC4C8 /* Material.hpp */,
-				EF669EB090D67DAAC6B1F827 /* SceneNode.cpp */,
-				EF6694414AB2921240E885EB /* SceneNode.hpp */,
-			);
-			path = A3;
-			sourceTree = "<group>";
-		};
-		0C1CAF601BC9E9270033071E /* build */ = {
-			isa = PBXGroup;
-			children = (
-				0C1CAF611BC9E9270033071E /* Makefile */,
-			);
-			path = build;
-			sourceTree = "<group>";
-		};
-		0C1CAF8B1BCC5CC10033071E /* Assets */ = {
-			isa = PBXGroup;
-			children = (
-				0C1CAFA41BCE01530033071E /* arc_FragmentShader.fs */,
-				0C1CAFA51BCE01530033071E /* arc_VertexShader.vs */,
-				0C1CAF8C1BCC5CC10033071E /* cube.obj */,
-				0C1CAF8D1BCC5CC10033071E /* FragmentShader.fs */,
-				0C1CAF951BCC5CC10033071E /* sphere.obj */,
-				0C1CAF961BCC5CC10033071E /* suzanne.obj */,
-				0C1CAF971BCC5CC10033071E /* VertexShader.vs */,
-				EF669EE2DCC67E85927AD1C5 /* a3mark.lua */,
-				EF66986C8C5C612013F63F96 /* puppet.lua */,
-				EF66974A3134D2FDCA34072B /* simpleScene.lua */,
-			);
-			path = Assets;
-			sourceTree = "<group>";
-		};
 		0C260AAA1BA10BC2009DAF93 = {
 			isa = PBXGroup;
 			children = (
@@ -948,7 +846,6 @@
 				0CFB967E1BA10CE3009EA4B5 /* A0 */,
 				0CFA618D1BA8C8E50041C6E5 /* A1 */,
 				0C7DDFE01BBAFDB400D643EF /* A2 */,
-				0C1CAF5A1BC9E9270033071E /* A3 */,
 				0C021AD91BDEF0F800B28537 /* A4 */,
 				0C850E011BADD3FD00D691DD /* Instanced_Example */,
 				0CC118C51BB9976F00C87A4F /* Index_Example */,
@@ -1651,6 +1548,7 @@
 				0C021B601BDEF26A00B28537 /* scene_lua.cpp in Sources */,
 				0C021B611BDEF26A00B28537 /* SceneNode.cpp in Sources */,
 				0C021B551BDEF24500B28537 /* A4.cpp in Sources */,
+				74F36BC51CA591B500AC9CE4 /* Texture.cpp in Sources */,
 				0C021B561BDEF24700B28537 /* GeometryNode.cpp in Sources */,
 				0C021B571BDEF24900B28537 /* Image.cpp in Sources */,
 			);
@@ -1670,12 +1568,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C1CAFA81BCE1A650033071E /* JointNode.cpp in Sources */,
-				0C1CAF841BCAC7A20033071E /* GeometryNode.cpp in Sources */,
-				0C1CAF821BCA08AF0033071E /* scene_lua.cpp in Sources */,
-				0C1CAF681BC9E9270033071E /* Main.cpp in Sources */,
-				0C1CAF661BC9E9270033071E /* A3.cpp in Sources */,
-				0C1CAF811BCA065D0033071E /* SceneNode.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2018,7 +1910,6 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
