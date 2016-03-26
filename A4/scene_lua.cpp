@@ -528,7 +528,7 @@ int gr_node_set_texture_cmd(lua_State *L)
     GeometryNode* self = dynamic_cast<GeometryNode*>(selfdata->node);
     luaL_argcheck(L, self != 0, 1, "Geometry node expected");
     
-    int textureID = luaL_checknumber(L, 1);
+    int textureID = luaL_checknumber(L, 2);
     
     Texture *texture = nullptr;
     

@@ -20,15 +20,15 @@ static double IMAGEHEIGHT;
 #define ABSORBANCE 0.1
 
 
-#if ANTIALIASING
+//#if ANTIALIASING
+//#define GLOSSYREFLECTION 10				// How many reflection rays
+//#define GLOSSYREFRACTION 10				// How many refraction rays.
+//#define SOFTSHADOW 100                  // How many shadow rays.
+//#else
 #define GLOSSYREFLECTION 50				// How many reflection rays
 #define GLOSSYREFRACTION 50				// How many refraction rays.
 #define SOFTSHADOW 100					// How many shadow rays.
-#else
-#define GLOSSYREFLECTION 10				// How many reflection rays
-#define GLOSSYREFRACTION 10				// How many refraction rays.
-#define SOFTSHADOW 20					// How many shadow rays.
-#endif
+//#endif
 
 #define REFLECTION_REFRACTION_ONLY 0
 
@@ -294,20 +294,7 @@ Intersection hit(const Ray & r, SceneNode * root) {
 	std::list<glm::mat4> transformations;
 
 	Intersection result = root->intersect(r, transformations);
-	
-	// The following is for non-hier
-//	for (auto node : root->children) {
-//		if (node->m_nodeType == NodeType::GeometryNode) {
-//			Intersection intersection = node->intersect(r);
-//			if (intersection.hit && !result.hit) {
-//				result = intersection;
-//			} else if (intersection.hit && result.hit && intersection.t < result.t) {
-//				assert(intersection.t > 0);
-//				result = intersection;
-//			}
-//		}
-//	}
-	
+
 	return result;
 }
 
@@ -454,14 +441,24 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
 				//            std::cout << "cosine theta: " << cosineTheta << std::endl;
 				
 				auto kd = primary_intersect.material->m_kd;
+                
+                Texture *texture = primary_intersect.getTexture();
+                if (texture) {
+                    double u = primary_intersect.primitive_intersection_point.x;
+                    double v = primary_intersect.primitive_intersection_point.z;
+                    kd = texture->color(u, v);
+                }
+                
 				
 				if (glm::length(kd) != 0) {
 					// length of the light
 					double length = primary_intersect.t * glm::length(primary_intersect.incoming_ray.direction);
 					// Get the diffused color
-					colorSum += kd * cosineTheta * light->colour / (light->falloff[0] +
-																 light->falloff[1] * length +
-																 light->falloff[2] * length * length);
+                    
+                    colorSum += kd * cosineTheta * light->colour / (light->falloff[0] +
+                                                                    light->falloff[1] * length +
+                                                                    light->falloff[2] * length * length);
+					
 				}
 				
 

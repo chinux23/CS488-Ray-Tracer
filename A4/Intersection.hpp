@@ -14,6 +14,8 @@
 #include <vector>
 #include "Ray.hpp"
 #include "PhongMaterial.hpp"
+#include "Texture.hpp"
+
 
 class SceneNode;
 
@@ -36,6 +38,7 @@ struct Intersection {
 	SceneNode	  *node;
 	
 	PhongMaterial *fromMaterial;
+    
 	
 	// Construct an intersection point.
 	Intersection(const Ray & ray,
@@ -48,7 +51,8 @@ struct Intersection {
     
     // Stores the intersection point in the primitive.
     glm::dvec4 primitive_intersection_point;
-	
+    
+    Texture* getTexture() const;
 };
 
 #endif /* Intersection_hpp */

@@ -7,6 +7,8 @@
 //
 
 #include "Intersection.hpp"
+#include "SceneNode.hpp"
+#include "GeometryNode.hpp"
 
 Intersection::Intersection(const Ray & ray, double t, bool hit) :
 	incoming_ray(ray), t(t), hit(hit)
@@ -27,5 +29,15 @@ Intersection::Intersection() :
 	hit(false)
 {
 	
+}
+
+Texture* Intersection::getTexture() const
+{
+    if (this->node->m_nodeType == NodeType::GeometryNode) {
+        auto node = dynamic_cast<GeometryNode*>(this->node);
+        return node->m_texture;
+    } else {
+        return nullptr;
+    }
 }
 

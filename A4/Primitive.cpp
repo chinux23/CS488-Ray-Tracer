@@ -327,6 +327,19 @@ Intersection Cone::intersect(const Ray &ray)
 		}
 		
 	}
+    
+    if (result.hit) {
+        
+        
+        double x = result.incoming_ray.origin.x;
+        double z = result.incoming_ray.origin.z;
+        double y = result.incoming_ray.origin.y;
+        
+        if (x * x + z * z <= y * y ) {
+            result.normal = -result.normal;
+        }
+        
+    }
 	
     return result;
 }
@@ -438,6 +451,18 @@ Intersection Cylinder::intersect(const Ray &ray)
 			}
 		}
 	}
+    
+    if (result.hit) {
+        // Test if it's inside the cylinder.
+        double x = result.incoming_ray.origin.x;
+        double z = result.incoming_ray.origin.z;
+        double y = result.incoming_ray.origin.y;
+        
+        if (std::abs(y) <= 1 && (x * x + z * z <= 1)) {
+            // inside.
+            result.normal = -result.normal;
+        }
+    }
 	
     
     return result;

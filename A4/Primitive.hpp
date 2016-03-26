@@ -57,6 +57,7 @@ public:
 	Cone();
     virtual ~Cone();
     virtual Intersection intersect(const Ray & ray);
+    virtual bool isOpticsEnabled() {return true;};
 };
 
 class Cylinder : public Primitive {
@@ -65,6 +66,7 @@ public:
     virtual ~Cylinder();
     virtual Intersection intersect(const Ray & ray);
     bool    isValidRoot(const Ray &ray, double t);
+    virtual bool isOpticsEnabled() {return true;};
 };
 
 

@@ -11,10 +11,13 @@
 
 #include <stdio.h>
 #include <glm/glm.hpp>
+#include <string>
+#include <vector>
 
 enum TEXTUREIDS
 {
-    TEXTUREIDS_MARBLE = 0
+    TEXTUREIDS_MARBLE = 0,
+    TEXTUREIDS_IMAGE = 1
 };
 
 
@@ -23,6 +26,7 @@ class Texture
 public:
     int textureID;
     Texture(int id);
+    virtual glm::dvec3 color(double u, double v);
 };
 
 
@@ -30,7 +34,17 @@ class Marble : public Texture {
 public:
     Marble();
     
-    glm::dvec3 color(double u, double v);
+    virtual glm::dvec3 color(double u, double v);
+};
+
+class Picture : public Texture {
+public:
+    Picture(std::string filename);
+    virtual glm::dvec3 color(double u, double v);
+    
+    std::vector<unsigned char> image;
+    unsigned width;
+    unsigned height;
 };
 
 #endif /* Texture_hpp */
