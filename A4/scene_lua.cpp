@@ -529,6 +529,7 @@ int gr_node_set_texture_cmd(lua_State *L)
     luaL_argcheck(L, self != 0, 1, "Geometry node expected");
     
     int textureID = luaL_checknumber(L, 2);
+    std::string file_name = luaL_optstring(L, 3, "kobe.png");
     
     Texture *texture = nullptr;
     
@@ -536,7 +537,8 @@ int gr_node_set_texture_cmd(lua_State *L)
         case TEXTUREIDS_MARBLE:
             texture = new Marble();
             break;
-            
+        case TEXTUREIDS_IMAGE:
+            texture = new Picture(file_name);
         default:
             break;
     }

@@ -113,6 +113,13 @@
 		0CC118E21BB998CA00C87A4F /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0CC118D41BB9976F00C87A4F /* Main.cpp */; };
 		0CC118E51BB9999000C87A4F /* IndexExample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0CC118E31BB9999000C87A4F /* IndexExample.cpp */; };
 		74096BED1CA5A49E00EF4BD7 /* room.lua in CopyFiles */ = {isa = PBXBuildFile; fileRef = 74096BEC1CA5A49B00EF4BD7 /* room.lua */; };
+		74096BF41CA6480200EF4BD7 /* kobejordan.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 74096BF21CA647FC00EF4BD7 /* kobejordan.png */; };
+		74096BF51CA6480200EF4BD7 /* kobe.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 74096BF31CA647FC00EF4BD7 /* kobe.png */; };
+		74096BF71CA8D39000EF4BD7 /* hardwoodfloor.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 74096BF61CA8D38C00EF4BD7 /* hardwoodfloor.png */; };
+		74096BF91CA8D52200EF4BD7 /* brickwall.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 74096BF81CA8D51D00EF4BD7 /* brickwall.png */; };
+		74096BFB1CA8D86000EF4BD7 /* Ceiling.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 74096BFA1CA8D85C00EF4BD7 /* Ceiling.png */; };
+		74096BFE1CA8D91900EF4BD7 /* stone2.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 74096BFD1CA8D91100EF4BD7 /* stone2.png */; };
+		74096BFF1CA8D91B00EF4BD7 /* stone1.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 74096BFC1CA8D90D00EF4BD7 /* stone1.png */; };
 		7444582B1C826D7900D7C652 /* Ray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 744458291C826D7900D7C652 /* Ray.cpp */; };
 		7444582E1C834AD800D7C652 /* Intersection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7444582C1C834AD800D7C652 /* Intersection.cpp */; };
 		744458331C853BD900D7C652 /* smstdodeca.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 746353171C7FA5BC009E0DC9 /* smstdodeca.obj */; };
@@ -160,7 +167,14 @@
 			dstPath = Assets;
 			dstSubfolderSpec = 16;
 			files = (
+				74096BFF1CA8D91B00EF4BD7 /* stone1.png in CopyFiles */,
+				74096BFE1CA8D91900EF4BD7 /* stone2.png in CopyFiles */,
+				74096BFB1CA8D86000EF4BD7 /* Ceiling.png in CopyFiles */,
+				74096BF91CA8D52200EF4BD7 /* brickwall.png in CopyFiles */,
 				7446459B1C84BEF300E45ED6 /* simple2.lua in CopyFiles */,
+				74096BF41CA6480200EF4BD7 /* kobejordan.png in CopyFiles */,
+				74096BF71CA8D39000EF4BD7 /* hardwoodfloor.png in CopyFiles */,
+				74096BF51CA6480200EF4BD7 /* kobe.png in CopyFiles */,
 				74096BED1CA5A49E00EF4BD7 /* room.lua in CopyFiles */,
 				744458341C853BE000D7C652 /* buckyball.obj in CopyFiles */,
 				744458351C853BE000D7C652 /* cube.obj in CopyFiles */,
@@ -450,6 +464,13 @@
 		0CFA61A01BA8C8E50041C6E5 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		0CFA61A11BA8C8E50041C6E5 /* premake4.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = premake4.lua; sourceTree = "<group>"; };
 		74096BEC1CA5A49B00EF4BD7 /* room.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = room.lua; sourceTree = "<group>"; };
+		74096BF21CA647FC00EF4BD7 /* kobejordan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kobejordan.png; sourceTree = "<group>"; };
+		74096BF31CA647FC00EF4BD7 /* kobe.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kobe.png; sourceTree = "<group>"; };
+		74096BF61CA8D38C00EF4BD7 /* hardwoodfloor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hardwoodfloor.png; sourceTree = "<group>"; };
+		74096BF81CA8D51D00EF4BD7 /* brickwall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = brickwall.png; sourceTree = "<group>"; };
+		74096BFA1CA8D85C00EF4BD7 /* Ceiling.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Ceiling.png; sourceTree = "<group>"; };
+		74096BFC1CA8D90D00EF4BD7 /* stone1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stone1.png; sourceTree = "<group>"; };
+		74096BFD1CA8D91100EF4BD7 /* stone2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stone2.png; sourceTree = "<group>"; };
 		744458291C826D7900D7C652 /* Ray.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Ray.cpp; sourceTree = "<group>"; };
 		7444582A1C826D7900D7C652 /* Ray.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Ray.hpp; sourceTree = "<group>"; };
 		7444582C1C834AD800D7C652 /* Intersection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Intersection.cpp; sourceTree = "<group>"; };
@@ -736,6 +757,11 @@
 		0C021ADE1BDEF0F900B28537 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				74096BF61CA8D38C00EF4BD7 /* hardwoodfloor.png */,
+				74096BFD1CA8D91100EF4BD7 /* stone2.png */,
+				74096BFC1CA8D90D00EF4BD7 /* stone1.png */,
+				74096BFA1CA8D85C00EF4BD7 /* Ceiling.png */,
+				74096BF81CA8D51D00EF4BD7 /* brickwall.png */,
 				74096BEC1CA5A49B00EF4BD7 /* room.lua */,
 				7446459A1C84BEEC00E45ED6 /* simple2.lua */,
 				746353101C7FA5BC009E0DC9 /* buckyball.obj */,
@@ -743,6 +769,8 @@
 				746353121C7FA5BC009E0DC9 /* cylinder.obj */,
 				746353131C7FA5BC009E0DC9 /* dodeca.obj */,
 				746353141C7FA5BC009E0DC9 /* icosa.obj */,
+				74096BF21CA647FC00EF4BD7 /* kobejordan.png */,
+				74096BF31CA647FC00EF4BD7 /* kobe.png */,
 				746353151C7FA5BC009E0DC9 /* mickey.obj */,
 				746353161C7FA5BC009E0DC9 /* plane.obj */,
 				746353171C7FA5BC009E0DC9 /* smstdodeca.obj */,
