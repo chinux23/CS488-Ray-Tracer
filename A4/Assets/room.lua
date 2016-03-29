@@ -135,6 +135,6 @@ green_white_light = gr.light({0.0, 0.0, 400.0}, {0.5, 0.5, 0.5}, {1, 0, 0})
 l2 = gr.light({0, 5, -20}, {0.4, 0.4, 0.8}, {1, 0, 0})
 white_spherical_light = gr.sphericallight({4, 8, 4}, {1, 1, 1}, {1, 0, 0}, 0.5)
 
-gr.render(scene, 'room.png', 256, 256,
-	  {0, -3, 30}, {0, 0, -1}, {0, 1, 0}, 50,
+gr.render(scene, 'room.png', 1024, 1024,
+	  {0, 3, -4}, {1, 0, 0}, {0, 1, 0}, 50,
 	  {0.4, 0.4, 0.4}, {white_spherical_light})

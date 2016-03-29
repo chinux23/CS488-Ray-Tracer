@@ -11,8 +11,8 @@ static double IMAGEWIDTH;
 static double IMAGEHEIGHT;
 
 #define DISTANCE 10.0
-#define ANTIALIASING 1
-#define MAXRECURSIVE 5
+#define ANTIALIASING 0
+#define MAXRECURSIVE 10
 #define EPSILON 0.0001
 #define REFLECTION_COEFF 0.2
 #define DEBUG 0
@@ -544,6 +544,13 @@ HitColor rayColor(const Ray & r, const std::list<Light*> & lights, int counter)
 		assert(primary_intersect.fromMaterial == PhongMaterial::Air);
 		
         // ambient color
+        glm::dvec3 kd;
+        Texture *texture = primary_intersect.getTexture();
+        if (texture) {
+            double u = primary_intersect.primitive_intersection_point.x;
+            double v = primary_intersect.primitive_intersection_point.z;
+            kd = texture->color(u, v);
+        }
         color += primary_intersect.material->m_kd * AmbientColor;
 		
 		// calculate the ray color

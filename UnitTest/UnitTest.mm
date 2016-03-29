@@ -229,7 +229,7 @@
 - (void) testPerlinNoise
 {
     for (int i = 0; i < 10; i++) {
-        float noise = glm::perlin(glm::dvec2(-0.5, -0.5));
+        float noise = glm::perlin(glm::dvec2(8.1, 8.2));
         std::cout << noise << std::endl;
     }
 }
