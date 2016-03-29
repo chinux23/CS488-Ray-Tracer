@@ -11,7 +11,7 @@ static double IMAGEWIDTH;
 static double IMAGEHEIGHT;
 
 #define DISTANCE 10.0
-#define ANTIALIASING 0
+#define ANTIALIASING 1
 #define MAXRECURSIVE 5
 #define EPSILON 0.0001
 #define REFLECTION_COEFF 0.2

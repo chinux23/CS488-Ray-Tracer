@@ -120,6 +120,8 @@
 		74096BFB1CA8D86000EF4BD7 /* Ceiling.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 74096BFA1CA8D85C00EF4BD7 /* Ceiling.png */; };
 		74096BFE1CA8D91900EF4BD7 /* stone2.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 74096BFD1CA8D91100EF4BD7 /* stone2.png */; };
 		74096BFF1CA8D91B00EF4BD7 /* stone1.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 74096BFC1CA8D90D00EF4BD7 /* stone1.png */; };
+		74324ED71CA9F6BB001E2956 /* animation.sh in CopyFiles */ = {isa = PBXBuildFile; fileRef = 74324ED41CA9F2FD001E2956 /* animation.sh */; };
+		74324ED91CAA0219001E2956 /* animation.lua in CopyFiles */ = {isa = PBXBuildFile; fileRef = 74324ED81CAA020C001E2956 /* animation.lua */; };
 		7444582B1C826D7900D7C652 /* Ray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 744458291C826D7900D7C652 /* Ray.cpp */; };
 		7444582E1C834AD800D7C652 /* Intersection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7444582C1C834AD800D7C652 /* Intersection.cpp */; };
 		744458331C853BD900D7C652 /* smstdodeca.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 746353171C7FA5BC009E0DC9 /* smstdodeca.obj */; };
@@ -168,6 +170,7 @@
 			dstSubfolderSpec = 16;
 			files = (
 				74096BFF1CA8D91B00EF4BD7 /* stone1.png in CopyFiles */,
+				74324ED91CAA0219001E2956 /* animation.lua in CopyFiles */,
 				74096BFE1CA8D91900EF4BD7 /* stone2.png in CopyFiles */,
 				74096BFB1CA8D86000EF4BD7 /* Ceiling.png in CopyFiles */,
 				74096BF91CA8D52200EF4BD7 /* brickwall.png in CopyFiles */,
@@ -270,6 +273,16 @@
 			files = (
 				0CC118DF1BB997F000C87A4F /* FragmentShader.fs in CopyFiles */,
 				0CC118E01BB997F000C87A4F /* VertexShader.vs in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74324ED61CA9F6AF001E2956 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				74324ED71CA9F6BB001E2956 /* animation.sh in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -471,6 +484,8 @@
 		74096BFA1CA8D85C00EF4BD7 /* Ceiling.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Ceiling.png; sourceTree = "<group>"; };
 		74096BFC1CA8D90D00EF4BD7 /* stone1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stone1.png; sourceTree = "<group>"; };
 		74096BFD1CA8D91100EF4BD7 /* stone2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stone2.png; sourceTree = "<group>"; };
+		74324ED41CA9F2FD001E2956 /* animation.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = animation.sh; sourceTree = "<group>"; };
+		74324ED81CAA020C001E2956 /* animation.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = animation.lua; sourceTree = "<group>"; };
 		744458291C826D7900D7C652 /* Ray.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Ray.cpp; sourceTree = "<group>"; };
 		7444582A1C826D7900D7C652 /* Ray.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Ray.hpp; sourceTree = "<group>"; };
 		7444582C1C834AD800D7C652 /* Intersection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Intersection.cpp; sourceTree = "<group>"; };
@@ -758,6 +773,8 @@
 			isa = PBXGroup;
 			children = (
 				74096BF61CA8D38C00EF4BD7 /* hardwoodfloor.png */,
+				74324ED81CAA020C001E2956 /* animation.lua */,
+				74324ED41CA9F2FD001E2956 /* animation.sh */,
 				74096BFD1CA8D91100EF4BD7 /* stone2.png */,
 				74096BFC1CA8D90D00EF4BD7 /* stone1.png */,
 				74096BFA1CA8D85C00EF4BD7 /* Ceiling.png */,
@@ -1362,6 +1379,7 @@
 				0C021B2B1BDEF0FC00B28537 /* Sources */,
 				0C021B321BDEF0FC00B28537 /* Frameworks */,
 				0C021B371BDEF0FC00B28537 /* CopyFiles */,
+				74324ED61CA9F6AF001E2956 /* CopyFiles */,
 			);
 			buildRules = (
 			);
