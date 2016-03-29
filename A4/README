@@ -1,0 +1,13 @@
+Compilation:
+	1. Compilation is the same as default. Program should be run from the directory of the source code.
+	2. Lab machine used to test the code is: gl23
+	3. Code is locally tested on Mac machine with OS X El Capitan 10.11.2.
+
+Manual:
+	1. Nonhier renders perfect. No error in phong illumination model.
+	2. There are some lighting problem in hier mode. I think the normal might not get correctly transformed back. Otherwise, hier renders fine.
+	3. Extra feature implemented is anti-aliasing. Two images are provided for comparison. nonhier_antialiasing.png vs nonhier_without_antialiasing.png
+	4. I have modified plane.obj manually. The old obj file has a wrong normal.
+	5. I have added a prefix of “Assets/“ to all obj string in lua. So that the binary can properly load objects without having to run it inside Assets folder.
+	6. Some lua scene has been modified to increase resolution from 256x256 to 1024x1024. Rendering those image might take some time.
+	7. All pre-generated png files are in the Assets folder.
