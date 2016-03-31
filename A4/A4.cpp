@@ -11,8 +11,8 @@ static double IMAGEWIDTH;
 static double IMAGEHEIGHT;
 
 #define DISTANCE 10.0
-#define ANTIALIASING 0
-#define MAXRECURSIVE 10
+#define ANTIALIASING 1
+#define MAXRECURSIVE 250
 #define EPSILON 0.0001
 #define REFLECTION_COEFF 0.2
 #define DEBUG 0
@@ -25,8 +25,8 @@ static double IMAGEHEIGHT;
 //#define GLOSSYREFRACTION 10				// How many refraction rays.
 //#define SOFTSHADOW 100                  // How many shadow rays.
 //#else
-#define GLOSSYREFLECTION 10				// How many reflection rays
-#define GLOSSYREFRACTION 10				// How many refraction rays.
+#define GLOSSYREFLECTION 50				// How many reflection rays
+#define GLOSSYREFRACTION 50				// How many refraction rays.
 #define SOFTSHADOW 100					// How many shadow rays.
 //#endif
 
@@ -345,7 +345,7 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
         
 		if (reflectance != 1.0) {
 
-			if (primary_intersect.material->m_glossy_coefficients.z > 0) {
+			if (counter <= 5 && primary_intersect.material->m_glossy_coefficients.z > 0) {
 				// Glossy refraction
 				glm::dvec3 refracted_color;
 				
@@ -476,7 +476,7 @@ glm::dvec3 directLight(const std::list<Light*> & lights, const Intersection & pr
 	
 #pragma mark - glossy reflection
 
-	if (primary_intersect.material->m_glossy_coefficients.x > 0) {
+	if (counter <= 5 && primary_intersect.material->m_glossy_coefficients.x > 0) {
 		glm::dvec3 reflected_color;
 		
 		// Add glossy reflection
