@@ -40,9 +40,12 @@ Perlin Noise is used to generate a marble like texture. Perlin noise is divided 
 ![PerlinNoise](./Project/Screenshot & Scripts/PerlinNoise.png)
 
 ## 9. Animation
+![Animation](./Project/Screenshot & Scripts/animation.gif)
 
 ## 10. Final scene
-![FinalScene](./Project/Screenshot & Scripts/finalScene.png)
+![FinalScene1](./Project/Screenshot & Scripts/finalScene.png)
+![FinalScene2](./Project/Screenshot & Scripts/coolimage.png)
+![FinalScene3](./Project/Screenshot & Scripts/room.png)
 
 
 ## Extra
