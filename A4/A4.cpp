@@ -118,8 +118,8 @@ void A4_Render(
 	double color_max = 1.0;
 	double color_min = 0;
 	
-	dispatch_queue_t concurrent_queue = dispatch_queue_create("ca.uwaterloo.cs488.raytracer", DISPATCH_QUEUE_CONCURRENT);
-	dispatch_queue_t image_queue = dispatch_queue_create("ca.uwaterloo.cs488.image_queue", 0);
+	dispatch_queue_t concurrent_queue = dispatch_queue_create("raytracer_concurrent_queue", DISPATCH_QUEUE_CONCURRENT);
+	dispatch_queue_t image_queue = dispatch_queue_create("raytracer_image_queue", 0);
 	
 	std::chrono::system_clock::time_point start = std::chrono::system_clock::now();
 	
